@@ -10,7 +10,7 @@ class TestPostman:
         return MyPostman(
             server='smtp.me.com',
             port=587,
-            middleware=[Auth('user', 'pass')],
+            middlewares=[Auth('user', 'pass')],
             )
 
     @pytest.fixture

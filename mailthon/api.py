@@ -18,7 +18,7 @@ def postman(server, port=587, auth=(None, None), force_tls=False):
     return Postman(
         server=server,
         port=port,
-        middleware=[
+        middlewares=[
             TLS(force=force_tls),
             Auth(username, password),
         ],
