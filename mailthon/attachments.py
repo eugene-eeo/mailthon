@@ -59,12 +59,12 @@ class Raw(Attachment):
         self.major, self.minor = mimetype.split('/', 1)
         self.content = content
         self.encoding = encoding
+        self.headers['Content-Transfer-Encoding'] = 'base64'
+        self.headers['Content-Encoding'] = self.encoding
 
     def prepare_mime(self):
         mime = MIMEBase(self.major, self.minor)
         mime.set_payload(b64encode(self.content))
-        mime['Content-Transfer-Encoding'] = 'base64'
-        mime['Content-Encoding'] = self.encoding
         return mime
 
     @classmethod

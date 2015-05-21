@@ -37,7 +37,7 @@ class TestHTML(TestPlainText):
 
 class TestImage(TestPlainText):
     content_type = 'image/gif'
-    content = open('tests/assets/spacer.gif', 'rb').read()
+    content = open('tests/assets/spacer"".gif', 'rb').read()
 
     @pytest.fixture(scope='class')
     def mime(self):
@@ -53,12 +53,13 @@ class TestImage(TestPlainText):
 class TestRaw(TestImage):
     @pytest.fixture(scope='class')
     def mime(self):
-        r = Raw.from_filename('tests/assets/spacer.gif')
+        r = Raw.from_filename('tests/assets/spacer"".gif')
         r.headers.update(self.headers)
         return r.mime()
 
     def test_disposition(self, mime):
-        assert mime['Content-Disposition'] == 'attachment; filename="spacer.gif"'
+        string = r'attachment; filename="spacer\"\".gif"'
+        assert mime['Content-Disposition'] == string
 
     def test_payload(self, mime):
         assert mime.get_payload() == b64encode(self.content).decode()
