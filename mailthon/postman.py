@@ -6,20 +6,20 @@ from .response import SendmailResponse
 class Postman:
     response_cls = SendmailResponse
 
-    def __init__(self, server, port, preprocessors=()):
+    def __init__(self, server, port, middleware=()):
         self.server = server
         self.port = port
-        self.preprocessors = list(preprocessors)
+        self.middleware = list(middleware)
 
     def use(self, preproc):
-        self.preprocessors.append(preproc)
+        self.middleware.append(preproc)
 
     @contextmanager
     def connection(self):
         conn = SMTP(self.server, self.port)
         with closing(conn):
             conn.ehlo()
-            for item in self.preprocessors:
+            for item in self.middleware:
                 item(conn)
             yield conn
 

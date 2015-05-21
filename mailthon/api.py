@@ -1,7 +1,7 @@
 from mailthon.attachments import HTML
 from mailthon.envelope import Envelope, Stamp
 from mailthon.postman import Postman
-from mailthon.preprocessors import TLS, Auth
+from mailthon.middleware import TLS, Auth
 
 
 def html(subject, sender, receiver, content):
@@ -18,7 +18,7 @@ def postman(server, port=587, auth=(None, None), force_tls=False):
     return Postman(
         server=server,
         port=port,
-        preprocessors=[
+        middleware=[
             TLS(force=force_tls),
             Auth(username, password),
         ],

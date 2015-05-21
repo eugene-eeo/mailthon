@@ -1,9 +1,9 @@
-class Preprocessor:
+class Middleware:
     def __call__(self, conn):
         return
 
 
-class TLS(Preprocessor):
+class TLS(Middleware):
     def __init__(self, force=False):
         self.force = force
 
@@ -13,7 +13,7 @@ class TLS(Preprocessor):
             conn.ehlo()
 
 
-class Auth(Preprocessor):
+class Auth(Middleware):
     def __init__(self, username, password):
         self.username = username
         self.password = password
