@@ -1,4 +1,4 @@
-class Middleware:
+class Middleware(object):
     def __call__(self, conn):
         return
 

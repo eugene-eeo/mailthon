@@ -11,7 +11,7 @@ from smtplib import SMTP
 from .response import SendmailResponse
 
 
-class Postman:
+class Postman(object):
     """
     Encapsulates a connection to a server and knows
     how to send MIME emails over a certain transport.
