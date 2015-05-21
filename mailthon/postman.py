@@ -74,17 +74,10 @@ class Postman:
         )
         return self.response_cls(conn.noop(), rejected)
 
-    def send_many(self, envelopes):
-        """
-        Given an iterable of *envelopes*, send them
-        all and return a list of response objects.
-        """
-        with self.connection() as conn:
-            return [self.deliver(conn, e) for e in envelopes]
-
     def send(self, envelope):
         """
-        Send one *envelope*. Internally this uses
-        the ``send_many`` method.
+        Sends an *envelope* and return a response
+        object.
         """
-        return self.send_many([envelope])[0]
+        with self.connection() as conn:
+            return self.deliver(conn, envelope)
