@@ -14,10 +14,6 @@ class Rejected(Response):
         Response.__init__(self, pair)
         self.receipient = receipient
 
-    @property
-    def ok(self):
-        return False
-
 
 class SendmailResponse(Response):
     def __init__(self, pair, rejected):

@@ -10,18 +10,17 @@ class Attachment(object):
 
 
 class PlainText(Attachment):
+    filetype = 'plain'
+
     def __init__(self, content, encoding='utf-8'):
         Attachment.__init__(self, content)
         self.encoding = encoding
 
     def mime(self):
         return MIMEText(self.content,
-                        'plain',
+                        self.filetype,
                         self.encoding)
 
 
 class HTML(PlainText):
-    def mime(self):
-        return MIMEText(self.content,
-                        'html',
-                        self.encoding)
+    filetype = 'html'
