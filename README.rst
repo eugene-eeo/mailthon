@@ -2,7 +2,10 @@ Mailthon
 ========
 
 MIT licensed library for easy delivery of emails, inspired
-by Requests's simple, beautiful API.
+by Requests's simple, beautiful API. Mailthon aims to
+simplify the delivery of emails and make it a joy to use
+as well as being extremely extensible and configurable at
+the same time.
 
 .. code-block:: python
 
