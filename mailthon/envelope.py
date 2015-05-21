@@ -2,10 +2,11 @@ from email.mime.multipart import MIMEMultipart
 
 
 class Stamp(object):
-    def __init__(self, subject, sender, receivers):
+    def __init__(self, subject, sender, receivers, headers=None):
         self.subject = subject
         self.sender = sender
         self.receivers = receivers
+        self.headers = headers or {}
 
     @property
     def receiver_string(self):
@@ -16,24 +17,21 @@ class Stamp(object):
         mime['From'] = self.sender
         mime['To'] = self.receiver_string
 
+        for key, value in self.headers.items():
+            mime[key] = value
+
 
 class Envelope(object):
-    def __init__(self, stamp, attachments, headers={}):
+    def __init__(self, stamp, attachments):
         self.stamp = stamp
         self.attachments = attachments
-        self.headers = headers.copy()
 
         self.sender = self.stamp.sender
         self.receivers = self.stamp.receivers
 
-    def put_headers(self, mime):
-        for key, value in self.headers.items():
-            mime[key] = value
-
     def prepare(self):
         mime = MIMEMultipart()
         self.stamp.prepare(mime)
-        self.put_headers(mime)
 
         for item in self.attachments:
             mime.attach(item.mime())
