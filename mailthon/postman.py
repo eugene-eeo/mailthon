@@ -3,6 +3,14 @@ from smtplib import SMTP
 from .response import SendmailResponse
 
 
+def send_email(conn, envelope):
+    return conn.sendmail(
+        envelope.sender,
+        envelope.receivers,
+        envelope.to_string(),
+    )
+
+
 class Postman:
     response_cls = SendmailResponse
 
@@ -24,11 +32,7 @@ class Postman:
             yield conn
 
     def deliver(self, conn, envelope):
-        rejected = conn.sendmail(
-            envelope.sender,
-            envelope.receivers,
-            envelope.to_string(),
-        )
+        rejected = send_email(conn, envelope)
         return self.response_cls(conn.noop(), rejected)
 
     def send_many(self, envelopes):

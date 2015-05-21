@@ -4,11 +4,11 @@ from mailthon.postman import Postman
 from mailthon.middleware import TLS, Auth
 
 
-def html(subject, sender, receiver, content):
+def html(subject, sender, receiver, content, encoding='utf8'):
     return Envelope(
         Stamp(subject, sender, receiver),
         attachments=[
-            HTML(content),
+            HTML(content, encoding=encoding),
         ],
     )
 
