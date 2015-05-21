@@ -54,31 +54,33 @@ class Image(Attachment):
 
 
 class Raw(Attachment):
+    default_filetype = 'application/octet_stream'
+
     def __init__(self, mimetype, content, encoding=None, **kwargs):
         Attachment.__init__(self, **kwargs)
-        self.major, self.minor = mimetype.split('/', 1)
+        self.mimetype = mimetype
         self.content = content
         self.encoding = encoding
-        self.headers['Content-Transfer-Encoding'] = 'base64'
-        self.headers['Content-Encoding'] = self.encoding
 
     def prepare_mime(self):
-        mime = MIMEBase(self.major, self.minor)
+        major, subtype = self.mimetype.split('/')
+        mime = MIMEBase(major, subtype)
         mime.set_payload(b64encode(self.content))
+        mime['Content-Transfer-Encoding'] = 'base64'
+        mime['Content-Encoding'] = self.encoding
         return mime
 
     @classmethod
     def from_filename(cls, path):
-        filetype, encoding = mimetypes.guess_type(path)
-        if filetype is None:
-            filetype = 'application/octet-stream'
+        mimetype, encoding = mimetypes.guess_type(path)
+        mimetype = mimetype or cls.default_filetype
 
         _, filename = os.path.split(path)
         disposition = 'attachment; filename="%s"' % quote(filename)
 
         with open(path, 'rb') as handle:
             return Raw(
-                mimetype=filetype,
+                mimetype=mimetype,
                 content=handle.read(),
                 encoding=encoding,
                 headers={

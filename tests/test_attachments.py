@@ -1,6 +1,5 @@
 import pytest
 from base64 import b64encode
-from textwrap import wrap
 from mailthon.attachments import PlainText, HTML, Image, Raw
 
 
@@ -47,7 +46,7 @@ class TestImage(TestPlainText):
     def test_payload(self, mime):
         payload = mime.get_payload().strip()
         other = b64encode(self.content).decode()
-        assert payload == '\n'.join(wrap(other, 76))
+        assert ''.join(payload.split()) == other
 
 
 class TestRaw(TestImage):
@@ -60,6 +59,3 @@ class TestRaw(TestImage):
     def test_disposition(self, mime):
         string = r'attachment; filename="spacer\"\".gif"'
         assert mime['Content-Disposition'] == string
-
-    def test_payload(self, mime):
-        assert mime.get_payload() == b64encode(self.content).decode()
