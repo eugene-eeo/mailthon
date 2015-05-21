@@ -18,8 +18,8 @@ def envelope(stamp):
     return Envelope(
         stamp=stamp,
         attachments=[
-            PlainText('Hi!'),
-            PlainText('Bye!'),
+            PlainText('Hi!', encoding='utf8'),
+            PlainText('Bye!', encoding='utf8'),
         ],
     )
 
