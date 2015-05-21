@@ -57,3 +57,10 @@ class TestPostman:
             assert response.ok
 
         self.match_vcr(conn, envelope)
+
+    def test_use(self, postman):
+        @postman.use
+        def function(conn):
+            pass
+
+        assert function in postman.middlewares
