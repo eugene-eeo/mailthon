@@ -2,15 +2,19 @@ from email.mime.multipart import MIMEMultipart
 
 
 class Stamp(object):
-    def __init__(self, subject, sender, receiver):
+    def __init__(self, subject, sender, receivers):
         self.subject = subject
         self.sender = sender
-        self.receiver = receiver
+        self.receivers = receivers
+
+    @property
+    def receiver_string(self):
+        return ', '.join(self.receivers)
 
     def prepare(self, mime):
         mime['Subject'] = self.subject
         mime['From'] = self.sender
-        mime['To'] = self.receiver
+        mime['To'] = self.receiver_string
 
 
 class Envelope(object):
@@ -20,7 +24,7 @@ class Envelope(object):
         self.headers = headers.copy()
 
         self.sender = self.stamp.sender
-        self.receiver = self.stamp.receiver
+        self.receivers = self.stamp.receivers
 
     def put_headers(self, mime):
         for key, value in self.headers.items():

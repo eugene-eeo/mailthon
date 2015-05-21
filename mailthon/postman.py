@@ -24,14 +24,13 @@ class Postman:
             yield conn
 
     def deliver(self, conn, envelope):
-        conn.sendmail(
+        rejected = conn.sendmail(
             envelope.sender,
-            envelope.receiver,
+            envelope.receivers,
             envelope.to_string(),
         )
-        status, message = conn.noop()
-        return self.response_cls(status, message)
+        return self.response_cls.from_pair(conn.noop(), rejected)
 
     def send(self, envelopes):
         with self.connection() as conn:
-            return [self.deliver(e, conn) for e in envelopes]
+            return [self.deliver(conn, e) for e in envelopes]

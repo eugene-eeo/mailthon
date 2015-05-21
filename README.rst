@@ -11,8 +11,8 @@ by Requests's simple, beautiful API.
     >>> e = html(
             content='<p>hi!</p>',
             subject='Hello world',
-            sender=('John', 'john@jon.com'),
-            receiver=('Doe', 'doe@jon.com'),
+            sender='John <john@jon.com>',
+            receivers=['doe@jon.com'],
         )
     >>> r = p.send([e])
     >>> assert [res.ok for res in r]
