@@ -6,17 +6,27 @@ from mailthon.attachments import PlainText, HTML, Image
 class TestPlainText:
     attachment_cls = PlainText
     content_type = 'text/plain'
+    headers = {'Content-ID': 'something'}
     content = 'hi'
 
     @pytest.fixture
     def mime(self):
-        return self.attachment_cls(self.content, encoding='ascii').mime()
+        attachment = self.attachment_cls(
+            self.content,
+            encoding='ascii',
+            headers=self.headers,
+        )
+        return attachment.mime()
 
     def test_content_type(self, mime):
         assert mime.get_content_type() == self.content_type
 
     def test_payload(self, mime):
         assert mime.get_payload() == self.content
+
+    def test_headers(self, mime):
+        for item in self.headers:
+            assert mime[item] == self.headers[item]
 
 
 class TestHTML(TestPlainText):
@@ -30,7 +40,7 @@ class TestImage(TestPlainText):
 
     @pytest.fixture
     def mime(self):
-        return Image(self.content).mime()
+        return Image(self.content, headers=self.headers).mime()
 
     def test_payload(self, mime):
         pass
