@@ -1,10 +1,10 @@
-import os.path
-import mimetypes
 from base64 import b64encode
-from email.utils import quote
-from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
 from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
+from email.mime.text import MIMEText
+from email.utils import quote
+import mimetypes
+import os.path
 
 
 class Attachment(object):
@@ -55,6 +55,8 @@ class Image(Attachment):
 
 class Raw(Attachment):
     default_filetype = 'application/octet_stream'
+    transfer_encoder = staticmethod(b64encode)
+    transfer_encoding = 'base64'
 
     def __init__(self, mimetype, content, encoding=None, **kwargs):
         Attachment.__init__(self, **kwargs)
@@ -65,8 +67,8 @@ class Raw(Attachment):
     def prepare_mime(self):
         major, subtype = self.mimetype.split('/')
         mime = MIMEBase(major, subtype)
-        mime.set_payload(b64encode(self.content))
-        mime['Content-Transfer-Encoding'] = 'base64'
+        mime.set_payload(self.transfer_encoder(self.content))
+        mime['Content-Transfer-Encoding'] = self.transfer_encoding
         mime['Content-Encoding'] = self.encoding
         return mime
 
