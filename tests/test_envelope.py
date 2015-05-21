@@ -45,6 +45,12 @@ class TestStamp:
     def test_receiver_string(self, stamp):
         assert stamp.receiver_string == 'him@mail.com, them@mail.com'
 
+    def test_headers_overrides_everything(self, stamp):
+        stamp.headers['From'] = 'me'
+        headers = {}
+        stamp.prepare(headers)
+        assert headers['From'] == 'me'
+
 
 class TestEnvelope:
     def test_prepare(self, envelope):

@@ -10,12 +10,15 @@ class TestPlainText:
     content = 'hi'
 
     @pytest.fixture
-    def mime(self):
-        attachment = self.attachment_cls(
+    def attachment(self):
+        return self.attachment_cls(
             self.content,
             encoding='ascii',
             headers=self.headers,
         )
+
+    @pytest.fixture
+    def mime(self, attachment):
         return attachment.mime()
 
     def test_content_type(self, mime):
@@ -39,9 +42,8 @@ class TestImage(TestPlainText):
     content = open('tests/assets/spacer"".gif', 'rb').read()
 
     @pytest.fixture(scope='class')
-    def mime(self):
-        attachment = Image(self.content, headers=self.headers)
-        return attachment.mime()
+    def attachment(self):
+        return Image(self.content, headers=self.headers)
 
     def test_payload(self, mime):
         payload = mime.get_payload().strip()
@@ -51,10 +53,10 @@ class TestImage(TestPlainText):
 
 class TestRaw(TestImage):
     @pytest.fixture(scope='class')
-    def mime(self):
+    def attachment(self):
         r = Raw.from_filename('tests/assets/spacer"".gif')
         r.headers.update(self.headers)
-        return r.mime()
+        return r
 
     def test_disposition(self, mime):
         string = r'attachment; filename="spacer\"\".gif"'
