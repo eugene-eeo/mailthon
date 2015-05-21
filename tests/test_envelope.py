@@ -1,4 +1,5 @@
 from pytest import fixture
+from base64 import b64decode
 from email import message_from_string
 from mailthon.attachments import PlainText
 from mailthon.envelope import Envelope, Stamp
@@ -30,6 +31,11 @@ def match_headers(mime):
     assert mime['This'] == 'him@mail.com'
 
 
+def match_content(mime):
+    text = [b64decode(m.get_payload()) for m in mime.get_payload()]
+    assert text == [b'Hi!', b'Bye!']
+
+
 class TestStamp:
     def test_prepare(self, stamp):
         headers = {}
@@ -44,7 +50,9 @@ class TestEnvelope:
     def test_prepare(self, envelope):
         mime = envelope.prepare()
         match_headers(mime)
+        match_content(mime)
 
     def test_to_string(self, envelope):
         mime = message_from_string(envelope.to_string())
         match_headers(mime)
+        match_content(mime)
