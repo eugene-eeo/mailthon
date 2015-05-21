@@ -40,7 +40,8 @@ class TestImage(TestPlainText):
 
     @pytest.fixture
     def mime(self):
-        return Image(self.content, headers=self.headers).mime()
+        attachment = Image(self.content, headers=self.headers)
+        return attachment.mime()
 
     def test_payload(self, mime):
         pass

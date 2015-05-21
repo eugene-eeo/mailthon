@@ -19,5 +19,5 @@ class SendmailResponse(Response):
 
     @property
     def ok(self):
-        return (super(SendmailResponse, self).ok and
+        return (Response.ok.fget(self) and
                 not self.rejected)
