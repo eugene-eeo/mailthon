@@ -1,10 +1,10 @@
 from contextlib import closing, contextmanager
 from smtplib import SMTP
-from .response import Response
+from .response import SendmailResponse
 
 
 class Postman:
-    response_cls = Response
+    response_cls = SendmailResponse
 
     def __init__(self, server, port, preprocessors=()):
         self.server = server
@@ -29,8 +29,11 @@ class Postman:
             envelope.receivers,
             envelope.to_string(),
         )
-        return self.response_cls.from_pair(conn.noop(), rejected)
+        return self.response_cls(conn.noop(), rejected)
 
-    def send(self, envelopes):
+    def send_many(self, envelopes):
         with self.connection() as conn:
             return [self.deliver(conn, e) for e in envelopes]
+
+    def send(self, envelope):
+        return self.send_many([envelope])[0]

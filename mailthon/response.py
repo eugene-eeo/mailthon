@@ -1,16 +1,31 @@
 class Response:
-    def __init__(self, status, message, rejected):
+    def __init__(self, pair):
+        status, message = pair
         self.status_code = status
         self.message = message
-        self.rejected = {}
-        for key, pair in rejected.items():
-            self.rejected[key] = self.from_pair(pair)
-
-    @classmethod
-    def from_pair(cls, pair, rejected={}):
-        status, message = pair
-        return cls(status, message, rejected)
 
     @property
     def ok(self):
-        return self.status_code == 250 and not self.rejected
+        return self.status_code == 250
+
+
+class Rejected(Response):
+    def __init__(self, pair, receipeint):
+        Response.__init__(self, pair)
+        self.receipient = receipient
+
+    @property
+    def ok(self):
+        return False
+
+
+class SendmailResponse(Response):
+    def __init__(self, pair, rejected):
+        Response.__init__(self, pair)
+        self.rejected = [
+            Rejected(pair, addr) for addr, pair in rejected.items()
+        ]
+
+    @property
+    def ok(self):
+        return Response.ok.fget(self) and not self.rejected

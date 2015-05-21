@@ -8,11 +8,10 @@ by Requests's simple, beautiful API.
 
     >>> from mailthon import postman, html
     >>> p = postman(server='smtp.google.com', auth=('username', 'password'))
-    >>> e = html(
+    >>> r = p.send(html(
             content='<p>hi!</p>',
             subject='Hello world',
             sender='John <john@jon.com>',
             receivers=['doe@jon.com'],
-        )
-    >>> r = p.send([e])
-    >>> assert [res.ok for res in r]
+        ))
+    >>> assert r.ok
