@@ -1,17 +1,10 @@
-from contextlib import closing, contextmanager
+from contextlib import contextmanager
 from smtplib import SMTP
 from .response import SendmailResponse
 
 
-def send_email(conn, envelope):
-    return conn.sendmail(
-        envelope.sender,
-        envelope.receivers,
-        envelope.to_string(),
-    )
-
-
 class Postman:
+    transport = SMTP
     response_cls = SendmailResponse
 
     def __init__(self, server, port, middleware=()):
@@ -24,15 +17,21 @@ class Postman:
 
     @contextmanager
     def connection(self):
-        conn = SMTP(self.server, self.port)
-        with closing(conn):
+        conn = self.transport(self.server, self.port)
+        try:
             conn.ehlo()
             for item in self.middleware:
                 item(conn)
             yield conn
+        finally:
+            conn.quit()
 
     def deliver(self, conn, envelope):
-        rejected = send_email(conn, envelope)
+        rejected = conn.sendmail(
+            envelope.sender,
+            envelope.receivers,
+            envelope.to_string(),
+        )
         return self.response_cls(conn.noop(), rejected)
 
     def send_many(self, envelopes):
