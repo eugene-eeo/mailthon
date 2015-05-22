@@ -1,10 +1,8 @@
-from email.mime.base import MIMEBase
-from email.mime.image import MIMEImage
-from email.mime.text import MIMEText
-from email.encoders import encode_base64
+from email.encoders import encode_base64, encode_noop
 from email.utils import quote
 import mimetypes
-import os.path
+from os.path import basename
+from .builder import MIMEBase, MIMEImage, MIMEText
 
 
 class Attachment(object):
@@ -53,38 +51,41 @@ class Image(Attachment):
                          self.mimetype)
 
 
-class Raw(Attachment):
-    default_filetype = 'application/octet_stream'
-    encoder = staticmethod(encode_base64)
+def get_mimetype(filename, fallback):
+    guessed = mimetypes.guess_type(filename, False)[0]
+    if guessed is None:
+        return fallback
+    return guessed
 
-    def __init__(self, mimetype, content, encoding=None, **kwargs):
+
+class Raw(Attachment):
+    def __init__(self, content, mimetype, encoding=None, encoder=encode_noop, **kwargs):
         Attachment.__init__(self, **kwargs)
         self.content = content
         self.mimetype = mimetype
         self.encoding = encoding
+        self.encoder = encoder
 
     def prepare_mime(self):
-        major, subtype = self.mimetype.split('/')
-        mime = MIMEBase(major, subtype)
+        mime = MIMEBase(*self.mimetype.split('/'))
         mime.set_payload(self.content)
         mime['Content-Encoding'] = self.encoding
         self.encoder(mime)
         return mime
 
     @classmethod
-    def from_filename(cls, path):
-        mimetype, encoding = mimetypes.guess_type(path)
-        mimetype = mimetype or cls.default_filetype
+    def from_filename(cls, path, encoding=None, fallback='text/plain'):
+        filename = basename(path)
+        mimetype = get_mimetype(filename, fallback)
 
-        _, filename = os.path.split(path)
+        encoder = encode_base64 if mimetype != 'text/plain' else encode_noop
         disposition = 'attachment; filename="%s"' % quote(filename)
 
         with open(path, 'rb') as handle:
-            return Raw(
-                mimetype=mimetype,
+            return cls(
                 content=handle.read(),
+                mimetype=mimetype,
                 encoding=encoding,
-                headers={
-                    'Content-Disposition': disposition,
-                },
-            )
+                encoder=encoder,
+                headers={'Content-Disposition': disposition},
+                )
