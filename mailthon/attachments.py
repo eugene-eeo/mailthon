@@ -6,12 +6,7 @@ from email.mime.text import MIMEText
 from email.utils import quote
 from os.path import basename
 import mimetypes
-
-
-def inject_headers(headers, mime):
-    for key in headers:
-        del mime[key]
-        mime[key] = headers[key]
+from .helpers import inject_headers
 
 
 class Attachment(object):

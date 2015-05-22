@@ -1,22 +1,9 @@
 from pytest import fixture
-from mailthon.attachments import PlainText, HTML, Image, Raw, inject_headers
-from .mimetest import mimetest, blank
+from mailthon.attachments import PlainText, HTML, Image, Raw
+from .mimetest import mimetest
 
 
 fixture = fixture(scope='class')
-
-
-def test_inject_headers():
-    mime = blank()
-    mime['X-Override'] = 'Else'
-    headers = {
-        'X-Something': 'Something',
-        'X-Override':  'Overridden',
-        }
-    inject_headers(headers, mime)
-
-    assert mime['X-Something'] == 'Something'
-    assert mime['X-Override'] == 'Overridden'
 
 
 class TestPlainText:
