@@ -1,12 +1,12 @@
 from base64 import b64decode
 from email import message_from_string
+from email.message import Message
 
 
 class mimetest:
-    def __init__(self, mime, rebuild=True):
-        if rebuild:
-            mime = message_from_string(mime.as_string())
-        self.mime = mime
+    def __init__(self, mime):
+        string = mime if isinstance(mime, str) else mime.as_string()
+        self.mime = message_from_string(string)
 
     def __getitem__(self, header):
         return self.mime[header]
@@ -29,3 +29,14 @@ class mimetest:
         if self.transfer_encoding == 'base64':
             return b64decode(payload)
         return payload
+
+    @property
+    def parts(self):
+        payload = self.mime.get_payload()
+        if not isinstance(payload, list):
+            raise TypeError
+        return [mimetest(k) for k in payload]
+
+
+def blank():
+    return Message()

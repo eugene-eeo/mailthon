@@ -22,6 +22,7 @@ class Stamp(object):
         headers.update(self.headers)
 
         for key, value in headers.items():
+            del mime[key]
             mime[key] = value
 
 
@@ -33,7 +34,7 @@ class Envelope(object):
         self.sender = self.stamp.sender
         self.receivers = self.stamp.receivers
 
-    def prepare(self):
+    def mime(self):
         mime = MIMEMultipart()
         self.stamp.prepare(mime)
 
@@ -43,4 +44,4 @@ class Envelope(object):
         return mime
 
     def to_string(self):
-        return self.prepare().as_string()
+        return self.mime().as_string()
