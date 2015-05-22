@@ -1,3 +1,4 @@
+# coding=utf8
 from pytest import fixture
 from mailthon.attachments import PlainText, HTML, Image, Raw
 from .mimetest import mimetest
@@ -7,12 +8,12 @@ fixture = fixture(scope='class')
 
 
 class TestPlainText:
-    content = 'some-content 华语'
+    content = u'some-content 华语'
     headers = {
         'X-Something': 'String',
         'X-Something-Else': 'Other String',
     }
-    bytes_content = content.encode('utf8')
+    bytes_content = content.encode('utf-8')
     expected_mimetype = 'text/plain'
 
     @fixture
