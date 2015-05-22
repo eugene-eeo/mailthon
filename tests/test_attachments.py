@@ -1,6 +1,8 @@
 import pytest
 from base64 import b64encode
+from mailthon.envelope import Envelope, Stamp
 from mailthon.attachments import PlainText, HTML, Image, Raw
+from .fixtures import postman
 
 
 class TestPlainText:
@@ -30,6 +32,17 @@ class TestPlainText:
     def test_headers(self, mime):
         for item in self.headers:
             assert mime[item] == self.headers[item]
+
+    def test_sendable(self, attachment, postman):
+        r = postman.send(Envelope(
+            stamp=Stamp(
+                sender='me <me@me.com>',
+                receivers=['him@me.com'],
+                subject='something',
+            ),
+            attachments=[attachment],
+        ))
+        assert r.ok
 
 
 class TestHTML(TestPlainText):

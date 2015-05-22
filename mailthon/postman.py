@@ -28,10 +28,11 @@ class Postman(object):
     transport = SMTP
     response_cls = SendmailResponse
 
-    def __init__(self, server, port, middlewares=()):
+    def __init__(self, server, port, middlewares=(), connect_opts={}):
         self.server = server
         self.port = port
         self.middlewares = list(middlewares)
+        self.connect_opts = connect_opts.copy()
 
     def use(self, middleware):
         """
@@ -52,7 +53,7 @@ class Postman(object):
         the server address and port that has been
         passed to the constructor, in that order.
         """
-        conn = self.transport(self.server, self.port)
+        conn = self.transport(self.server, self.port, **self.connect_opts)
         try:
             conn.ehlo()
             for item in self.middlewares:

@@ -18,3 +18,12 @@ the same time.
             receivers=['doe@jon.com'],
         ))
     >>> assert r.ok
+
+Running the tests::
+
+    $ python -m smtpd -n -c DebuggingServer localhost:8000 > /dev/null &
+    $ MAILTHON_HOST="localhost"
+    $ MAILTHON_PORT="8000"
+    $ MAILTHON_USERNAME=""
+    $ MAILTHON_PASSWORD=""
+    $ py.test

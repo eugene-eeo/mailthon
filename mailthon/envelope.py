@@ -1,3 +1,4 @@
+from email.utils import formatdate
 from email.mime.multipart import MIMEMultipart
 
 
@@ -13,11 +14,14 @@ class Stamp(object):
         return ', '.join(self.receivers)
 
     def prepare(self, mime):
-        mime['Subject'] = self.subject
-        mime['From'] = self.sender
-        mime['To'] = self.receiver_string
+        headers = {
+            'Subject': self.subject,
+            'From': self.sender,
+            'To': self.receiver_string,
+        }
+        headers.update(self.headers)
 
-        for key, value in self.headers.items():
+        for key, value in headers.items():
             mime[key] = value
 
 

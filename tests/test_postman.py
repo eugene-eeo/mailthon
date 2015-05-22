@@ -1,18 +1,25 @@
 import pytest
 from mailthon.api import html
-from mailthon.middleware import Auth
-from .mocks import MyPostman, MockedSMTP
+from .fixtures import postman
+
+
+class Transport(object):
+    def __init__(self, server, port, **kwargs):
+        self.server = server
+        self.port = port
+        self.kwargs = kwargs
+
+    def ehlo(self):
+        pass
+
+    def quit(self):
+        pass
+
+    def login(self, username, password):
+        pass
 
 
 class TestPostman:
-    @pytest.fixture
-    def postman(self):
-        return MyPostman(
-            server='smtp.me.com',
-            port=587,
-            middlewares=[Auth('user', 'pass')],
-            )
-
     @pytest.fixture
     def envelope(self):
         return html(
@@ -23,44 +30,35 @@ class TestPostman:
             encoding='ascii',
         )
 
-    def match_vcr(self, smtp, envelope):
-        sendmail_args = (envelope.sender,
-                         envelope.receivers)
-        assert smtp.vcr == [
-            ('ehlo', ()),
-            ('login', ('user', 'pass')),
-            ('sendmail', sendmail_args),
-            ('noop', ()),
-            ('quit', ()),
-        ]
-        assert smtp.closed
-
     def test_connection(self, postman):
         with postman.connection() as conn:
-            assert conn.server == 'smtp.me.com'
-            assert conn.port == 587
-        assert conn.vcr == [
-            ('ehlo', ()),
-            ('login', ('user', 'pass')),
-            ('quit', ()),
-        ]
+            conn.ehlo()
+            assert conn.noop()[0] == 250
 
     def test_send(self, postman, envelope):
         r = postman.send(envelope)
         assert r.ok
-
-        self.match_vcr(MockedSMTP.instance, envelope)
 
     def test_deliver(self, postman, envelope):
         with postman.connection() as conn:
             response = postman.deliver(conn, envelope)
             assert response.ok
 
-        self.match_vcr(conn, envelope)
-
     def test_use(self, postman):
+        stack = []
+
         @postman.use
         def function(conn):
-            pass
+            stack.append(conn)
 
-        assert function in postman.middlewares
+        with postman.connection() as conn:
+            assert stack == [conn]
+
+    def test_connect_opts(self, postman):
+        postman.transport = Transport
+        postman.connect_opts = {'timeout': 0}
+
+        with postman.connection() as conn:
+            assert conn.server == postman.server
+            assert conn.port == postman.port
+            assert conn.kwargs == postman.connect_opts

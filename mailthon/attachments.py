@@ -1,8 +1,11 @@
 from email.encoders import encode_base64, encode_noop
+from email.message import Message
+from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
+from email.mime.text import MIMEText
 from email.utils import quote
-import mimetypes
 from os.path import basename
-from .builder import MIMEBase, MIMEImage, MIMEText
+import mimetypes
 
 
 class Attachment(object):
@@ -51,15 +54,16 @@ class Image(Attachment):
                          self.mimetype)
 
 
-def get_mimetype(filename, fallback):
-    guessed = mimetypes.guess_type(filename, False)[0]
+def guess_mimetype(filename, fallback):
+    guessed, encoding = mimetypes.guess_type(filename, strict=False)
     if guessed is None:
-        return fallback
-    return guessed
+        return fallback, encoding
+    return guessed, encoding
 
 
 class Raw(Attachment):
-    def __init__(self, content, mimetype, encoding=None, encoder=encode_noop, **kwargs):
+    def __init__(self, content, mimetype, encoding=None,
+                 encoder=encode_noop, **kwargs):
         Attachment.__init__(self, **kwargs)
         self.content = content
         self.mimetype = mimetype
@@ -74,9 +78,9 @@ class Raw(Attachment):
         return mime
 
     @classmethod
-    def from_filename(cls, path, encoding=None, fallback='text/plain'):
+    def from_filename(cls, path, fallback='text/plain'):
         filename = basename(path)
-        mimetype = get_mimetype(filename, fallback)
+        mimetype, encoding = guess_mimetype(filename, fallback)
 
         encoder = encode_base64 if mimetype != 'text/plain' else encode_noop
         disposition = 'attachment; filename="%s"' % quote(filename)
