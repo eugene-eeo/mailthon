@@ -1,5 +1,5 @@
-from email.utils import formatdate
 from email.mime.multipart import MIMEMultipart
+from .attachments import inject_headers
 
 
 class Stamp(object):
@@ -20,10 +20,7 @@ class Stamp(object):
             'To': self.receiver_string,
         }
         headers.update(self.headers)
-
-        for key, value in headers.items():
-            del mime[key]
-            mime[key] = value
+        inject_headers(headers, mime)
 
 
 class Envelope(object):

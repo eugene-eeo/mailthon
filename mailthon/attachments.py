@@ -8,14 +8,18 @@ from os.path import basename
 import mimetypes
 
 
+def inject_headers(headers, mime):
+    for key in headers:
+        del mime[key]
+        mime[key] = headers[key]
+
+
 class Attachment(object):
     def __init__(self, headers=None):
         self.headers = headers or {}
 
     def inject_headers(self, mime):
-        for key in self.headers:
-            del mime[key]
-            mime[key] = self.headers[key]
+        inject_headers(self.headers, mime)
 
     def prepare_mime(self):
         raise NotImplementedError
