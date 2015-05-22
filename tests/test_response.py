@@ -15,7 +15,7 @@ def rejected(request):
 class TestResponse:
     def test_ok(self, reply):
         r = Response(reply)
-        if r.status_code == 250:
+        if reply[0] == 250:
             assert r.ok
         else:
             assert not r.ok
@@ -32,3 +32,11 @@ class TestSendmailResponse:
             assert r.ok
         else:
             assert not r.ok
+
+    def test_rejected(self, reply, rejected):
+        r = SendmailResponse(reply, rejected)
+        if rejected:
+            r2 = r.rejected['addr']
+
+            assert (r2.status_code, r2.message) == rejected['addr']
+            assert not r2.ok
