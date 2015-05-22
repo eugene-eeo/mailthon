@@ -13,8 +13,9 @@ class Attachment(object):
         self.headers = headers or {}
 
     def inject_headers(self, mime):
-        for key, value in self.headers.items():
-            mime[key] = value
+        for key in self.headers:
+            del mime[key]
+            mime[key] = self.headers[key]
 
     def prepare_mime(self):
         raise NotImplementedError
