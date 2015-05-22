@@ -55,7 +55,7 @@ class Image(Attachment):
                          self.mimetype)
 
 
-def guess_mimetype(filename, fallback):
+def _guess(filename, fallback):
     guessed, encoding = mimetypes.guess_type(filename, strict=False)
     if guessed is None:
         return fallback, encoding
@@ -79,9 +79,9 @@ class Raw(Attachment):
         return mime
 
     @classmethod
-    def from_filename(cls, path, fallback='text/plain'):
+    def from_filename(cls, path, default='application/octet-stream'):
         filename = basename(path)
-        mimetype, encoding = guess_mimetype(filename, fallback)
+        mimetype, encoding = _guess(filename, default)
 
         encoder = encode_base64 if mimetype != 'text/plain' else encode_noop
         disposition = 'attachment; filename="%s"' % quote(filename)
