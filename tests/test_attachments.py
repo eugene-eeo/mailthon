@@ -3,6 +3,9 @@ from mailthon.attachments import PlainText, HTML, Image, Raw
 from .mimetest import mimetest
 
 
+fixture = fixture(scope='class')
+
+
 class TestPlainText:
     content = 'some-content 华语'
     headers = {
@@ -13,8 +16,11 @@ class TestPlainText:
     expected_mimetype = 'text/plain'
 
     @fixture
-    def mime(self):
-        attachment = PlainText(self.content, headers=self.headers)
+    def attachment(self):
+        return PlainText(self.content, headers=self.headers)
+
+    @fixture
+    def mime(self, attachment):
         return mimetest(attachment.mime())
 
     def test_mimetype(self, mime):
@@ -32,9 +38,8 @@ class TestHTML(TestPlainText):
     expected_mimetype = 'text/html'
 
     @fixture
-    def mime(self):
-        attachment = HTML(self.content, headers=self.headers)
-        return mimetest(attachment.mime())
+    def attachment(self):
+        return HTML(self.content, headers=self.headers)
 
 
 class TestImage(TestPlainText):
@@ -45,20 +50,19 @@ class TestImage(TestPlainText):
     expected_mimetype = 'image/gif'
 
     @fixture
-    def mime(self):
-        image = Image(
+    def attachment(self):
+        return Image(
             content=self.content,
             headers=self.headers,
         )
-        return mimetest(image.mime())
 
 
 class TestRaw(TestImage):
     @fixture
-    def mime(self):
-        attachment = Raw.from_filename('tests/assets/spacer"".gif')
-        attachment.headers.update(self.headers)
-        return mimetest(attachment.mime())
+    def attachment(self):
+        raw = Raw.from_filename('tests/assets/spacer"".gif')
+        raw.headers.update(self.headers)
+        return raw
 
     def test_content_disposition(self, mime):
         expected = r'attachment; filename="spacer\"\".gif"'
