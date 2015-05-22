@@ -23,6 +23,8 @@ class Postman(object):
     :param port: Port to connect to.
     :param middlewares: An iterable of middleware that
         will be used by the Postman.
+    :param options: Dictionary of options to be passed
+        to the underlying transport.
     """
 
     transport = SMTP
