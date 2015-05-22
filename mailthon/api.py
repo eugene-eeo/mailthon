@@ -13,10 +13,10 @@ def html(subject, sender, receivers, content, encoding='utf8'):
     )
 
 
-def postman(server, port=587, auth=(None, None), force_tls=False):
+def postman(host, port=587, auth=(None, None), force_tls=False):
     username, password = auth
     return Postman(
-        server=server,
+        host=host,
         port=port,
         middlewares=[
             TLS(force=force_tls),

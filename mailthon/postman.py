@@ -19,7 +19,7 @@ class Postman(object):
     ``response_cls`` class variables to tweak the
     transport used and the response class, respectively.
 
-    :param server: The address to a server.
+    :param host: The address to a server.
     :param port: Port to connect to.
     :param middlewares: An iterable of middleware that
         will be used by the Postman.
@@ -28,11 +28,11 @@ class Postman(object):
     transport = SMTP
     response_cls = SendmailResponse
 
-    def __init__(self, server, port, middlewares=(), connect_opts={}):
-        self.server = server
+    def __init__(self, host, port, middlewares=(), options={}):
+        self.host = host
         self.port = port
         self.middlewares = list(middlewares)
-        self.connect_opts = connect_opts.copy()
+        self.options = options or {}
 
     def use(self, middleware):
         """
@@ -53,7 +53,7 @@ class Postman(object):
         the server address and port that has been
         passed to the constructor, in that order.
         """
-        conn = self.transport(self.server, self.port, **self.connect_opts)
+        conn = self.transport(self.host, self.port, **self.options)
         try:
             conn.ehlo()
             for item in self.middlewares:
