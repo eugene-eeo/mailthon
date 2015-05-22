@@ -43,11 +43,11 @@ class TestHTML(TestPlainText):
 
 
 class TestImage(TestPlainText):
+    expected_mimetype = 'image/gif'
+
     with open('tests/assets/spacer"".gif', 'rb') as handle:
         bytes_content = handle.read()
         content = bytes_content
-
-    expected_mimetype = 'image/gif'
 
     @fixture
     def attachment(self):
