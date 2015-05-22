@@ -52,8 +52,8 @@ class TestEnvelope:
             ],
         )
 
-    def test_payload(self, envelope):
-        mime = mimetest(envelope.mime())
+    def test_as_string(self, envelope):
+        mime = mimetest(envelope.to_string())
         assert [g.payload for g in mime.parts] == [b'hi!', b'bye!']
 
     def test_headers(self, envelope):
@@ -62,7 +62,3 @@ class TestEnvelope:
         assert mime['From'] == envelope.sender
         assert mime['To'] == envelope.stamp.receiver_string
         assert mime['Subject'] == envelope.stamp.subject
-
-    def test_to_string(self, envelope):
-        mime = mimetest(envelope.to_string())
-        assert [g.payload for g in mime.parts] == [b'hi!', b'bye!']
