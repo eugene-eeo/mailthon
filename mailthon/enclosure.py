@@ -25,7 +25,7 @@ class Enclosure(object):
 
 
 class PlainText(Enclosure):
-    filetype = 'plain'
+    subtype = 'plain'
 
     def __init__(self, content, encoding='utf-8', **kwargs):
         Enclosure.__init__(self, **kwargs)
@@ -34,12 +34,12 @@ class PlainText(Enclosure):
 
     def prepare_mime(self):
         return MIMEText(self.content,
-                        self.filetype,
+                        self.subtype,
                         self.encoding)
 
 
 class HTML(PlainText):
-    filetype = 'html'
+    subtype = 'html'
 
 
 class Image(Enclosure):
