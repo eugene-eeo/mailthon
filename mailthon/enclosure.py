@@ -1,7 +1,6 @@
 from email.encoders import encode_base64, encode_noop
 from email.message import Message
 from email.mime.base import MIMEBase
-from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
 from os.path import basename
 from .helpers import inject_headers, guess
@@ -42,18 +41,7 @@ class HTML(PlainText):
     subtype = 'html'
 
 
-class Image(Enclosure):
-    def __init__(self, content, mimetype=None, **kwargs):
-        Enclosure.__init__(self, **kwargs)
-        self.content = content
-        self.mimetype = mimetype
-
-    def prepare_mime(self):
-        return MIMEImage(self.content,
-                         self.mimetype)
-
-
-class Raw(Enclosure):
+class Binary(Enclosure):
     def __init__(self, content, mimetype, encoding=None,
                  encoder=encode_base64, **kwargs):
         Enclosure.__init__(self, **kwargs)
@@ -70,22 +58,17 @@ class Raw(Enclosure):
         return mime
 
 
-class Attachment(Raw):
+class Attachment(Binary):
     def __init__(self, path, headers=()):
         self.path = path
-        self.headers = dict(headers)
+        self.mimetype, self.encoding = guess(path)
+        self.encoder = encode_base64
+        self.headers = dict([
+            content_disposition('attachment', basename(path))
+        ])
+        self.headers.update(headers)
 
-    def prepare_mime(self):
-        mimetype, encoding = guess(self.path)
-        headers = [
-            content_disposition('attachment', basename(self.path))
-        ]
-
+    @property
+    def content(self):
         with open(self.path, 'rb') as handle:
-            raw = Raw(
-                content=handle.read(),
-                mimetype=mimetype,
-                encoding=encoding,
-                headers=headers,
-            )
-            return raw.mime()
+            return handle.read()
