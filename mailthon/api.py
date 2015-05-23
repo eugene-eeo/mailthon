@@ -26,12 +26,13 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
 
 def postman(host, port=587, auth=(None, None),
             force_tls=False, options={}):
+    username, password = auth
     return Postman(
         host=host,
         port=port,
         options=options,
         middlewares=[
-            TLS(force_tls=force_tls),
+            TLS(force=force_tls),
             Auth(username, password),
         ],
     )
