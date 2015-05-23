@@ -2,24 +2,36 @@ from mailthon.attachments import HTML
 from mailthon.envelope import Envelope, Stamp
 from mailthon.postman import Postman
 from mailthon.middleware import TLS, Auth
+import mailthon.headers as headers
 
 
-def html(subject, sender, receivers, content, encoding='utf8'):
+def email(sender=None, receivers=(), cc=(), bcc=(),
+          subject=None, content=None, encoding='utf8',
+          attachments=()):
+
+    html = [HTML(content, encoding)]
+    files = [Raw.from_filename(k) for k in attachments]
     return Envelope(
-        stamp=Stamp(subject, sender, receivers),
-        attachments=[
-            HTML(content, encoding=encoding),
-        ],
+        stamp=Stamp(
+            sender=sender,
+            receivers=receivers,
+            headers=[
+                headers.Cc(*cc),
+                headers.Bcc(*bcc),
+            ],
+        ),
+        attachments=html + files,
     )
 
 
-def postman(host, port=587, auth=(None, None), force_tls=False):
-    username, password = auth
+def postman(host, port=587, auth=(None, None),
+            force_tls=False, options={}):
     return Postman(
         host=host,
         port=port,
+        options=options,
         middlewares=[
-            TLS(force=force_tls),
+            TLS(force_tls=force_tls),
             Auth(username, password),
         ],
     )

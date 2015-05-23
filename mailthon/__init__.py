@@ -1,1 +1,1 @@
-from mailthon.api import html, postman
+from mailthon.api import email, postman

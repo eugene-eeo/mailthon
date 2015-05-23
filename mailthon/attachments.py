@@ -3,15 +3,14 @@ from email.message import Message
 from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
-from email.utils import quote
 from os.path import basename
-import mimetypes
-from .helpers import inject_headers
+from .helpers import inject_headers, guess
+from .headers import ContentDisposition
 
 
 class Attachment(object):
-    def __init__(self, headers=None):
-        self.headers = headers or {}
+    def __init__(self, headers=()):
+        self.headers = dict(headers)
 
     def inject_headers(self, mime):
         inject_headers(self.headers, mime)
@@ -54,13 +53,6 @@ class Image(Attachment):
                          self.mimetype)
 
 
-def _guess(filename, fallback):
-    guessed, encoding = mimetypes.guess_type(filename, strict=False)
-    if guessed is None:
-        return fallback, encoding
-    return guessed, encoding
-
-
 class Raw(Attachment):
     def __init__(self, content, mimetype, encoding=None,
                  encoder=encode_noop, **kwargs):
@@ -80,10 +72,12 @@ class Raw(Attachment):
     @classmethod
     def from_filename(cls, path, default='application/octet-stream'):
         filename = basename(path)
-        mimetype, encoding = _guess(filename, default)
+        mimetype, encoding = guess(filename, default)
 
         encoder = encode_base64 if mimetype != 'text/plain' else encode_noop
-        disposition = 'attachment; filename="%s"' % quote(filename)
+        headers = [
+            ContentDisposition('attachment', filename)
+        ]
 
         with open(path, 'rb') as handle:
             return cls(
@@ -91,5 +85,5 @@ class Raw(Attachment):
                 mimetype=mimetype,
                 encoding=encoding,
                 encoder=encoder,
-                headers={'Content-Disposition': disposition},
+                headers=headers,
                 )

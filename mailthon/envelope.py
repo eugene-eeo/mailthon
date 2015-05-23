@@ -4,11 +4,11 @@ from .attachments import inject_headers
 
 
 class Stamp(object):
-    def __init__(self, subject, sender, receivers, headers=None):
+    def __init__(self, subject, sender, receivers, headers=()):
         self.subject = subject
         self.sender = sender
         self.receivers = receivers
-        self.headers = headers or {}
+        self.headers = dict(headers)
 
     @property
     def receiver_string(self):
