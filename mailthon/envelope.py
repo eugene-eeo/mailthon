@@ -1,3 +1,4 @@
+from email.utils import formatdate
 from email.mime.multipart import MIMEMultipart
 from .attachments import inject_headers
 
@@ -18,6 +19,7 @@ class Stamp(object):
             'Subject': self.subject,
             'From': self.sender,
             'To': self.receiver_string,
+            'Date': formatdate(localtime=True),
         }
         headers.update(self.headers)
         inject_headers(headers, mime)
@@ -28,8 +30,13 @@ class Envelope(object):
         self.stamp = stamp
         self.attachments = attachments
 
-        self.sender = self.stamp.sender
-        self.receivers = self.stamp.receivers
+    @property
+    def sender(self):
+        return self.stamp.sender
+
+    @property
+    def receivers(self):
+        return self.stamp.receivers
 
     def mime(self):
         mime = MIMEMultipart()
