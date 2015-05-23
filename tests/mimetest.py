@@ -5,8 +5,10 @@ from email.message import Message
 
 class mimetest:
     def __init__(self, mime):
-        string = mime if isinstance(mime, str) else mime.as_string()
-        self.mime = message_from_string(string)
+        if not isinstance(mime, str):
+            mime = mime.as_string()
+        mime = message_from_string(mime)
+        self.mime = mime
 
     def __getitem__(self, header):
         return self.mime[header]
