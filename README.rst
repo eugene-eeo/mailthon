@@ -10,7 +10,7 @@ the same time.
 .. code-block:: python
 
     >>> from mailthon import postman, email
-    >>> p = postman(host='smtp.google.com', auth=('username', 'password'))
+    >>> p = postman(host='smtp.gmail.com', auth=('username', 'password'))
     >>> r = p.send(email(
             content='<p>Hello 世界</p>',
             subject='Hello world',
