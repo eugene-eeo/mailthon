@@ -1,6 +1,7 @@
 import pytest
 from mailthon.enclosure import PlainText
 from mailthon.envelope import Envelope, Stamp
+from mailthon import headers
 from .mimetest import mimetest, blank
 
 
@@ -39,6 +40,21 @@ class TestStamp:
         stamp.prepare(mime)
         assert mime['To'] == 'her@mail.com'
         assert mime['From'] == 'Her <her@mail.com>'
+
+    def test_init_with_list(self):
+        stamp = Stamp(
+            subject='Subject',
+            sender='Me <me@mail.com>',
+            receivers=['someone'],
+            headers=[
+                headers.date('this'),
+                headers.content_id('filename'),
+            ]
+        )
+        mime = blank()
+        stamp.prepare(mime)
+        assert mime['Date'] == 'this'
+        assert mime['Content-ID'] == '<filename>'
 
 
 class TestEnvelope:
