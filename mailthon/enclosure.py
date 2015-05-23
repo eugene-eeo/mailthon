@@ -5,7 +5,7 @@ from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
 from os.path import basename
 from .helpers import inject_headers, guess
-from .headers import ContentDisposition
+from .headers import content_disposition
 
 
 class Enclosure(object):
@@ -76,7 +76,7 @@ class Raw(Enclosure):
 
         encoder = encode_base64 if mimetype != 'text/plain' else encode_noop
         headers = [
-            ContentDisposition('attachment', filename)
+            content_disposition('attachment', filename),
         ]
 
         with open(path, 'rb') as handle:

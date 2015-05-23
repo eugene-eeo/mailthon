@@ -1,39 +1,26 @@
-from email.utils import quote
+from email.utils import quote, formatdate
 
 
-class Header(object):
-    key = None
-
-    def __init__(self, value):
-        self.value = value
-
-    def __iter__(self):
-        yield self.key
-        yield self.value
+def cc(*values):
+    yield 'Cc'
+    yield ', '.join(values)
 
 
-class MultiHeader(Header):
-    def __init__(self, *values):
-        self.value = ', '.join(values)
+def bcc(*values):
+    yield 'Bcc'
+    yield ', '.join(values)
 
 
-class Cc(MultiHeader):
-    key = 'Cc'
+def content_id(filename):
+    yield 'Content-ID'
+    yield '<%s>' % filename
 
 
-class Bcc(MultiHeader):
-    key = 'Bcc'
+def content_disposition(disposition, filename):
+    yield 'Content-Disposition'
+    yield '%s; filename="%s"' % (disposition, quote(filename))
 
 
-class ContentID(Header):
-    key = 'Content-ID'
-
-    def __init__(self, value):
-        self.value = '<%s>' % value
-
-
-class ContentDisposition(Header):
-    key = 'Content-Disposition'
-
-    def __init__(self, disposition, filename):
-        self.value = '%s; filename="%s"' % (disposition, quote(filename))
+def date(time=None):
+    yield 'Date'
+    yield time or formatdate(localtime=True)
