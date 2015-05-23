@@ -1,6 +1,6 @@
 from email.utils import formatdate
 from email.mime.multipart import MIMEMultipart
-from .attachments import inject_headers
+from .helpers import inject_headers
 
 
 class Stamp(object):
@@ -26,23 +26,17 @@ class Stamp(object):
 
 
 class Envelope(object):
-    def __init__(self, stamp, attachments):
+    def __init__(self, stamp, enclosure):
         self.stamp = stamp
-        self.attachments = attachments
-
-    @property
-    def sender(self):
-        return self.stamp.sender
-
-    @property
-    def receivers(self):
-        return self.stamp.receivers
+        self.enclosure = enclosure
+        self.sender = stamp.sender
+        self.receivers = stamp.receivers
 
     def mime(self):
         mime = MIMEMultipart()
         self.stamp.prepare(mime)
 
-        for item in self.attachments:
+        for item in self.enclosure:
             mime.attach(item.mime())
 
         return mime

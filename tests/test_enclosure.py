@@ -1,6 +1,6 @@
 # coding=utf8
 from pytest import fixture
-from mailthon.attachments import PlainText, HTML, Image, Raw
+from mailthon.enclosure import PlainText, HTML, Image, Raw
 from .mimetest import mimetest
 
 

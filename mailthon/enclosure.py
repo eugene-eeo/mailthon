@@ -8,7 +8,7 @@ from .helpers import inject_headers, guess
 from .headers import ContentDisposition
 
 
-class Attachment(object):
+class Enclosure(object):
     def __init__(self, headers=()):
         self.headers = dict(headers)
 
@@ -24,11 +24,11 @@ class Attachment(object):
         return mime
 
 
-class PlainText(Attachment):
+class PlainText(Enclosure):
     filetype = 'plain'
 
     def __init__(self, content, encoding='utf-8', **kwargs):
-        Attachment.__init__(self, **kwargs)
+        Enclosure.__init__(self, **kwargs)
         self.content = content
         self.encoding = encoding
 
@@ -42,9 +42,9 @@ class HTML(PlainText):
     filetype = 'html'
 
 
-class Image(Attachment):
+class Image(Enclosure):
     def __init__(self, content, mimetype=None, **kwargs):
-        Attachment.__init__(self, **kwargs)
+        Enclosure.__init__(self, **kwargs)
         self.content = content
         self.mimetype = mimetype
 
@@ -53,10 +53,10 @@ class Image(Attachment):
                          self.mimetype)
 
 
-class Raw(Attachment):
+class Raw(Enclosure):
     def __init__(self, content, mimetype, encoding=None,
                  encoder=encode_noop, **kwargs):
-        Attachment.__init__(self, **kwargs)
+        Enclosure.__init__(self, **kwargs)
         self.content = content
         self.mimetype = mimetype
         self.encoding = encoding

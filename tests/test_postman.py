@@ -2,7 +2,7 @@ from pytest import fixture
 from mock import MagicMock, call
 from mailthon.postman import Postman
 from mailthon.envelope import Envelope, Stamp
-from mailthon.attachments import PlainText
+from mailthon.enclosure import PlainText
 
 
 @fixture
@@ -21,7 +21,7 @@ def envelope():
             receivers=['him@mail.com'],
             subject='Subject',
         ),
-        attachments=[
+        enclosure=[
             PlainText('Hi!'),
         ],
     )

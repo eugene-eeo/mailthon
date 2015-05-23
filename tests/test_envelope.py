@@ -1,5 +1,5 @@
 import pytest
-from mailthon.attachments import PlainText
+from mailthon.enclosure import PlainText
 from mailthon.envelope import Envelope, Stamp
 from .mimetest import mimetest, blank
 
@@ -46,7 +46,7 @@ class TestEnvelope:
     def envelope(self, stamp):
         return Envelope(
             stamp=stamp,
-            attachments=[
+            enclosure=[
                 PlainText('hi!'),
                 PlainText('bye!'),
             ],
