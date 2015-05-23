@@ -1,4 +1,4 @@
-from mailthon.enclosure import HTML
+from mailthon.enclosure import HTML, Attachment
 from mailthon.envelope import Envelope, Stamp
 from mailthon.postman import Postman
 from mailthon.middleware import TLS, Auth
@@ -10,7 +10,7 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
           attachments=()):
 
     html = [HTML(content, encoding)]
-    files = [Raw.from_filename(k) for k in attachments]
+    files = [Attachment(k) for k in attachments]
     return Envelope(
         stamp=Stamp(
             sender=sender,

@@ -69,21 +69,23 @@ class Raw(Enclosure):
         self.encoder(mime)
         return mime
 
-    @classmethod
-    def from_filename(cls, path, default='application/octet-stream'):
-        filename = basename(path)
-        mimetype, encoding = guess(filename, default)
 
-        encoder = encode_base64 if mimetype != 'text/plain' else encode_noop
+class Attachment(Raw):
+    def __init__(self, path, headers=()):
+        self.path = path
+        self.headers = dict(headers)
+
+    def prepare_mime(self):
+        mimetype, encoding = guess(self.path)
         headers = [
-            content_disposition('attachment', filename),
+            content_disposition('attachment', basename(self.path))
         ]
 
-        with open(path, 'rb') as handle:
-            return cls(
+        with open(self.path, 'rb') as handle:
+            raw = Raw(
                 content=handle.read(),
                 mimetype=mimetype,
                 encoding=encoding,
-                encoder=encoder,
                 headers=headers,
-                )
+            )
+            return raw.mime()

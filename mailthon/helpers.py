@@ -7,7 +7,7 @@ def inject_headers(headers, mime):
         mime[key] = headers[key]
 
 
-def guess(filename, fallback):
+def guess(filename, fallback='application/octet-stream'):
     guessed, encoding = mimetypes.guess_type(filename, strict=False)
     if guessed is None:
         return fallback, encoding
