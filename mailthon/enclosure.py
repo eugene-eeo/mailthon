@@ -55,7 +55,7 @@ class Image(Enclosure):
 
 class Raw(Enclosure):
     def __init__(self, content, mimetype, encoding=None,
-                 encoder=encode_noop, **kwargs):
+                 encoder=encode_base64, **kwargs):
         Enclosure.__init__(self, **kwargs)
         self.content = content
         self.mimetype = mimetype
