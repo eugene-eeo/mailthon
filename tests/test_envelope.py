@@ -43,8 +43,7 @@ class TestStamp:
 
     def test_init_with_list(self):
         stamp = Stamp(
-            subject='Subject',
-            sender='Me <me@mail.com>',
+            sender='sender',
             receivers=['someone'],
             headers=[
                 headers.date('this'),

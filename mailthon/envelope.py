@@ -4,10 +4,10 @@ from .helpers import inject_headers
 
 
 class Stamp(object):
-    def __init__(self, subject, sender, receivers, headers=()):
-        self.subject = subject
+    def __init__(self, sender, receivers, subject=None, headers=()):
         self.sender = sender
         self.receivers = receivers
+        self.subject = subject
         self.headers = dict(headers)
 
     @property
