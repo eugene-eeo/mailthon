@@ -1,6 +1,6 @@
 # coding=utf8
 from pytest import fixture
-from mailthon.enclosure import PlainText, HTML, Attachment
+from mailthon.enclosure import PlainText, HTML, Binary, Attachment
 from .mimetest import mimetest
 
 
@@ -43,13 +43,23 @@ class TestHTML(TestPlainText):
         return HTML(self.content, headers=self.headers)
 
 
-class TestAttachment(TestPlainText):
+class TestBinary(TestPlainText):
     expected_mimetype = 'image/gif'
 
     with open('tests/assets/spacer"".gif', 'rb') as handle:
         bytes_content = handle.read()
         content = bytes_content
 
+    @fixture
+    def enclosure(self):
+        return Binary(
+            content=self.content,
+            mimetype=self.expected_mimetype,
+            headers=self.headers,
+        )
+
+
+class TestAttachment(TestBinary):
     @fixture
     def enclosure(self):
         raw = Attachment('tests/assets/spacer"".gif')
