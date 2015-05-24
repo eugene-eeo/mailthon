@@ -9,7 +9,6 @@
 
 from mailthon.enclosure import HTML, Attachment
 from mailthon.envelope import Envelope
-from mailthon.stamp import Stamp
 from mailthon.postman import Postman
 from mailthon.middleware import TLS, Auth
 import mailthon.headers as headers
@@ -29,12 +28,12 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
     html = [HTML(content, encoding)]
     files = [Attachment(k) for k in attachments]
     return Envelope(
-        stamp=Stamp([
+        headers=[
             headers.From(sender),
             headers.To(*receivers),
             headers.Cc(*cc),
             headers.Bcc(*bcc),
-        ]),
+        ],
         enclosure=(html + files),
     )
 

@@ -17,7 +17,7 @@ class Info(object):
 
 class Stamp(object):
     def __init__(self, headers=()):
-        self.headers = headers
+        self.headers = tuple(headers)
 
     def prepare(self, mime):
         info = Info(mime)

@@ -65,9 +65,7 @@ class Attachment(Binary):
         self.path = path
         self.mimetype, self.encoding = guess(path)
         self.encoder = encode_base64
-        heads = [
-            ContentDisposition('attachment', basename(path))
-        ]
+        heads = [ContentDisposition('attachment', basename(path))]
         heads.extend(headers)
         self.stamp = Stamp(heads)
 

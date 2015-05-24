@@ -1,15 +1,19 @@
 import pytest
 from mailthon.enclosure import PlainText
 from mailthon.envelope import Envelope
+from mailthon.headers import From, To, Subject
 from .mimetest import mimetest
-from .test_stamp import stamp
 
 
 class TestEnvelope:
     @pytest.fixture
-    def envelope(self, stamp):
+    def envelope(self):
         return Envelope(
-            stamp=stamp,
+            headers=[
+                From('Me <me@mail.com>'),
+                To('him@mail.com', 'them@mail.com'),
+                Subject('subject'),
+            ],
             enclosure=[
                 PlainText('hi!'),
                 PlainText('bye!'),

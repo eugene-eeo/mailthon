@@ -1,6 +1,5 @@
 from pytest import fixture
 from mock import Mock, call
-from mailthon.stamp import Stamp
 from mailthon.postman import Postman
 from mailthon.envelope import Envelope
 from mailthon.enclosure import PlainText
@@ -19,11 +18,11 @@ def smtp():
 @fixture
 def envelope():
     env = Envelope(
-        stamp=Stamp([
+        headers=[
             headers.From('Me <me@mail.com>'),
             headers.To('him@mail.com'),
             headers.Subject('Subject'),
-        ]),
+        ],
         enclosure=[
             PlainText('Hi!'),
         ],
