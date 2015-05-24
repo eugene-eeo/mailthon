@@ -8,18 +8,20 @@ class Headers(dict):
 
     @property
     def sender(self):
-        to_fetch = ['Sender', 'From']
-        if self.resent:
-            to_fetch = ['Resent-Sender', 'Resent-From']
+        to_fetch = (
+            ['Resent-Sender', 'Resent-From'] if self.resent else
+            ['Sender', 'From']
+        )
         for item in to_fetch:
             if item in self:
                 return self[item]
 
     @property
     def receivers(self):
-        attrs = ['To', 'Cc', 'Bcc']
-        if self.resent:
-            attrs = ['Resent-To', 'Resent-Cc', 'Resent-Bcc']
+        attrs = (
+            ['Resent-To', 'Resent-Cc', 'Resent-Bcc'] if self.resent else
+            ['To', 'Cc', 'Bcc']
+        )
         addrs = (f for f in (self.get(item, []) for item in attrs) if f)
         return [a[1] for a in getaddresses(addrs)]
 
