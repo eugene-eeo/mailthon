@@ -28,14 +28,12 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
     html = [HTML(content, encoding)]
     files = [Attachment(k) for k in attachments]
     return Envelope(
-        stamp=Stamp(
-            sender=sender,
-            receivers=receivers,
-            headers=[
-                headers.cc(*cc),
-                headers.bcc(*bcc),
-            ],
-        ),
+        stamp=Stamp([
+            headers.From(sender),
+            headers.To(*receivers),
+            headers.Cc(*cc),
+            headers.Bcc(*bcc),
+        ]),
         enclosure=(html + files),
     )
 

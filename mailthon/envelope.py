@@ -1,46 +1,45 @@
 from email.utils import formatdate, make_msgid
 from email.mime.multipart import MIMEMultipart
 from .helpers import inject_headers
+from .headers import date, message_id
 
 
 class Stamp(object):
-    def __init__(self, sender, receivers, subject=None, headers=()):
-        self.sender = sender
-        self.receivers = receivers
-        self.subject = subject
-        self.headers = dict(headers)
+    def __init__(self, headers=()):
+        self.headers = headers
 
-    @property
-    def receiver_string(self):
-        return ', '.join(self.receivers)
+    def prepare(self, info):
+        for item in self.headers:
+            item.update(info)
+        info.inject_headers()
 
-    def prepare(self, mime):
-        headers = {
-            'Subject': self.subject,
-            'From': self.sender,
-            'To': self.receiver_string,
-            'Date': formatdate(localtime=True),
-            'Message-ID': make_msgid(),
-        }
-        headers.update(self.headers)
-        inject_headers(headers, mime)
+
+class Info(object):
+    def __init__(self, mime):
+        self.mime = mime
+        self.sender = None
+        self.receivers = []
+        self.headers = {}
+
+    def inject_headers(self):
+        inject_headers(self.headers, self.mime)
+
+    def string(self):
+        return self.mime.as_string()
 
 
 class Envelope(object):
     def __init__(self, stamp, enclosure):
         self.stamp = stamp
         self.enclosure = enclosure
-        self.sender = stamp.sender
-        self.receivers = stamp.receivers
 
     def mime(self):
         mime = MIMEMultipart()
-        self.stamp.prepare(mime)
-
         for item in self.enclosure:
             mime.attach(item.mime())
-
         return mime
 
-    def to_string(self):
-        return self.mime().as_string()
+    def info(self):
+        info = Info(self.mime())
+        self.stamp.prepare(info)
+        return info

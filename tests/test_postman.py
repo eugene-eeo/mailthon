@@ -1,31 +1,40 @@
 from pytest import fixture
-from mock import MagicMock, call
+from mock import Mock, call
 from mailthon.postman import Postman
 from mailthon.envelope import Envelope, Stamp
 from mailthon.enclosure import PlainText
+from mailthon import headers
 
 
 @fixture
 def smtp():
-    smtp = MagicMock()
+    smtp = Mock()
     smtp.return_value = smtp
     smtp.noop.return_value = (250, 'ok')
+    smtp.sendmail.return_value = {}
     return smtp
 
 
 @fixture
 def envelope():
     env = Envelope(
-        stamp=Stamp(
-            sender='Me <me@mail.com>',
-            receivers=['him@mail.com'],
-            subject='Subject',
-        ),
+        stamp=Stamp([
+            headers.From('Me <me@mail.com>'),
+            headers.To('him@mail.com'),
+            headers.Subject('Subject'),
+        ]),
         enclosure=[
             PlainText('Hi!'),
         ],
     )
-    env.to_string = MagicMock(return_value='--email--')
+    info = env.info()
+    mocked_info = Mock(
+        sender=info.sender,
+        receivers=info.receivers,
+    )
+    mocked_info.return_value = mocked_info
+    mocked_info.string.return_value = '--email--'
+    env.info = mocked_info
     return env
 
 
@@ -58,9 +67,9 @@ class TestPostman:
             r = postman.deliver(conn, envelope)
 
             calls = [
-                call.sendmail(envelope.sender,
-                              envelope.receivers,
-                              envelope.to_string()),
+                call.sendmail('Me <me@mail.com>',
+                              ['him@mail.com'],
+                              '--email--'),
                 call.noop(),
             ]
 
@@ -68,7 +77,7 @@ class TestPostman:
             assert r.ok
 
     def test_send(self, postman, smtp, envelope):
-        postman.deliver = MagicMock(return_value=1)
+        postman.deliver = Mock(return_value=1)
         assert postman.send(envelope) == 1
         assert postman.deliver.mock_calls == [
             call(smtp, envelope)
