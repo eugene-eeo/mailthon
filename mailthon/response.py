@@ -44,10 +44,9 @@ class SendmailResponse(Response):
 
     def __init__(self, pair, rejected):
         Response.__init__(self, pair)
-        self.rejected = {
-            addr: Response(pair)
-            for addr, pair in rejected.items()
-        }
+        self.rejected = {}
+        for addr, pair in rejected.items():
+            self.rejected[addr] = Response(pair)
 
     @property
     def ok(self):
