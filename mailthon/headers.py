@@ -1,4 +1,4 @@
-from email.utils import quote, formatdate
+from email.utils import quote, formatdate, make_msgid
 
 
 def cc(*values):
@@ -24,3 +24,8 @@ def content_disposition(disposition, filename):
 def date(time=None):
     yield 'Date'
     yield time or formatdate(localtime=True)
+
+
+def message_id(string=None, idstring=None):
+    yield 'Message-ID'
+    yield string or make_msgid(idstring)

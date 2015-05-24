@@ -7,6 +7,8 @@ from .mimetest import mimetest
 
 if version_info[0] == 3:
     unicode = str
+else:
+    unicode = lambda k: k.decode('utf8')
 
 
 fixture = fixture(scope='class')

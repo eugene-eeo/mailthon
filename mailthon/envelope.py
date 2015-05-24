@@ -1,4 +1,4 @@
-from email.utils import formatdate
+from email.utils import formatdate, make_msgid
 from email.mime.multipart import MIMEMultipart
 from .helpers import inject_headers
 
@@ -20,6 +20,7 @@ class Stamp(object):
             'From': self.sender,
             'To': self.receiver_string,
             'Date': formatdate(localtime=True),
+            'Message-ID': make_msgid(),
         }
         headers.update(self.headers)
         inject_headers(headers, mime)
