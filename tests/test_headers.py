@@ -58,6 +58,14 @@ class TestResentHeaders(TestNotResentHeaders):
     def test_sender(self, headers):
         assert headers.sender == 'rfrom@mail.com'
 
+    def test_resent_sender(self, headers):
+        headers['Resent-Sender'] = 'rsender@mail.com'
+        assert headers.sender == 'rsender@mail.com'
+
+    def test_resent_sender_without_senders(self, headers):
+        del headers['Resent-From']
+        assert headers.sender is None
+
     def test_receivers(self, headers):
         assert set(headers.receivers) == set([
             'rto@mail.com',

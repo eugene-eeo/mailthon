@@ -10,7 +10,7 @@ class Headers(dict):
     def sender(self):
         to_fetch = ['Sender', 'From']
         if self.resent:
-            to_fetch = ['Resent-Sender', 'Resent-From'] + to_fetch
+            to_fetch = ['Resent-Sender', 'Resent-From']
         for item in to_fetch:
             if item in self:
                 return self[item]
