@@ -62,9 +62,11 @@ def content_id(filename):
     yield '<%s>' % filename
 
 
-def content_disposition(disposition, filename):
-    yield 'Content-Disposition'
-    yield '%s; filename="%s"' % (disposition, quote(filename))
+class ContentDisposition(Header):
+    key = 'Content-Disposition'
+
+    def __init__(self, disposition, filename):
+        self.value = '%s; filename="%s"' % (disposition, quote(filename))
 
 
 def date(time=None):

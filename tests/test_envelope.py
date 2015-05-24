@@ -1,29 +1,8 @@
 import pytest
 from mailthon.enclosure import PlainText
-from mailthon.envelope import Envelope, Stamp, Info
-from mailthon import headers
-from .mimetest import mimetest, blank
-
-
-@pytest.fixture
-def stamp():
-    return Stamp([
-        headers.From('Me <me@mail.com>'),
-        headers.To('him@mail.com', 'them@mail.com'),
-        headers.Subject('subject'),
-        headers.Header('X-This-That', 'Something'),
-    ])
-
-
-class TestStamp:
-    def test_prepare(self, stamp):
-        info = Info(blank())
-        stamp.prepare(info)
-
-        assert info.headers['To'] == 'him@mail.com, them@mail.com'
-        assert info.headers['From'] == 'Me <me@mail.com>'
-        assert info.headers['Subject'] == 'subject'
-        assert info.headers['X-This-That'] == 'Something'
+from mailthon.envelope import Envelope
+from .mimetest import mimetest
+from .test_stamp import stamp
 
 
 class TestEnvelope:
@@ -38,6 +17,7 @@ class TestEnvelope:
         )
 
     def test_as_string(self, envelope):
+        print(envelope.info())
         mime = mimetest(envelope.info().string())
         assert [g.payload for g in mime.parts] == [b'hi!', b'bye!']
 

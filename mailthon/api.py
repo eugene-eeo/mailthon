@@ -8,7 +8,8 @@
 
 
 from mailthon.enclosure import HTML, Attachment
-from mailthon.envelope import Envelope, Stamp
+from mailthon.envelope import Envelope
+from mailthon.stamp import Stamp
 from mailthon.postman import Postman
 from mailthon.middleware import TLS, Auth
 import mailthon.headers as headers

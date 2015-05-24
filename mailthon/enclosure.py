@@ -4,23 +4,21 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from os.path import basename
 from .helpers import inject_headers, guess
-from .headers import content_disposition
+from .headers import ContentDisposition, Header
+from .stamp import Stamp
 
 
 class Enclosure(object):
     def __init__(self, headers=()):
-        self.headers = dict(headers)
-
-    def inject_headers(self, mime):
-        inject_headers(self.headers, mime)
+        self.stamp = Stamp(headers)
 
     def prepare_mime(self):
         raise NotImplementedError
 
     def mime(self):
         mime = self.prepare_mime()
-        self.inject_headers(mime)
-        return mime
+        info = self.stamp.prepare(mime)
+        return info.mime
 
 
 class PlainText(Enclosure):
@@ -67,10 +65,11 @@ class Attachment(Binary):
         self.path = path
         self.mimetype, self.encoding = guess(path)
         self.encoder = encode_base64
-        self.headers = dict([
-            content_disposition('attachment', basename(path))
-        ])
-        self.headers.update(headers)
+        heads = [
+            ContentDisposition('attachment', basename(path))
+        ]
+        heads.extend(headers)
+        self.stamp = Stamp(heads)
 
     @property
     def content(self):

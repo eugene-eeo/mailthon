@@ -1,7 +1,8 @@
 from pytest import fixture
 from mock import Mock, call
+from mailthon.stamp import Stamp
 from mailthon.postman import Postman
-from mailthon.envelope import Envelope, Stamp
+from mailthon.envelope import Envelope
 from mailthon.enclosure import PlainText
 from mailthon import headers
 
