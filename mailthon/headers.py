@@ -34,6 +34,11 @@ class Headers(dict):
             mime[key] = self[key]
 
 
+def subject(text):
+    yield 'Subject'
+    yield text
+
+
 def sender(address):
     yield 'Sender'
     yield address
