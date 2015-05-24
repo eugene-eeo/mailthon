@@ -1,5 +1,5 @@
 import pytest
-import mailthon.headers as headers
+from mailthon.headers import From, To, Subject, Header
 from mailthon.stamp import Stamp
 from .mimetest import blank
 
@@ -7,10 +7,10 @@ from .mimetest import blank
 @pytest.fixture
 def stamp():
     return Stamp([
-        headers.From('Me <me@mail.com>'),
-        headers.To('him@mail.com', 'them@mail.com'),
-        headers.Subject('subject'),
-        headers.Header('X-This-That', 'Something'),
+        From('Me <me@mail.com>'),
+        To('him@mail.com', 'them@mail.com'),
+        Subject('subject'),
+        Header('X-This-That', 'Something'),
     ])
 
 
