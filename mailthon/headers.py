@@ -56,7 +56,7 @@ def bcc(*addrs):
 
 def content_disposition(disposition, filename):
     yield 'Content-Disposition'
-    yield '%s; filename="%s"' % (disposition, filename)
+    yield '%s; filename="%s"' % (disposition, quote(filename))
 
 
 def date(time=None):

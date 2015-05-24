@@ -64,9 +64,9 @@ class Attachment(Binary):
         self.path = path
         self.mimetype, self.encoding = guess(path)
         self.encoder = encode_base64
-        heads = [content_disposition('attachment', basename(path))]
-        heads.extend(headers)
-        self.headers = heads
+        heads = dict([content_disposition('attachment', basename(path))])
+        heads.update(headers)
+        self.headers = Headers(heads)
 
     @property
     def content(self):
