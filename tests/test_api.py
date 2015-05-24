@@ -20,12 +20,16 @@ class TestEmail:
         )
         return mimetest(envelope.info().mime)
 
+
+    def test_bcc_not_set(self, mime):
+        assert not mime['Bcc']
+
     def test_headers(self, mime):
         assert mime['From'] == 'Me <me@mail.com>'
         assert mime['To'] == 'rcv@mail.com'
         assert mime['Cc'] == 'cc1@mail.com, cc2@mail.com'
-        assert not mime['Bcc']
-
+        assert mime['Date']
+        assert mime['Message-ID']
 
     def test_payload(self, mime):
         assert [k.payload for k in mime.parts] == [

@@ -57,11 +57,6 @@ class Bcc(Header):
         info.receivers.extend(self.values)
 
 
-def content_id(filename):
-    yield 'Content-ID'
-    yield '<%s>' % filename
-
-
 class ContentDisposition(Header):
     key = 'Content-Disposition'
 
@@ -69,11 +64,19 @@ class ContentDisposition(Header):
         self.value = '%s; filename="%s"' % (disposition, quote(filename))
 
 
-def date(time=None):
-    yield 'Date'
-    yield time or formatdate(localtime=True)
+class Date(Header):
+    key = 'Date'
+
+    def __init__(self, time=None):
+        self.time = time
+
+    @property
+    def value(self):
+        return self.time or formatdate(localtime=True)
 
 
-def message_id(string=None, idstring=None):
-    yield 'Message-ID'
-    yield string or make_msgid(idstring)
+class MessageID(Header):
+    key = 'Message-ID'
+
+    def __init__(self, string=None, idstring=None):
+        self.value = string or make_msgid(idstring)

@@ -1,6 +1,5 @@
 from email.utils import formatdate, make_msgid
 from email.mime.multipart import MIMEMultipart
-from .headers import date, message_id
 from .stamp import Stamp
 
 

@@ -33,6 +33,8 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
             headers.To(*receivers),
             headers.Cc(*cc),
             headers.Bcc(*bcc),
+            headers.Date(),
+            headers.MessageID(),
         ],
         enclosure=(html + files),
     )
