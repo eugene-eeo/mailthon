@@ -1,3 +1,4 @@
+import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
@@ -5,7 +6,7 @@ from setuptools.command.test import test as TestCommand
 class PyPackageTest(TestCommand):
     def initialize_options(self):
         TestCommand.initialize_options(self)
-        self.pytest_args = ['--strict']
+        self.pytest_args = ['tests', '--strict', '-s']
 
     def finalize_options(self):
         TestCommand.finalize_options(self)
