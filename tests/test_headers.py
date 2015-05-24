@@ -47,7 +47,7 @@ class TestNotResentHeaders:
 class TestResentHeaders(TestNotResentHeaders):
     @pytest.fixture
     def headers(self):
-        h = super(TestResentHeaders, self).headers()
+        h = TestNotResentHeaders.headers(self)
         h['Resent-Date'] = 'Today'
         h['Resent-From'] = 'rfrom@mail.com'
         h['Resent-To'] = 'rto@mail.com'
