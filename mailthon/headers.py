@@ -1,4 +1,4 @@
-from email.utils import quote, formatdate, make_msgid
+from email.utils import quote, formatdate, make_msgid, getaddresses
 
 
 class Headers(dict):
@@ -24,7 +24,8 @@ class Headers(dict):
         attrs = ['To', 'Cc', 'Bcc']
         if self.resent:
             attrs += ['Resent-To', 'Resent-Cc', 'Resent-Bcc']
-        return [f for f in (self.get(item, []) for item in attrs) if f]
+        addrs = (f for f in (self.get(item, []) for item in attrs) if f)
+        return [a[1] for a in getaddresses(addrs)]
 
     def prepare(self, mime):
         for key in self:

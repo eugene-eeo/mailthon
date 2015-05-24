@@ -30,3 +30,7 @@ class TestEnvelope:
         assert mime['Sender'] == 'Me <me@mail.com>'
         assert mime['To'] == 'him@mail.com, them@mail.com'
         assert mime['Subject'] == 'subject'
+
+    def test_attrs(self, envelope):
+        assert envelope.sender == 'Me <me@mail.com>'
+        assert envelope.receivers == ['him@mail.com', 'them@mail.com']
