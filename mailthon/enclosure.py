@@ -1,9 +1,9 @@
-from email.encoders import encode_base64, encode_noop
+from email.encoders import encode_base64
 from email.message import Message
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from os.path import basename
-from .helpers import inject_headers, guess, embed
+from .helpers import guess, embed
 from .headers import ContentDisposition, Header
 
 
