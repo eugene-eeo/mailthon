@@ -82,3 +82,12 @@ class TestAttachment(TestBinary):
     def test_content_disposition(self, mime):
         expected = r'attachment; filename="spacer\"\".gif"'
         assert mime['Content-Disposition'] == expected
+
+
+def test_binary_with_encoding():
+    b = Binary(
+        content=b'something',
+        mimetype='image/gif',
+        encoding='utf8',
+    )
+    assert mimetest(b.mime()).encoding == 'utf8'
