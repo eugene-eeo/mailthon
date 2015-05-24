@@ -1,14 +1,19 @@
 # coding=utf8
+from sys import version_info
 from pytest import fixture
 from mailthon.enclosure import PlainText, HTML, Binary, Attachment
 from .mimetest import mimetest
+
+
+if version_info[0] == 3:
+    unicode = str
 
 
 fixture = fixture(scope='class')
 
 
 class TestPlainText:
-    content = u'some-content 华语'
+    content = unicode('some-content 华语')
     headers = {
         'X-Something': 'String',
         'X-Something-Else': 'Other String',

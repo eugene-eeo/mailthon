@@ -53,7 +53,11 @@ class Binary(Enclosure):
     def prepare_mime(self):
         mime = MIMEBase(*self.mimetype.split('/'))
         mime.set_payload(self.content)
-        mime['Content-Encoding'] = self.encoding
+        if self.encoding:
+            del mime['Content-Type']
+            mime.add_header('Content-Type',
+                            self.mimetype,
+                            charset=self.encoding)
         self.encoder(mime)
         return mime
 

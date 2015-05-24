@@ -29,7 +29,7 @@ class TestEmail:
 
     def test_payload(self, mime):
         assert [k.payload for k in mime.parts] == [
-            '<p>hi</p>',
+            b'<p>hi</p>',
             open('tests/assets/spacer"".gif', 'rb').read(),
         ]
 

@@ -6,9 +6,8 @@ from email.message import Message
 
 class mimetest:
     def __init__(self, mime):
-        if not isinstance(mime, str):
-            mime = mime.as_string()
-        mime = message_from_string(mime)
+        if isinstance(mime, str):
+            mime = message_from_string(mime)
         self.mime = mime
 
     def __getitem__(self, header):
@@ -21,9 +20,10 @@ class mimetest:
     @property
     def encoding(self):
         ctype = self['Content-Type'].split()
-        if len(ctype) < 2:
-            return None
-        return search('charset="(.+?)"', ctype[1]).group(1)
+        if len(ctype) >= 2:
+            match = search('charset="(.+?)"', ctype[1])
+            if match:
+                return match.group(1)
 
     @property
     def mimetype(self):
@@ -31,7 +31,7 @@ class mimetest:
 
     @property
     def payload(self):
-        payload = self.mime.get_payload()
+        payload = self.mime.get_payload().encode(self.encoding or 'ascii')
         if self.transfer_encoding == 'base64':
             return b64decode(payload)
         return payload
