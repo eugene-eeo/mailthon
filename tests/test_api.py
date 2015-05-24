@@ -18,14 +18,14 @@ class TestEmail:
             bcc=['bcc1@mail.com', 'bcc2@mail.com'],
             encoding='ascii',
         )
-        return mimetest(envelope.info().mime)
+        return mimetest(envelope.mime())
 
 
     def test_bcc_not_set(self, mime):
         assert not mime['Bcc']
 
     def test_headers(self, mime):
-        assert mime['From'] == 'Me <me@mail.com>'
+        assert mime['Sender'] == 'Me <me@mail.com>'
         assert mime['To'] == 'rcv@mail.com'
         assert mime['Cc'] == 'cc1@mail.com, cc2@mail.com'
         assert mime['Date']

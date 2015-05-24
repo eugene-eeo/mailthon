@@ -1,7 +1,7 @@
 import pytest
 from mailthon.enclosure import PlainText
 from mailthon.envelope import Envelope
-from mailthon.headers import From, To, Subject
+from mailthon.headers import sender, to, subject
 from .mimetest import mimetest
 
 
@@ -10,9 +10,9 @@ class TestEnvelope:
     def envelope(self):
         return Envelope(
             headers=[
-                From('Me <me@mail.com>'),
-                To('him@mail.com', 'them@mail.com'),
-                Subject('subject'),
+                sender('Me <me@mail.com>'),
+                to('him@mail.com', 'them@mail.com'),
+                subject('subject'),
             ],
             enclosure=[
                 PlainText('hi!'),
@@ -21,12 +21,16 @@ class TestEnvelope:
         )
 
     def test_as_string(self, envelope):
-        mime = mimetest(envelope.info().string())
+        mime = mimetest(envelope.string())
         assert [g.payload for g in mime.parts] == [b'hi!', b'bye!']
 
     def test_headers(self, envelope):
-        mime = mimetest(envelope.info().mime)
+        mime = mimetest(envelope.mime())
 
-        assert mime['From'] == 'Me <me@mail.com>'
+        assert mime['Sender'] == 'Me <me@mail.com>'
         assert mime['To'] == 'him@mail.com, them@mail.com'
         assert mime['Subject'] == 'subject'
+
+    def test_attrs(self, envelope):
+        assert envelope.sender == 'Me <me@mail.com>'
+        assert envelope.receivers == ['him@mail.com', 'them@mail.com']

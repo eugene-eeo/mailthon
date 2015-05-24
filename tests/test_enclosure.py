@@ -2,7 +2,6 @@
 from sys import version_info
 from pytest import fixture
 from mailthon.enclosure import PlainText, HTML, Binary, Attachment
-from mailthon.headers import Header
 from .mimetest import mimetest
 
 
@@ -17,10 +16,10 @@ fixture = fixture(scope='class')
 
 class TestPlainText:
     content = unicode('some-content 华语')
-    headers = (
-        Header('X-Something', 'String'),
-        Header('X-Something-Else', 'Other String'),
-    )
+    headers = {
+        'X-Something': 'String',
+        'X-Something-Else': 'Other String',
+    }
     bytes_content = content.encode('utf-8')
     expected_mimetype = 'text/plain'
     expected_encoding = 'utf-8'
@@ -44,7 +43,7 @@ class TestPlainText:
 
     def test_headers(self, mime):
         for header in self.headers:
-            assert mime[header.key] == header.value
+            assert mime[header] == self.headers[header]
 
 
 class TestHTML(TestPlainText):
@@ -83,3 +82,12 @@ class TestAttachment(TestBinary):
     def test_content_disposition(self, mime):
         expected = r'attachment; filename="spacer\"\".gif"'
         assert mime['Content-Disposition'] == expected
+
+
+def test_binary_with_encoding():
+    b = Binary(
+        content=b'something',
+        mimetype='image/gif',
+        encoding='utf8',
+    )
+    assert mimetest(b.mime()).encoding == 'utf8'

@@ -3,7 +3,6 @@ from mock import Mock, call
 from mailthon.postman import Postman
 from mailthon.envelope import Envelope
 from mailthon.enclosure import PlainText
-from mailthon import headers
 
 
 @fixture
@@ -18,23 +17,16 @@ def smtp():
 @fixture
 def envelope():
     env = Envelope(
-        headers=[
-            headers.From('Me <me@mail.com>'),
-            headers.To('him@mail.com'),
-            headers.Subject('Subject'),
-        ],
+        headers={
+            'From': 'Me <me@mail.com>',
+            'To': 'him@mail.com',
+            'Subject': 'subject',
+        },
         enclosure=[
             PlainText('Hi!'),
         ],
     )
-    info = env.info()
-    mocked_info = Mock(
-        sender=info.sender,
-        receivers=info.receivers,
-    )
-    mocked_info.return_value = mocked_info
-    mocked_info.string.return_value = '--email--'
-    env.info = mocked_info
+    env.string = Mock(return_value='--email--')
     return env
 
 

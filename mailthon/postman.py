@@ -70,11 +70,10 @@ class Postman(object):
         *conn*, and return the response object. Does
         not close the connection.
         """
-        info = envelope.info()
         rejected = conn.sendmail(
-            info.sender,
-            info.receivers,
-            info.string(),
+            envelope.sender,
+            envelope.receivers,
+            envelope.string(),
         )
         return self.response_cls(conn.noop(), rejected)
 

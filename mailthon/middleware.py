@@ -1,6 +1,6 @@
 class Middleware(object):
     def __call__(self, conn):
-        return
+        raise NotImplementedError
 
 
 class TLS(Middleware):
