@@ -1,22 +1,5 @@
 import sys
 from setuptools import setup
-from setuptools.command.test import test as TestCommand
-
-
-class PyPackageTest(TestCommand):
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = ['tests', '--strict', '-s']
-
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        import pytest
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
 
 
 setup(
@@ -41,5 +24,5 @@ setup(
     include_package_data=True,
     package_data={'mailthon': ['LICENSE', 'README.rst']},
     packages=['mailthon'],
-    cmdclass={'test': PyPackageTest},
+    tests_require=['pytest'],
 )
