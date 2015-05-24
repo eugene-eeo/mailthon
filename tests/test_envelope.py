@@ -21,7 +21,6 @@ class TestEnvelope:
         )
 
     def test_as_string(self, envelope):
-        print(envelope.info())
         mime = mimetest(envelope.info().string())
         assert [g.payload for g in mime.parts] == [b'hi!', b'bye!']
 
