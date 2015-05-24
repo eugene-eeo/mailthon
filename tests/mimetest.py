@@ -1,3 +1,4 @@
+from re import search
 from base64 import b64decode
 from email import message_from_string
 from email.message import Message
@@ -19,7 +20,10 @@ class mimetest:
 
     @property
     def encoding(self):
-        return self['Content-Encoding']
+        ctype = self['Content-Type'].split()
+        if len(ctype) < 2:
+            return None
+        return search('charset="(.+?)"', ctype[1]).group(1)
 
     @property
     def mimetype(self):

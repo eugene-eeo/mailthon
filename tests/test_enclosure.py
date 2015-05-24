@@ -15,6 +15,7 @@ class TestPlainText:
     }
     bytes_content = content.encode('utf-8')
     expected_mimetype = 'text/plain'
+    expected_encoding = 'utf-8'
 
     @fixture
     def enclosure(self):
@@ -23,6 +24,9 @@ class TestPlainText:
     @fixture
     def mime(self, enclosure):
         return mimetest(enclosure.mime())
+
+    def test_encoding(self, mime):
+        assert mime.encoding == self.expected_encoding
 
     def test_mimetype(self, mime):
         assert mime.mimetype == self.expected_mimetype
@@ -57,6 +61,9 @@ class TestBinary(TestPlainText):
             mimetype=self.expected_mimetype,
             headers=self.headers,
         )
+
+    def test_encoding(self, mime):
+        assert mime.encoding is None
 
 
 class TestAttachment(TestBinary):
