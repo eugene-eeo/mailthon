@@ -1,4 +1,6 @@
-from mailthon.helpers import inject_headers, guess
+import pytest
+from mailthon.helpers import inject_headers, guess, embed
+from mailthon.headers import From, To, Subject, Header
 from .mimetest import blank
 
 
@@ -23,3 +25,23 @@ def test_guess_recognised():
 def test_guess_fallback():
     mimetype, _ = guess('ha', 'text/plain')
     assert mimetype == 'text/plain'
+
+
+@pytest.fixture
+def headers():
+    return (
+        From('Me <me@mail.com>'),
+        To('him@mail.com', 'them@mail.com'),
+        Subject('subject'),
+        Header('X-This-That', 'Something'),
+    )
+
+
+def test_embed(headers):
+    mime = blank()
+    info = embed(headers, mime)
+
+    assert mime['To'] == 'him@mail.com, them@mail.com'
+    assert mime['From'] == 'Me <me@mail.com>'
+    assert mime['Subject'] == 'subject'
+    assert mime['X-This-That'] == 'Something'

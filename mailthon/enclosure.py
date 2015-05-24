@@ -3,21 +3,20 @@ from email.message import Message
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from os.path import basename
-from .helpers import inject_headers, guess
+from .helpers import inject_headers, guess, embed
 from .headers import ContentDisposition, Header
-from .stamp import Stamp
 
 
 class Enclosure(object):
     def __init__(self, headers=()):
-        self.stamp = Stamp(headers)
+        self.headers = headers
 
     def prepare_mime(self):
         raise NotImplementedError
 
     def mime(self):
         mime = self.prepare_mime()
-        info = self.stamp.prepare(mime)
+        info = embed(self.headers, mime)
         return info.mime
 
 
@@ -67,7 +66,7 @@ class Attachment(Binary):
         self.encoder = encode_base64
         heads = [ContentDisposition('attachment', basename(path))]
         heads.extend(headers)
-        self.stamp = Stamp(heads)
+        self.headers = heads
 
     @property
     def content(self):

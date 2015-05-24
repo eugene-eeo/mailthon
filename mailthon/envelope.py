@@ -1,11 +1,11 @@
 from email.utils import formatdate, make_msgid
 from email.mime.multipart import MIMEMultipart
-from .stamp import Stamp
+from .helpers import embed
 
 
 class Envelope(object):
     def __init__(self, headers, enclosure):
-        self.stamp = Stamp(headers)
+        self.headers = headers
         self.enclosure = enclosure
 
     def mime(self):
@@ -15,4 +15,4 @@ class Envelope(object):
         return mime
 
     def info(self):
-        return self.stamp.prepare(self.mime())
+        return embed(self.headers, self.mime())

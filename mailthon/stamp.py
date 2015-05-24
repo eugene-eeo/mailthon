@@ -1,6 +1,3 @@
-from .helpers import inject_headers
-
-
 class Info(object):
     def __init__(self, mime):
         self.mime = mime
@@ -13,15 +10,3 @@ class Info(object):
 
     def string(self):
         return self.mime.as_string()
-
-
-class Stamp(object):
-    def __init__(self, headers=()):
-        self.headers = tuple(headers)
-
-    def prepare(self, mime):
-        info = Info(mime)
-        for item in self.headers:
-            item.update(info)
-        info.inject_headers()
-        return info
