@@ -17,7 +17,7 @@ class PyTest(TestCommand):
 
 setup(
     name='mailthon',
-    version='0.0.0',
+    version='0.0.1',
     description='Elegant email library',
     long_description=open('README.rst', 'rb').read().decode('utf8'),
     author='Eeo Jun',
