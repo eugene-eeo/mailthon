@@ -30,10 +30,9 @@ class Postman(object):
 
     def use(self, middleware):
         """
-        Use a certain function/class *middleware*,
-        i.e. append it to the list of middlewares,
-        and return it so it can be used as a
-        decorator.
+        Use a certain callable *middleware*, i.e.
+        append it to the list of middlewares, and
+        return it so it can be used as a decorator.
         """
         self.middlewares.append(middleware)
         return middleware
