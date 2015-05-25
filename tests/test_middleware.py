@@ -51,10 +51,8 @@ class TestTLSUnsupported:
 
 
 class TestAuth:
-    def test_auth(self, smtp):
+    def test_logs_in_user(self, smtp):
         auth = Auth(username='user', password='pass')
         auth(smtp)
 
-        assert smtp.mock_calls == [
-            call.login('user', 'pass')
-        ]
+        assert call.login('user', 'pass') in smtp.mock_calls
