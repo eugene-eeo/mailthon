@@ -22,7 +22,7 @@ class Postman(object):
     transport = SMTP
     response_cls = SendmailResponse
 
-    def __init__(self, host, port, middlewares=(), options={}):
+    def __init__(self, host, port, middlewares=(), options=None):
         self.host = host
         self.port = port
         self.middlewares = list(middlewares)
