@@ -1,3 +1,13 @@
+"""
+    mailthon.postman
+    ~~~~~~~~~~~~~~~~
+
+    This module implements the central Postman object.
+
+    :copyright: (c) 2015 by Eeo Jun
+    :license: MIT, see LICENSE for details.
+"""
+
 from contextlib import contextmanager
 from smtplib import SMTP
 from .response import SendmailResponse

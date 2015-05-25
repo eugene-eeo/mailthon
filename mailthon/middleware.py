@@ -1,3 +1,15 @@
+"""
+    mailthon.middleware
+    ~~~~~~~~~~~~~~~~~~~
+
+    Implements Middleware classes. Middleware are small and
+    configurable pieces of code that implement and allow for
+    certain functionality.
+
+    :copyright: (c) 2015 by Eeo Jun
+    :license: MIT, see LICENSE for details.
+"""
+
 class Middleware(object):
     """
     Base class for middlewares. Middlewares are encouraged

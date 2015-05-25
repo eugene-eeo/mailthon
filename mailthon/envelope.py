@@ -1,3 +1,13 @@
+"""
+    mailthon.envelope
+    ~~~~~~~~~~~~~~~~~
+
+    Implements the Envelope object.
+
+    :copyright: (c) 2015 by Eeo Jun
+    :license: MIT, see LICENSE for details.
+"""
+
 from email.mime.multipart import MIMEMultipart
 from .headers import Headers
 

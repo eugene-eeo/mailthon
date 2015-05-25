@@ -1,3 +1,14 @@
+"""
+    mailthon.response
+    ~~~~~~~~~~~~~~~~~
+
+    Response objects encapsulate responses returned
+    by SMTP servers.
+
+    :copyright: (c) 2015 by Eeo Jun
+    :license: MIT, see LICENSE for details.
+"""
+
 class Response(object):
     """
     Encapsulates a (status_code, message) tuple

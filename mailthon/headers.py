@@ -1,3 +1,15 @@
+"""
+    mailthon.headers
+    ~~~~~~~~~~~~~~~~
+
+    Implements RFC compliant headers, and is the
+    recommended way to put headers into enclosures
+    or envelopes.
+
+    :copyright: (c) 2015 by Eeo Jun
+    :license: MIT, see LICENSE for details.
+"""
+
 from email.utils import quote, formatdate, make_msgid, getaddresses
 
 

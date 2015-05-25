@@ -1,3 +1,13 @@
+"""
+    mailthon.helpers
+    ~~~~~~~~~~~~~~~~
+
+    Implements various helper functions/utilities.
+
+    :copyright: (c) 2015 by Eeo Jun
+    :license: MIT, see LICENSE for details.
+"""
+
 import mimetypes
 
 
