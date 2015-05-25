@@ -68,9 +68,9 @@ class Headers(dict):
         Resent-Bcc headers.
         """
         for key in self:
+            del mime[key]
             if key == 'Bcc' or key == 'Resent-Bcc':
                 continue
-            del mime[key]
             mime[key] = self[key]
 
 

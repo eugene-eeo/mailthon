@@ -47,18 +47,20 @@ class TestNotResentHeaders:
 class TestResentHeaders(TestNotResentHeaders):
     @pytest.fixture
     def headers(self):
-        h = TestNotResentHeaders.headers(self)
-        h['Resent-Date'] = 'Today'
-        h['Resent-From'] = 'rfrom@mail.com'
-        h['Resent-To'] = 'rto@mail.com'
-        h['Resent-Cc'] = 'rcc@mail.com'
-        h['Resent-Bcc'] = 'rbcc1@mail.com, rbcc2@mail.com'
-        return h
+        head = TestNotResentHeaders.headers(self)
+        head.update({
+            'Resent-Date': 'Today',
+            'Resent-From': 'rfrom@mail.com',
+            'Resent-To': 'rto@mail.com',
+            'Resent-Cc': 'rcc@mail.com',
+            'Resent-Bcc': 'rbcc1@mail.com, rbcc2@mail.com'
+        })
+        return head
 
     def test_sender(self, headers):
         assert headers.sender == 'rfrom@mail.com'
 
-    def test_resent_sender(self, headers):
+    def test_prefers_resent_sender(self, headers):
         headers['Resent-Sender'] = 'rsender@mail.com'
         assert headers.sender == 'rsender@mail.com'
 
