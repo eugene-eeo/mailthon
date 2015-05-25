@@ -4,6 +4,9 @@ Mailthon
 .. image:: https://travis-ci.org/eugene-eeo/mailthon.svg?branch=master
     :target: https://travis-ci.org/eugene-eeo/mailthon
 
+.. image:: https://ci.appveyor.com/api/projects/status/eadeytartlka64a1?svg=true
+    :target: https://ci.appveyor.com/project/eugene-eeo/mailthon
+
 MIT licensed library for easy delivery of emails, inspired
 by Requests's simple, beautiful API. Mailthon aims to
 simplify the delivery of emails and make it a joy to use
