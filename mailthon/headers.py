@@ -9,17 +9,17 @@ class Headers(dict):
     @property
     def resent(self):
         """
-        Tells whether the email was resent, i.e. whether
-        the ``Resent-Date`` header was set.
+        Tells whether the email was resent, i.e.
+        whether the ``Resent-Date`` header was set.
         """
         return 'Resent-Date' in self
 
     @property
     def sender(self):
         """
-        Returns the sender, respecting the Resent-* headers.
-        In any case, prefer``Sender`` over ``From``, meaning
-        that if ``Sender`` is present then ``From`` is
+        Returns the sender, respecting the Resent-*
+        headers. In any case, prefer Sender over From,
+        meaning that if Sender is present then From is
         ignored, as per the RFC.
         """
         to_fetch = (
@@ -33,8 +33,8 @@ class Headers(dict):
     @property
     def receivers(self):
         """
-        Returns a list of receivers, obtained from the To,
-        Cc, and Bcc headers, respecting the Resent-*
+        Returns a list of receivers, obtained from the
+        To, Cc, and Bcc headers, respecting the Resent-*
         headers if the email was resent.
         """
         attrs = (
@@ -46,9 +46,9 @@ class Headers(dict):
 
     def prepare(self, mime):
         """
-        Preprares a MIME object by applying the headers to
-        the other object. Ignores any Bcc or Resent-Bcc
-        headers as these are not meant to be set.
+        Preprares a MIME object by applying the headers
+        to the *mime* object. Ignores any Bcc or
+        Resent-Bcc headers.
         """
         for key in self:
             if key == 'Bcc' or key == 'Resent-Bcc':
