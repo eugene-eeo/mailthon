@@ -34,9 +34,9 @@ class Envelope(object):
     def mime(self):
         """
         Returns a mime object. Internally this
-        generates a ``MIMEMultipart`` object and
-        prepares it using the internal headers
-        object.
+        generates a ``MIMEMultipart`` object,
+        attaches the enclosures, then prepares
+        it using the internal headers object.
         """
         mime = MIMEMultipart()
         for item in self.enclosure:
