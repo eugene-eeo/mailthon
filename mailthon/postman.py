@@ -1,11 +1,3 @@
-"""
-    mailthon.postman
-    ~~~~~~~~~~~~~~~~
-
-    Implements the main Postman class.
-"""
-
-
 from contextlib import contextmanager
 from smtplib import SMTP
 from .response import SendmailResponse

@@ -1,11 +1,3 @@
-"""
-    mailthon.response
-    ~~~~~~~~~~~~~~~~~
-
-    Implements the Response objects.
-"""
-
-
 class Response(object):
     """
     Encapsulates a (status_code, message) tuple
