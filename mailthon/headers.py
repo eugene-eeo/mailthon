@@ -2,12 +2,26 @@ from email.utils import quote, formatdate, make_msgid, getaddresses
 
 
 class Headers(dict):
+    """
+    RFC 2822 compliant subclass of a dictionary.
+    """
+
     @property
     def resent(self):
+        """
+        Tells whether the email was resent, i.e. whether
+        the ``Resent-Date`` header was set.
+        """
         return 'Resent-Date' in self
 
     @property
     def sender(self):
+        """
+        Returns the sender, respecting the Resent-* headers.
+        In any case, prefer``Sender`` over ``From``, meaning
+        that if ``Sender`` is present then ``From`` is
+        ignored, as per the RFC.
+        """
         to_fetch = (
             ['Resent-Sender', 'Resent-From'] if self.resent else
             ['Sender', 'From']
@@ -18,6 +32,11 @@ class Headers(dict):
 
     @property
     def receivers(self):
+        """
+        Returns a list of receivers, obtained from the To,
+        Cc, and Bcc headers, respecting the Resent-*
+        headers if the email was resent.
+        """
         attrs = (
             ['Resent-To', 'Resent-Cc', 'Resent-Bcc'] if self.resent else
             ['To', 'Cc', 'Bcc']
@@ -26,6 +45,11 @@ class Headers(dict):
         return [a[1] for a in getaddresses(addrs)]
 
     def prepare(self, mime):
+        """
+        Preprares a MIME object by applying the headers to
+        the other object. Ignores any Bcc or Resent-Bcc
+        headers as these are not meant to be set.
+        """
         for key in self:
             if key == 'Bcc' or key == 'Resent-Bcc':
                 continue
