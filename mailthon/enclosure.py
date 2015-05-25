@@ -121,11 +121,9 @@ class Binary(Enclosure):
 class Attachment(Binary):
     """
     Binary subclass for easier file attachments.
-    Basically using this class has the advantage
-    that fetching the file contents is lazy, which
-    may be desired. Else use the Binary class. Also,
-    the Content-Disposition header is automatically
-    set.
+    The advantage over directly using the Binary
+    class is that the Content-Disposition header
+    is automatically set.
 
     :param path: Absolute/Relative path to the file.
     :param headers: Optional headers.
