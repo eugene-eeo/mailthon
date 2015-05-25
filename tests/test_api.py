@@ -13,7 +13,7 @@ class TestEmail:
             receivers=['rcv@mail.com'],
             subject='Something',
             content='<p>hi</p>',
-            attachments=['tests/assets/spacer"".gif'],
+            attachments=['tests/assets/spacer.gif'],
             cc=['cc1@mail.com', 'cc2@mail.com'],
             bcc=['bcc1@mail.com', 'bcc2@mail.com'],
             encoding='ascii',
@@ -34,7 +34,7 @@ class TestEmail:
     def test_payload(self, mime):
         assert [k.payload for k in mime.parts] == [
             b'<p>hi</p>',
-            open('tests/assets/spacer"".gif', 'rb').read(),
+            open('tests/assets/spacer.gif', 'rb').read(),
         ]
 
         assert mime.parts[0].encoding == 'us-ascii'
