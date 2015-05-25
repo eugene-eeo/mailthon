@@ -9,10 +9,12 @@ def smtp():
 
 
 def tls_started(conn):
-    return conn.mock_calls[-2:] == [
-        call.starttls(),
-        call.ehlo(),
-    ]
+    calls = conn.mock_calls
+    starttls = call.starttls()
+    ehlo = call.ehlo()
+    return (starttls in calls and
+            ehlo in calls and
+            calls.index(starttls) < calls.index(ehlo))
 
 
 class TestTlsSupported:
