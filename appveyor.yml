@@ -13,4 +13,4 @@ install:
   - "%PYTHON%/Scripts/pip.exe install -e ."
   - "%PYTHON%/Scripts/pip.exe install pytest"
 test_script:
-  - "py.test -s --strict tests"
+  - "%PYTHON%/python.exe setup.py test"
