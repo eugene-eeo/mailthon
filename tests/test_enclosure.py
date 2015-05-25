@@ -57,7 +57,7 @@ class TestHTML(TestPlainText):
 class TestBinary(TestPlainText):
     expected_mimetype = 'image/gif'
 
-    with open('tests/assets/spacer"".gif', 'rb') as handle:
+    with open('tests/assets/spacer.gif', 'rb') as handle:
         bytes_content = handle.read()
         content = bytes_content
 
@@ -76,11 +76,11 @@ class TestBinary(TestPlainText):
 class TestAttachment(TestBinary):
     @fixture
     def enclosure(self):
-        raw = Attachment('tests/assets/spacer"".gif', headers=self.headers)
+        raw = Attachment('tests/assets/spacer.gif', headers=self.headers)
         return raw
 
     def test_content_disposition(self, mime):
-        expected = r'attachment; filename="spacer\"\".gif"'
+        expected = r'attachment; filename="spacer.gif"'
         assert mime['Content-Disposition'] == expected
 
 
