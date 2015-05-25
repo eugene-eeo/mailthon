@@ -6,7 +6,7 @@
     make up body of the email.
 
     :copyright: (c) 2015 by Eeo Jun
-    :license: MIT, see LICENSE for details
+    :license: MIT, see LICENSE for details.
 """
 
 from email.encoders import encode_base64
