@@ -20,7 +20,7 @@ class TestEnvelope:
             ],
         )
 
-    def test_as_string(self, envelope):
+    def test_string(self, envelope):
         mime = mimetest(envelope.string())
         assert [g.payload for g in mime.parts] == [b'hi!', b'bye!']
 
