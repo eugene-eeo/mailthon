@@ -22,7 +22,7 @@ class Headers(dict):
             ['Resent-To', 'Resent-Cc', 'Resent-Bcc'] if self.resent else
             ['To', 'Cc', 'Bcc']
         )
-        addrs = (f for f in (self.get(item, []) for item in attrs) if f)
+        addrs = (f for f in (self.get(item) for item in attrs) if f)
         return [a[1] for a in getaddresses(addrs)]
 
     def prepare(self, mime):
