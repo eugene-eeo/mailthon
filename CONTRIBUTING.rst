@@ -1,32 +1,36 @@
-How to contribute to Mailthon
-=============================
+Contributing to Mailthon
+========================
 
 Thanks for considering to contribute to Mailthon.
+
+Feedback / Support Questions
+----------------------------
+
+- Use the Github Issues system.
 
 Reporting Issues
 ----------------
 
- - Include the Python version, as well as the Mailthon version.
-   The former is especially important if the issue is encoding
-   related.
- - If possible, check if it was already fixed in the latest
-   source code.
+- Include the Python version. Usually this can be done by invoking
+  ``python --version``. This is especially important when it comes
+  to encoding issues.
+- If possible, check that it's already fixed in the latest version
+  of the codebase (i.e. the master branch).
 
 Submitting Patches
 ------------------
 
- - Include tests if your patch solves a bug. Explain how to bug
-   happens and include a stack trace if possible. Make sure the
-   regression test fails without your changes (if only on
-   certain systems).
- - Follow PEP8 to a reasonable extent- but ignore it if it makes
-   the code uglier/harder to grok.
+- Include regression test(s) if your patch solves a bug. Explain
+  how the bug happens and if possible, include version information
+  and stack traces. Make sure that the regression test fails without
+  your patch. (If only on certain systems).
+- Follow PEP 8 to a reasonable extent. Ignore it if it makes the
+  code ugly or harder to understand. Readability is more important.
 
-Running tests
+Running Tests
 #############
 
-The test suite requires pytest and mock (for the SMTP server).
-You can install them with::
+The test suite requires pytest and mock::
 
     $ pip install mock
     $ pip install pytest
@@ -35,8 +39,8 @@ Running the test suite is simply::
 
     $ py.test
 
-You can also use pyenv_ to test against many other Python versions,
-but Travis CI is configured to test against all of them when you
-submit your pull request.
+Feel free to use pyenv_ to test against many other Pythons. Note
+that Travis is already configured to test against the more
+frequently used ones when you submit your pull request.
 
 .. _pyenv: https://github.com/yyuu/pyenv
