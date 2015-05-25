@@ -63,5 +63,5 @@ class TestPostman:
         for item in postman.middlewares:
             item(conn)
 
-        conn.starttls.assert_called_once()
-        conn.login.assert_called_once_with('username', 'password')
+        assert conn.starttls.called
+        assert call.login('username', 'password') in conn.mock_calls
