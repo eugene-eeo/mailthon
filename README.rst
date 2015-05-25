@@ -29,3 +29,10 @@ The library is still in rapid development and the edges
 are being ironed out. Feel free to raise issues/ping me
 if you want to give feedback. Also, you can always make
 pull requests if you prefer expressing yourself in code.
+
+Installation
+------------
+
+::
+
+    $ pip install mailthon
