@@ -12,5 +12,6 @@ install:
   - "%PYTHON%/python.exe C:/get-pip.py"
   - "%PYTHON%/Scripts/pip.exe install -e ."
   - "%PYTHON%/Scripts/pip.exe install pytest"
+  - "%PYTHON%/Scripts/pip.exe install mock"
 test_script:
   - "%PYTHON%/python.exe setup.py test"
