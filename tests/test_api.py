@@ -3,6 +3,7 @@ from mock import Mock, call
 from mailthon.api import email, postman
 from mailthon.middleware import TLS, Auth
 from .mimetest import mimetest
+from .test_middleware import tls_started
 
 
 class TestEmail:
@@ -63,5 +64,5 @@ class TestPostman:
         for item in postman.middlewares:
             item(conn)
 
-        assert conn.starttls.called
+        assert tls_started(conn)
         assert call.login('username', 'password') in conn.mock_calls
