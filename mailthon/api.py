@@ -32,6 +32,7 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
     files = [Attachment(k) for k in attachments]
     return Envelope(
         headers=[
+            headers.subject(subject),
             headers.sender(sender),
             headers.to(*receivers),
             headers.cc(*cc),

@@ -26,6 +26,7 @@ class TestEmail:
         assert not mime['Bcc']
 
     def test_headers(self, mime):
+        assert mime['Subject'] == 'Something'
         assert mime['Sender'] == 'Me <me@mail.com>'
         assert mime['To'] == 'rcv@mail.com'
         assert mime['Cc'] == 'cc1@mail.com, cc2@mail.com'
