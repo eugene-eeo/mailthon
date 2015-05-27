@@ -1,5 +1,5 @@
 import pytest
-from mailthon.headers import Headers
+from mailthon.headers import Headers, cc, bcc, to
 from .mimetest import blank
 
 
@@ -89,3 +89,10 @@ class TestResentHeaders(TestNotResentHeaders):
 
         assert not mime['Resent-Bcc']
         assert not mime['Bcc']
+
+
+@pytest.mark.parametrize('function', [to, cc, bcc])
+def test_tuple_headers(function):
+    _, value = function(('Sender', 'sender@mail.com'), 'Me <me@mail.com>')
+    expected = 'Sender <sender@mail.com>, Me <me@mail.com>'
+    assert value == expected
