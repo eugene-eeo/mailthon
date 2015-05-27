@@ -45,7 +45,7 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
 
 
 def postman(host, port=587, auth=(None, None),
-            force_tls=False, options={}):
+            force_tls=False, options=None):
     """
     Creates a Postman object with TLS and Auth
     middleware.
