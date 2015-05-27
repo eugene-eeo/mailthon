@@ -22,9 +22,10 @@ class Envelope(object):
     :param enclosure: A list of enclosure objects.
     """
 
-    def __init__(self, headers, enclosure):
+    def __init__(self, headers, enclosure, mail_from=None):
         self.headers = Headers(headers)
         self.enclosure = enclosure
+        self.mail_from = mail_from
 
     @property
     def sender(self):
@@ -33,6 +34,13 @@ class Envelope(object):
         from the headers.
         """
         return self.headers.sender
+
+    @property
+    def mail_from(self):
+        return self._mail_from or self.sender
+    @mail_from.setter
+    def mail_from(self, value):
+        self._mail_from = value
 
     @property
     def receivers(self):
