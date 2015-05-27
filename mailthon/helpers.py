@@ -9,6 +9,7 @@
 """
 
 import mimetypes
+from email.utils import formataddr
 
 
 def guess(filename, fallback='application/octet-stream'):
@@ -24,3 +25,13 @@ def guess(filename, fallback='application/octet-stream'):
     if guessed is None:
         return fallback, encoding
     return guessed, encoding
+
+
+def format_addresses(addrs):
+    chunks = []
+    for item in addrs:
+        if isinstance(item, tuple):
+            chunks.append(formataddr(item))
+            continue
+        chunks.append(item)
+    return ', '.join(chunks)

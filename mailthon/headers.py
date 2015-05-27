@@ -11,6 +11,7 @@
 """
 
 from email.utils import quote, formatdate, make_msgid, getaddresses
+from .helpers import format_addresses
 
 
 class Headers(dict):
@@ -97,7 +98,7 @@ def to(*addrs):
     strings, or a mix of both.
     """
     yield 'To'
-    yield ', '.join(addrs)
+    yield format_addresses(addrs)
 
 
 def cc(*addrs):
@@ -105,7 +106,7 @@ def cc(*addrs):
     Similar to ``to`` function. Generates a Cc header.
     """
     yield 'Cc'
-    yield ', '.join(addrs)
+    yield format_addresses(addrs)
 
 
 def bcc(*addrs):
@@ -115,7 +116,7 @@ def bcc(*addrs):
     headers will not be included in the MIME object.
     """
     yield 'Bcc'
-    yield ', '.join(addrs)
+    yield format_addresses(addrs)
 
 
 def content_disposition(disposition, filename):
