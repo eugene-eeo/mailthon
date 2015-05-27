@@ -24,8 +24,13 @@ Submitting Patches
   how the bug happens and if possible, include version information
   and stack traces. Make sure that the regression test fails without
   your patch. (If only on certain systems).
+
 - Follow PEP 8 to a reasonable extent. Ignore it if it makes the
   code ugly or harder to understand. Readability is more important.
+
+- If you would like to contribute but are not familiar with the
+  codebase, look for issues filed under the ``beginner-friendly``
+  tag.
 
 Running Tests
 #############
