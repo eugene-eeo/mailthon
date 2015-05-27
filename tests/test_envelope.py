@@ -34,3 +34,7 @@ class TestEnvelope:
     def test_attrs(self, envelope):
         assert envelope.sender == 'Me <me@mail.com>'
         assert envelope.receivers == ['him@mail.com', 'them@mail.com']
+        assert envelope.mail_from == envelope.sender
+        envelope.mail_from = 'From <from@mail.com>'
+        assert envelope.sender == 'Me <me@mail.com>'
+        assert envelope.mail_from == 'From <from@mail.com>'

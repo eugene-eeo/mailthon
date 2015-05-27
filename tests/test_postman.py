@@ -68,6 +68,21 @@ class TestPostman:
             conn.assert_has_calls(calls, any_order=True)
             assert r.ok
 
+    def test_deliver_mail_from(self, postman, envelope):
+        envelope.mail_from = 'from@mail.com'
+        with postman.connection() as conn:
+            r = postman.deliver(conn, envelope)
+
+            calls = [
+                call.sendmail('from@mail.com',
+                              ['him@mail.com'],
+                              '--email--'),
+                call.noop(),
+            ]
+
+            conn.assert_has_calls(calls, any_order=True)
+            assert r.ok
+
     def test_send(self, postman, smtp, envelope):
         postman.deliver = Mock(return_value=1)
         assert postman.send(envelope) == 1

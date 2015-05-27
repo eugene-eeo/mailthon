@@ -72,7 +72,7 @@ class Postman(object):
         not close the connection.
         """
         rejected = conn.sendmail(
-            envelope.sender,
+            envelope.mail_from,
             envelope.receivers,
             envelope.string(),
         )
