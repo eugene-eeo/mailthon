@@ -93,6 +93,9 @@ class TestResentHeaders(TestNotResentHeaders):
 
 @pytest.mark.parametrize('function', [to, cc, bcc])
 def test_tuple_headers(function):
-    _, value = function(('Sender', 'sender@mail.com'), 'Me <me@mail.com>')
+    _, value = function(
+        ('Sender', 'sender@mail.com'),
+        'Me <me@mail.com>',
+    )
     expected = 'Sender <sender@mail.com>, Me <me@mail.com>'
     assert value == expected
