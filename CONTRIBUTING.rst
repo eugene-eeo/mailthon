@@ -6,7 +6,8 @@ Thanks for considering to contribute to Mailthon.
 Feedback / Support Questions
 ----------------------------
 
-- Use the Github Issues system.
+- Use the Github Issues system or send me an email if the feedback
+  is more personal.
 
 Reporting Issues
 ----------------
