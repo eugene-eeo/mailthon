@@ -59,24 +59,9 @@ class TestPostman:
             r = postman.deliver(conn, envelope)
 
             calls = [
-                call.sendmail('Me <me@mail.com>',
-                              ['him@mail.com'],
-                              '--email--'),
-                call.noop(),
-            ]
-
-            conn.assert_has_calls(calls, any_order=True)
-            assert r.ok
-
-    def test_deliver_mail_from(self, postman, envelope):
-        envelope.mail_from = 'from@mail.com'
-        with postman.connection() as conn:
-            r = postman.deliver(conn, envelope)
-
-            calls = [
-                call.sendmail('from@mail.com',
-                              ['him@mail.com'],
-                              '--email--'),
+                call.sendmail(envelope.mail_from,
+                              envelope.receivers,
+                              envelope.string()),
                 call.noop(),
             ]
 
