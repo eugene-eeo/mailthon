@@ -18,7 +18,7 @@ the same time.
     >>> from mailthon import postman, email
     >>> p = postman(host='smtp.gmail.com', auth=('username', 'password'))
     >>> r = p.send(email(
-            content='<p>Hello 世界</p>',
+            content=u'<p>Hello 世界</p>',
             subject='Hello world',
             sender='John <john@jon.com>',
             receivers=['doe@jon.com'],
