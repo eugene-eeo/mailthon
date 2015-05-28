@@ -37,7 +37,16 @@ class Envelope(object):
 
     @property
     def mail_from(self):
+        """
+        Dictates the sender argument being passed to
+        the SMTP.sendmail method. This is different
+        from the ``sender`` property in a sense that
+        it is the "real" sender, but the ``sender``
+        property is merely what *appears* on the
+        email.
+        """
         return self._mail_from or self.sender
+
     @mail_from.setter
     def mail_from(self, value):
         self._mail_from = value
