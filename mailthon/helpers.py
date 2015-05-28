@@ -28,10 +28,12 @@ def guess(filename, fallback='application/octet-stream'):
 
 
 def format_addresses(addrs):
-    chunks = []
-    for item in addrs:
-        if isinstance(item, tuple):
-            chunks.append(formataddr(item))
-            continue
-        chunks.append(item)
-    return ', '.join(chunks)
+    """
+    Given an iterable of addresses or name-address
+    tuples *addrs*, return a header value that joins
+    all of them together with a space and a comma.
+    """
+    return ', '.join(
+        formataddr(item) if isinstance(item, tuple) else item
+        for item in addrs
+    )
