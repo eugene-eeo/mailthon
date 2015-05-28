@@ -10,7 +10,6 @@
 """
 
 from email.encoders import encode_base64
-from email.message import Message
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from os.path import basename
