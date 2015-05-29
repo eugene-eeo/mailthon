@@ -72,6 +72,13 @@ class TestBinary(TestPlainText):
     def test_encoding(self, mime):
         assert mime.encoding is None
 
+    def test_headers_priority(self):
+        b = Binary(content=self.content,
+                   mimetype=self.expected_mimetype,
+                   headers={'Content-Type': 'text/plain'})
+        mime = mimetest(b.mime())
+        assert mime['Content-Type'] == 'text/plain'
+
 
 class TestAttachment(TestBinary):
     @fixture
@@ -82,6 +89,12 @@ class TestAttachment(TestBinary):
     def test_content_disposition(self, mime):
         expected = r'attachment; filename="spacer.gif"'
         assert mime['Content-Disposition'] == expected
+
+    def test_headers_priority(self):
+        a = Attachment('tests/assets/spacer.gif',
+                       headers={'Content-Disposition': 'something'})
+        mime = mimetest(a.mime())
+        assert mime['Content-Disposition'] == 'something'
 
 
 def test_binary_with_encoding():
