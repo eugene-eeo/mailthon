@@ -7,7 +7,7 @@ from .test_middleware import tls_started
 
 
 class TestEmail:
-    @pytest.fixture
+    @pytest.fixture(scope='class')
     def mime(self):
         envelope = email(
             sender='Me <me@mail.com>',
