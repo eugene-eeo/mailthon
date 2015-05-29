@@ -36,7 +36,9 @@ class TestEnvelope:
         assert envelope.receivers == ['him@mail.com', 'them@mail.com']
         assert envelope.sender == 'Me <me@mail.com>'
 
-    def test_mail_from(self, envelope):
+    def test_mail_from_not_specified(self, envelope):
         assert envelope.mail_from == envelope.sender
+
+    def test_mail_from_specified(self, envelope):
         envelope.mail_from = 'From <from@mail.com>'
         assert envelope.mail_from == 'From <from@mail.com>'
