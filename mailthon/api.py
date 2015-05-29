@@ -9,7 +9,6 @@
     :license: MIT, see LICENSE for details.
 """
 
-
 from mailthon.enclosure import HTML, Attachment
 from mailthon.envelope import Envelope
 from mailthon.postman import Postman
