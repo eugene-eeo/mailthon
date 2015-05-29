@@ -40,11 +40,11 @@ class Envelope(object):
         """
         Dictates the sender argument being passed to
         the SMTP.sendmail method. This is different
-        from the ``sender`` property in a sense that
-        it is the "real" sender, but the ``sender``
-        property is merely what *appears* on the
-        email. If it is not set, the sender is then
-        inferred from the headers.
+        from the ``sender`` property as it is the
+        *real* sender, but the ``sender`` property
+        is merely what *appears* on the email. If it
+        is not set, the real sender is then inferred
+        from the headers.
         """
         return self._mail_from or self.sender
 
