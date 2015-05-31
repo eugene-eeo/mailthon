@@ -27,8 +27,8 @@ class Headers(dict):
     @property
     def resent(self):
         """
-        Tells whether the email was resent, i.e.
-        whether the ``Resent-Date`` header was set.
+        Whether the email was resent, i.e. whether the
+        ``Resent-Date`` header was set.
         """
         return 'Resent-Date' in self
 
