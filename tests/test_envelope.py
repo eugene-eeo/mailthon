@@ -32,7 +32,7 @@ class TestEnvelope:
         assert mime['Subject'] == 'subject'
 
     def test_attrs(self, envelope):
-        assert envelope.sender == b'me@mail.com'
+        assert envelope.sender == 'me@mail.com'
         assert envelope.receivers == ['him@mail.com', 'them@mail.com']
 
     def test_mail_from_not_specified(self, envelope):

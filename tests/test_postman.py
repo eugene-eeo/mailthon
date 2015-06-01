@@ -59,8 +59,8 @@ class TestPostman:
             r = postman.deliver(conn, envelope)
 
             calls = [
-                call.sendmail(envelope.mail_from,
-                              envelope.receivers,
+                call.sendmail(b'me@mail.com',
+                              [b'him@mail.com'],
                               envelope.string()),
                 call.noop(),
             ]
