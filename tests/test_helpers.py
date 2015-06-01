@@ -1,6 +1,7 @@
 # coding=utf8
 import pytest
 from mailthon.helpers import guess, format_addresses, encode_address, UnicodeDict
+from .utils import unicode as uni
 
 
 def test_guess_recognised():
@@ -22,9 +23,9 @@ def test_format_addresses():
 
 
 def test_encode_address():
-    assert encode_address(u'mail@mail.com') == b'mail@mail.com'
-    assert encode_address(u'mail@måil.com') == b'mail@xn--mil-ula.com'
-    assert encode_address(u'måil@måil.com') == b'm\xc3\xa5il@xn--mil-ula.com'
+    assert encode_address(uni('mail@mail.com')) == b'mail@mail.com'
+    assert encode_address(uni('mail@måil.com')) == b'mail@xn--mil-ula.com'
+    assert encode_address(uni('måil@måil.com')) == b'm\xc3\xa5il@xn--mil-ula.com'
 
 
 class TestUnicodeDict:

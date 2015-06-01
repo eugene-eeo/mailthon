@@ -1,14 +1,8 @@
 # coding=utf8
-from sys import version_info
 from pytest import fixture
 from mailthon.enclosure import PlainText, HTML, Binary, Attachment
 from .mimetest import mimetest
-
-
-if version_info[0] == 3:
-    unicode = str
-else:
-    unicode = lambda k: k.decode('utf8')
+from .utils import unicode
 
 
 fixture = fixture(scope='class')
