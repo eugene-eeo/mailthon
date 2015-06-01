@@ -31,27 +31,27 @@ def test_encode_address():
 class TestUnicodeDict:
     @pytest.fixture
     def mapping(self):
-        return UnicodeDict({'Item': u'måil'})
+        return UnicodeDict({'Item': uni('måil')})
 
     def test_setitem(self):
         u = UnicodeDict()
         u['Item'] = b'm\xc3\xa5il'
-        assert u['Item'] == u'måil'
+        assert u['Item'] == uni('måil')
 
     def test_getitem(self, mapping):
-        assert mapping['Item'] == u'måil'
+        assert mapping['Item'] == uni('måil')
 
     def test_update(self, mapping):
         mapping.update({
             'Item-1': u'unicode-itém',
             'Item-2': b'bytes-item',
         })
-        assert mapping['Item-1'] == u'unicode-itém'
-        assert mapping['Item-2'] == u'bytes-item'
+        assert mapping['Item-1'] == uni('unicode-itém')
+        assert mapping['Item-2'] == uni('bytes-item')
 
     def test_get(self, mapping):
         assert mapping.get('Something', default=None) is None
-        assert mapping.get('Item') == u'måil'
+        assert mapping.get('Item') == uni('måil')
 
     def test_get_bytes_encoding(self, mapping):
         with pytest.raises(UnicodeEncodeError):
