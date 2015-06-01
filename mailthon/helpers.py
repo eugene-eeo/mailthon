@@ -17,10 +17,8 @@ from email.header import Header
 
 if sys.version_info[0] == 3:
     bytes_type = bytes
-    unicode_type = str
 else:
     bytes_type = str
-    unicode_type = unicode
 
 
 def guess(filename, fallback='application/octet-stream'):
@@ -78,7 +76,6 @@ class UnicodeDict(dict):
         dict.__setitem__(self, key, value)
 
     update = MutableMapping.update
-    get = MutableMapping.get
 
     def get_bytes(self, key, default=None, encoding=None):
         if key in self:

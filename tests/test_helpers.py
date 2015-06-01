@@ -50,7 +50,7 @@ class TestUnicodeDict:
         assert mapping['Item-2'] == uni('bytes-item')
 
     def test_get(self, mapping):
-        assert mapping.get('Something', default=None) is None
+        assert mapping.get('Something', None) is None
         assert mapping.get('Item') == uni('måil')
 
     def test_get_bytes_encoding(self, mapping):
