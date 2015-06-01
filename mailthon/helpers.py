@@ -8,8 +8,19 @@
     :license: MIT, see LICENSE for details.
 """
 
+import sys
 import mimetypes
+from collections import MutableMapping
 from email.utils import formataddr
+from email.header import Header
+
+
+if sys.version_info[0] == 3:
+    bytes_type = bytes
+    unicode_type = str
+else:
+    bytes_type = str
+    unicode_type = unicode
 
 
 def guess(filename, fallback='application/octet-stream'):
@@ -37,3 +48,39 @@ def format_addresses(addrs):
         formataddr(item) if isinstance(item, tuple) else item
         for item in addrs
     )
+
+
+def encode_address(addr, encoding='utf-8'):
+    if isinstance(addr, bytes_type):
+        return addr
+    try:
+        addr = addr.encode(encoding)
+    except UnicodeEncodeError:
+        if '@' in addr:
+            localpart, domain = addr.split('@', 1)
+            addr = '@'.join([
+                localpart.encode(encoding),
+                domain.decode('idna').encode('ascii'),
+            ])
+        else:
+            raise
+    return addr
+
+
+class UnicodeDict(dict):
+    def __init__(self, values, encoding='utf-8'):
+        self.encoding = encoding
+        self.update(values)
+
+    def __setitem__(self, key, value):
+        if isinstance(value, bytes_type):
+            value = value.decode(self.encoding)
+        dict.__setitem__(self, key, value)
+
+    update = MutableMapping.update
+    get = MutableMapping.get
+
+    def get_bytes(self, key, default=None, encoding=None):
+        if key in self:
+            return self[key].encode(encoding or self.encoding)
+        return default

@@ -11,7 +11,7 @@
 """
 
 from email.utils import quote, formatdate, make_msgid, getaddresses
-from .helpers import format_addresses
+from .helpers import format_addresses, encode_address
 
 
 class Headers(dict):
@@ -46,7 +46,8 @@ class Headers(dict):
         )
         for item in to_fetch:
             if item in self:
-                return self[item]
+                _, addr = getaddresses([self[item]])[0]
+                return encode_address(addr)
 
     @property
     def receivers(self):
