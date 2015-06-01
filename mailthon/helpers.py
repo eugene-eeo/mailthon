@@ -54,16 +54,16 @@ def encode_address(addr, encoding='utf-8'):
     if isinstance(addr, bytes_type):
         return addr
     try:
-        addr = addr.encode(encoding)
+        addr = addr.encode('ascii')
     except UnicodeEncodeError:
         if '@' in addr:
             localpart, domain = addr.split('@', 1)
-            addr = '@'.join([
+            addr = b'@'.join([
                 localpart.encode(encoding),
-                domain.decode('idna').encode('ascii'),
+                domain.encode('idna'),
             ])
         else:
-            raise
+            addr = addr.encode(encoding)
     return addr
 
 
