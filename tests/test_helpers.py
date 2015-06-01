@@ -43,7 +43,7 @@ class TestUnicodeDict:
 
     def test_update(self, mapping):
         mapping.update({
-            'Item-1': u'unicode-itém',
+            'Item-1': uni('unicode-itém'),
             'Item-2': b'bytes-item',
         })
         assert mapping['Item-1'] == uni('unicode-itém')
