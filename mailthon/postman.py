@@ -11,6 +11,7 @@
 from contextlib import contextmanager
 from smtplib import SMTP
 from .response import SendmailResponse
+from .helpers import encode_address
 
 
 class Postman(object):
@@ -72,8 +73,8 @@ class Postman(object):
         not close the connection.
         """
         rejected = conn.sendmail(
-            envelope.mail_from,
-            envelope.receivers,
+            encode_address(envelope.mail_from),
+            [encode_address(k) for k in envelope.receivers],
             envelope.string(),
         )
         return self.response_cls(conn.noop(), rejected)

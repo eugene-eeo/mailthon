@@ -11,10 +11,10 @@
 """
 
 from email.utils import quote, formatdate, make_msgid, getaddresses
-from .helpers import format_addresses
+from .helpers import format_addresses, UnicodeDict
 
 
-class Headers(dict):
+class Headers(UnicodeDict):
     """
     RFC 2822 compliant subclass of a dictionary. The
     semantics of the dictionary is different from
@@ -46,7 +46,8 @@ class Headers(dict):
         )
         for item in to_fetch:
             if item in self:
-                return self[item]
+                _, addr = getaddresses([self[item]])[0]
+                return addr
 
     @property
     def receivers(self):
