@@ -54,10 +54,3 @@ class TestUnicodeDict:
     def test_get(self, mapping):
         assert mapping.get('Something', None) is None
         assert mapping.get('Item') == uni('måil')
-
-    def test_get_bytes_encoding(self, mapping):
-        with pytest.raises(UnicodeEncodeError):
-            mapping.get_bytes('Item', encoding='ascii')
-
-    def test_get_bytes(self, mapping):
-        assert mapping.get_bytes('Item') == uni('måil').encode('utf8')

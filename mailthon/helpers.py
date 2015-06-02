@@ -76,8 +76,3 @@ class UnicodeDict(dict):
         dict.__setitem__(self, key, value)
 
     update = MutableMapping.update
-
-    def get_bytes(self, key, default=None, encoding=None):
-        if key in self:
-            return self[key].encode(encoding or self.encoding)
-        return default
