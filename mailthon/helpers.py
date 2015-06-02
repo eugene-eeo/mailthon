@@ -67,6 +67,7 @@ def encode_address(addr, encoding='utf-8'):
 
 class UnicodeDict(dict):
     def __init__(self, values=(), encoding='utf-8'):
+        dict.__init__(self)
         self.encoding = encoding
         self.update(values)
 
