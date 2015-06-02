@@ -12,7 +12,6 @@ import sys
 import mimetypes
 from collections import MutableMapping
 from email.utils import formataddr
-from email.header import Header
 
 
 if sys.version_info[0] == 3:
@@ -49,6 +48,12 @@ def format_addresses(addrs):
 
 
 def encode_address(addr, encoding='utf-8'):
+    """
+    Given an email address *addr*, try to encode
+    it with ASCII. If it's not possible, encode
+    the *local-part* with the *encoding* and the
+    *domain* with IDNA.
+    """
     if isinstance(addr, bytes_type):
         return addr
     try:

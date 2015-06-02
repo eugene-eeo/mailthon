@@ -60,7 +60,7 @@ class Headers(UnicodeDict):
             ['Resent-To', 'Resent-Cc', 'Resent-Bcc'] if self.resent else
             ['To', 'Cc', 'Bcc']
         )
-        addrs = (f for f in (self.get(item) for item in attrs) if f)
+        addrs = (v for v in (self.get(k) for k in attrs) if v)
         return [addr for _, addr in getaddresses(addrs)]
 
     def prepare(self, mime):

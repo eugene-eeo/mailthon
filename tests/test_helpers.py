@@ -6,12 +6,12 @@ from .utils import unicode as uni
 
 
 def test_guess_recognised():
-    mimetype, _ = guess('file.html', 'text/plain')
+    mimetype, _ = guess('file.html')
     assert mimetype == 'text/html'
 
 
 def test_guess_fallback():
-    mimetype, _ = guess('ha', 'text/plain')
+    mimetype, _ = guess('ha', fallback='text/plain')
     assert mimetype == 'text/plain'
 
 
