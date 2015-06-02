@@ -1,6 +1,7 @@
 # coding=utf8
 import pytest
-from mailthon.helpers import guess, format_addresses, encode_address, UnicodeDict
+from mailthon.helpers import (guess, format_addresses,
+                              encode_address, UnicodeDict)
 from .utils import unicode as uni
 
 
@@ -33,18 +34,19 @@ class TestUnicodeDict:
     def mapping(self):
         return UnicodeDict({'Item': uni('måil')})
 
-    def test_setitem(self):
+    @pytest.mark.parametrize('param', [
+        uni('måil'),
+        uni('måil').encode('utf8'),
+    ])
+    def test_setitem(self, param):
         u = UnicodeDict()
-        u['Item'] = b'm\xc3\xa5il'
+        u['Item'] = param
         assert u['Item'] == uni('måil')
-
-    def test_getitem(self, mapping):
-        assert mapping['Item'] == uni('måil')
 
     def test_update(self, mapping):
         mapping.update({
             'Item-1': uni('unicode-itém'),
-            'Item-2': b'bytes-item',
+            'Item-2': uni('bytes-item').encode('utf8'),
         })
         assert mapping['Item-1'] == uni('unicode-itém')
         assert mapping['Item-2'] == uni('bytes-item')
@@ -58,4 +60,4 @@ class TestUnicodeDict:
             mapping.get_bytes('Item', encoding='ascii')
 
     def test_get_bytes(self, mapping):
-        assert mapping.get_bytes('Item') == b'm\xc3\xa5il'
+        assert mapping.get_bytes('Item') == uni('måil').encode('utf8')
