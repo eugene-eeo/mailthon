@@ -52,6 +52,7 @@ class TestPostman:
                 call(self.host, self.port),
                 call.ehlo(),
             ]
+        assert call.quit() in conn.mock_calls
 
     def test_deliver_with_failures(self, postman, envelope, with_failures):
         with postman.connection() as conn:

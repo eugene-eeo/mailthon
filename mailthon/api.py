@@ -27,8 +27,8 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
     :param attachments: List of filenames to
         attach to the email.
     """
-    html = [HTML(content, encoding)]
-    files = [Attachment(k) for k in attachments]
+    enclosure = [HTML(content, encoding)]
+    enclosure.extend(Attachment(k) for k in attachments)
     return Envelope(
         headers=[
             headers.subject(subject),
@@ -39,7 +39,7 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
             headers.date(),
             headers.message_id(),
         ],
-        enclosure=(html + files),
+        enclosure=enclosure,
     )
 
 

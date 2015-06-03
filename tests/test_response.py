@@ -9,9 +9,7 @@ def status(request):
 
 @fixture
 def message(status):
-    if status == 250:
-        return 'ok'
-    return 'error'
+    return 'ok' if status == 250 else 'error'
 
 
 class TestResponse:
@@ -33,9 +31,7 @@ class TestResponse:
 class TestSendmailResponse:
     @fixture(params=[1, 0])
     def failures(self, request):
-        if request.param:
-            return {'addr': (251, 'error')}
-        return {}
+        return {'addr': (251, 'error')} if request.param else {}
 
     def test_ok(self, failures, status, message):
         r = SendmailResponse((status, message), failures)
