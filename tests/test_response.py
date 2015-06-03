@@ -1,42 +1,51 @@
-import pytest
+from pytest import fixture
 from mailthon.response import Response, SendmailResponse
 
 
-@pytest.fixture(params=(250, 255))
-def reply(request):
-    return (request.param, 'message')
+@fixture(params=[250, 251])
+def status(request):
+    return request.param
 
 
-@pytest.fixture(params=[(), {'addr': (255, 'reason')}])
-def rejected(request):
-    return dict(request.param)
+@fixture
+def message(status):
+    if status == 250:
+        return 'ok'
+    return 'error'
 
 
 class TestResponse:
-    def test_ok(self, reply):
-        r = Response(reply)
-        if r.status_code == 250:
-            assert r.ok
-        else:
-            assert not r.ok
+    @fixture
+    def res(self, status, message):
+        return Response((status, message))
 
-    def test_attributes(self, reply):
-        r = Response(reply)
-        assert reply == (r.status_code, r.message)
+    def test_attrs(self, res, status, message):
+        assert res.status_code == status
+        assert res.message == message
+
+    def test_ok(self, res, status, message):
+        if status == 250:
+            assert res.ok
+        else:
+            assert not res.ok
 
 
 class TestSendmailResponse:
-    def test_ok(self, reply, rejected):
-        r = SendmailResponse(reply, rejected)
-        if r.status_code == 250 and not rejected:
+    @fixture(params=[1, 0])
+    def failures(self, request):
+        if request.param:
+            return {'addr': (251, 'error')}
+        return {}
+
+    def test_ok(self, failures, status, message):
+        r = SendmailResponse((status, message), failures)
+        if not failures and status == 250:
             assert r.ok
+            assert not r.rejected
+        elif failures:
+            rejected = r.rejected['addr']
+            assert not r.ok
+            assert not rejected.ok
+            assert rejected.status_code == 251
         else:
             assert not r.ok
-
-    def test_rejected(self, reply, rejected):
-        r = SendmailResponse(reply, rejected)
-        if rejected:
-            r2 = r.rejected['addr']
-
-            assert (r2.status_code, r2.message) == rejected['addr']
-            assert not r2.ok
