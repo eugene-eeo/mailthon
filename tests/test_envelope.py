@@ -26,7 +26,7 @@ class TestEnvelope:
         mime = mimetest(message)
         assert [g.payload for g in mime.parts] == [b'hi!', b'bye!']
 
-    def test_headers(self, envelope):
+    def test_mime_headers(self, envelope):
         mime = mimetest(envelope.mime())
 
         assert mime['Sender'] == 'Me <me@mail.com>'
