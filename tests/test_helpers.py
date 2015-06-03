@@ -50,7 +50,3 @@ class TestUnicodeDict:
         })
         assert mapping['Item-1'] == uni('unicode-itém')
         assert mapping['Item-2'] == uni('bytes-item')
-
-    def test_get(self, mapping):
-        assert mapping.get('Something', None) is None
-        assert mapping.get('Item') == uni('måil')
