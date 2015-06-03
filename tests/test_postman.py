@@ -58,7 +58,6 @@ class TestPostman:
             if with_failures:
                 assert not r.ok
                 assert r.rejected
-                return
             else:
                 assert not r.rejected
                 assert r.ok
