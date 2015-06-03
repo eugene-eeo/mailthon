@@ -1,13 +1,10 @@
 from re import search
 from base64 import b64decode
-from email import message_from_string
 from email.message import Message
 
 
 class mimetest:
     def __init__(self, mime):
-        if isinstance(mime, str):
-            mime = message_from_string(mime)
         self.mime = mime
 
     def __getitem__(self, header):

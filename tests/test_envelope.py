@@ -1,4 +1,5 @@
 import pytest
+from email import message_from_string
 from mailthon.enclosure import PlainText
 from mailthon.envelope import Envelope
 from mailthon.headers import sender, to, subject
@@ -21,7 +22,8 @@ class TestEnvelope:
         )
 
     def test_string(self, envelope):
-        mime = mimetest(envelope.string())
+        message = message_from_string(envelope.string())
+        mime = mimetest(message)
         assert [g.payload for g in mime.parts] == [b'hi!', b'bye!']
 
     def test_headers(self, envelope):
