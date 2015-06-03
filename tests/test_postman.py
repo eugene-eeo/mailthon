@@ -28,62 +28,63 @@ def envelope():
 
 
 class TestPostman:
-    host = 'smtp.mail.com'
-    port = 587
+    host = 'host'
+    port = 1000
 
     @fixture
     def postman(self, smtp):
-        postman = Postman(self.host, self.port)
-        postman.transport = smtp
-        return postman
+        p = Postman(self.host, self.port)
+        p.transport = smtp
+        return p
 
-    def test_connection(self, postman):
+    @fixture(params=[0, 1])
+    def with_failures(self, request, smtp):
+        if request.param:
+            smtp.sendmail.return_value = {'addr': (255, 'reason')}
+            smtp.noop.return_value = (250, 'ok')
+        return request.param
+
+    def test_connection(self, postman, smtp):
         with postman.connection() as conn:
+            assert conn is smtp
             assert conn.mock_calls == [
                 call(self.host, self.port),
                 call.ehlo(),
             ]
 
-    def test_options(self, postman):
-        postman.options = dict(timeout=0)
-
-        with postman.connection() as conn:
-            expected = call(self.host, self.port, timeout=0)
-            assert conn.mock_calls[0] == expected
-
-    def test_deliver(self, postman, envelope):
+    def test_deliver_with_failures(self, postman, envelope, with_failures):
         with postman.connection() as conn:
             r = postman.deliver(conn, envelope)
+            if with_failures:
+                assert not r.ok
+                assert r.rejected
+                return
+            else:
+                assert not r.rejected
+                assert r.ok
 
+    def test_deliver_mocked_calls(self, postman, envelope):
+        with postman.connection() as conn:
+            postman.deliver(conn, envelope)
             sendmail = call.sendmail(
                 envelope.sender.encode(),
-                [k.encode() for k in envelope.receivers],
+                [u.encode() for u in envelope.receivers],
                 envelope.string(),
             )
-            noop = call.noop()
+            ehlo = call.ehlo()
+            conn.assert_has_calls(
+                [sendmail, ehlo],
+                any_order=True,
+            )
 
-            conn.assert_has_calls([sendmail, noop], any_order=True)
-            assert r.ok
-
-    def test_deliver_with_failures(self, smtp, postman, envelope):
-        smtp.sendmail.return_value = {
-            'addr': (255, 'something-bad'),
-        }
-
-        with postman.connection() as conn:
-            r = postman.deliver(conn, envelope)
-
-            assert not r.rejected['addr'].ok
-            assert not r.ok
-
-    def test_send(self, postman, smtp, envelope):
+    def test_send(self, postman, envelope, smtp):
         postman.deliver = Mock()
         postman.send(envelope)
-        assert postman.deliver.mock_calls == [
-            call(smtp, envelope)
-        ]
+        assert call(smtp, envelope) in postman.deliver.mock_calls
 
     def test_use(self, postman):
-        postman.use(lambda conn: conn.login('username', 'password'))
-        with postman.connection() as smtp:
-            assert smtp.login.mock_calls == [call('username', 'password')]
+        middleware = Mock()
+        postman.use(middleware)
+
+        with postman.connection() as conn:
+            assert middleware.mock_calls == [call(conn)]
