@@ -3,6 +3,7 @@ from mock import Mock, call
 from mailthon.postman import Postman
 from mailthon.envelope import Envelope
 from mailthon.enclosure import PlainText
+from mailthon.headers import sender, to, subject
 
 
 @fixture
@@ -17,14 +18,10 @@ def smtp():
 @fixture
 def envelope():
     env = Envelope(
-        headers={
-            'From': 'Me <me@mail.com>',
-            'To': 'him@mail.com',
-            'Subject': 'subject',
-        },
-        enclosure=[
-            PlainText('Hi!'),
-        ],
+        headers=[sender('Me <me@mail.com>'),
+                 to('him@mail.com'),
+                 subject('subject')],
+        enclosure=[PlainText('Hi!')],
     )
     env.string = Mock(return_value='--email--')
     return env
@@ -58,19 +55,30 @@ class TestPostman:
         with postman.connection() as conn:
             r = postman.deliver(conn, envelope)
 
-            calls = [
-                call.sendmail(envelope.sender.encode(),
-                              [k.encode() for k in envelope.receivers],
-                              envelope.string()),
-                call.noop(),
-            ]
+            sendmail = call.sendmail(
+                envelope.sender.encode(),
+                [k.encode() for k in envelope.receivers],
+                envelope.string(),
+            )
+            noop = call.noop()
 
-            conn.assert_has_calls(calls, any_order=True)
+            conn.assert_has_calls([sendmail, noop], any_order=True)
             assert r.ok
 
+    def test_deliver_with_failures(self, smtp, postman, envelope):
+        smtp.sendmail.return_value = {
+            'addr': (255, 'something-bad'),
+        }
+
+        with postman.connection() as conn:
+            r = postman.deliver(conn, envelope)
+
+            assert not r.rejected['addr'].ok
+            assert not r.ok
+
     def test_send(self, postman, smtp, envelope):
-        postman.deliver = Mock(return_value=1)
-        assert postman.send(envelope) == 1
+        postman.deliver = Mock()
+        postman.send(envelope)
         assert postman.deliver.mock_calls == [
             call(smtp, envelope)
         ]
