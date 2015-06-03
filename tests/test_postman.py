@@ -39,10 +39,11 @@ class TestPostman:
 
     @fixture(params=[0, 1])
     def with_failures(self, request, smtp):
-        if request.param:
+        failures = request.param
+        if failures:
             smtp.sendmail.return_value = {'addr': (255, 'reason')}
             smtp.noop.return_value = (250, 'ok')
-        return request.param
+        return failures
 
     def test_connection(self, postman, smtp):
         with postman.connection() as conn:
