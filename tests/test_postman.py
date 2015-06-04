@@ -38,7 +38,7 @@ class TestPostman:
         return p
 
     @fixture(params=[0, 1])
-    def with_failures(self, request, smtp):
+    def failures(self, request, smtp):
         failures = request.param
         if failures:
             smtp.sendmail.return_value = {'addr': (255, 'reason')}
@@ -54,10 +54,10 @@ class TestPostman:
             ]
         assert call.quit() in conn.mock_calls
 
-    def test_deliver_with_failures(self, postman, envelope, with_failures):
+    def test_deliver_with_failures(self, postman, envelope, failures):
         with postman.connection() as conn:
             r = postman.deliver(conn, envelope)
-            if with_failures:
+            if failures:
                 assert not r.ok
                 assert r.rejected
             else:
@@ -79,9 +79,9 @@ class TestPostman:
             )
 
     def test_send(self, postman, envelope, smtp):
-        postman.deliver = Mock()
+        deliver = postman.deliver = Mock()
         postman.send(envelope)
-        assert call(smtp, envelope) in postman.deliver.mock_calls
+        assert deliver.mock_calls == [call(smtp, envelope)]
 
     def test_use(self, postman):
         middleware = Mock()
