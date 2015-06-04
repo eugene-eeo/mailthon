@@ -54,8 +54,8 @@ class Postman(object):
         A context manager that returns a connection
         to the server using some transport, defaulting
         to SMTP. The transport will be called with
-        the server address and port that has been
-        passed to the constructor, in that order.
+        the server address, port, and options that have
+        been passed to the constructor, in that order.
         """
         conn = self.transport(self.host, self.port, **self.options)
         try:
