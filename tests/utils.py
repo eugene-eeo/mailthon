@@ -1,4 +1,7 @@
 from sys import version_info
+from pytest import fixture
+from mock import Mock, call
+
 
 if version_info[0] == 3:
     unicode = str
@@ -6,3 +9,25 @@ if version_info[0] == 3:
 else:
     unicode = lambda k: k.decode('utf8')
     bytes_type = str
+
+
+@fixture
+def smtp():
+    smtp = Mock()
+    smtp.return_value = smtp
+    smtp.noop.return_value = (250, 'ok')
+    smtp.sendmail.return_value = {}
+
+    def side_effect(*_):
+        smtp.closed = True
+
+    smtp.quit.side_effect = side_effect
+    return smtp
+
+
+def tls_started(conn):
+    calls = conn.mock_calls
+    starttls = call.starttls()
+    ehlo = call.ehlo()
+    return (starttls in calls and
+            ehlo in calls[calls.index(starttls)+1:])

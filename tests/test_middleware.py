@@ -1,19 +1,12 @@
 from pytest import fixture
 from mock import Mock, call
 from mailthon.middleware import TLS, Auth
+from .utils import tls_started
 
 
 @fixture
 def smtp():
     return Mock()
-
-
-def tls_started(conn):
-    calls = conn.mock_calls
-    starttls = call.starttls()
-    ehlo = call.ehlo()
-    return (starttls in calls and
-            ehlo in calls[calls.index(starttls)+1:])
 
 
 class TestTlsSupported:

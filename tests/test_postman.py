@@ -4,15 +4,7 @@ from mailthon.postman import Postman
 from mailthon.envelope import Envelope
 from mailthon.enclosure import PlainText
 from mailthon.headers import sender, to, subject
-
-
-@fixture
-def smtp():
-    smtp = Mock()
-    smtp.return_value = smtp
-    smtp.noop.return_value = (250, 'ok')
-    smtp.sendmail.return_value = {}
-    return smtp
+from .utils import smtp
 
 
 @fixture
@@ -52,7 +44,7 @@ class TestPostman:
                 call(self.host, self.port),
                 call.ehlo(),
             ]
-        assert call.quit() in conn.mock_calls
+        assert conn.closed
 
     def test_deliver_with_failures(self, postman, envelope, failures):
         with postman.connection() as conn:

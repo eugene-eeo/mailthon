@@ -3,7 +3,7 @@ from mock import Mock, call
 from mailthon.api import email, postman
 from mailthon.middleware import TLS, Auth
 from .mimetest import mimetest
-from .test_middleware import tls_started
+from .utils import smtp, tls_started
 
 
 class TestEmail:
@@ -45,7 +45,7 @@ class TestEmail:
 
 class TestPostman:
     @pytest.fixture
-    def postman(self):
+    def postman(self, smtp):
         p = postman(
             host='smtp.mail.com',
             port=100,
@@ -53,8 +53,6 @@ class TestPostman:
             force_tls=True,
             options={'timeout': 1},
         )
-        smtp = Mock()
-        smtp.return_value = smtp
         p.transport = smtp
         return p
 

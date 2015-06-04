@@ -6,13 +6,13 @@ from .mimetest import blank
 class TestNotResentHeaders:
     @pytest.fixture
     def headers(self):
-        return Headers({
-            'Sender': 'sender@mail.com',
-            'From': 'from@mail.com',
-            'To': 'to@mail.com',
-            'Cc': 'cc1@mail.com, cc2@mail.com',
-            'Bcc': 'bcc1@mail.com, bcc2@mail.com',
-        })
+        return Headers([
+            ('From', 'from@mail.com'),
+            sender('sender@mail.com'),
+            to('to@mail.com'),
+            cc('cc1@mail.com', 'cc2@mail.com'),
+            bcc('bcc1@mail.com', 'bcc2@mail.com'),
+        ])
 
     def test_getitem(self, headers):
         assert headers['Sender'] == 'sender@mail.com'
