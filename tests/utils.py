@@ -18,7 +18,7 @@ def smtp():
     smtp.noop.return_value = (250, 'ok')
     smtp.sendmail.return_value = {}
 
-    def side_effect(*_):
+    def side_effect():
         smtp.closed = True
 
     smtp.quit.side_effect = side_effect

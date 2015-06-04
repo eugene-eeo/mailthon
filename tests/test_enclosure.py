@@ -99,4 +99,3 @@ def test_binary_with_encoding():
     )
     mime = mimetest(b.mime())
     assert mime.encoding == 'utf8'
-    assert mime['Content-Type'] == 'image/gif; charset="utf8"'
