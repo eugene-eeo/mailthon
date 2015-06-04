@@ -1,5 +1,7 @@
 import pytest
-from mailthon.headers import Headers, cc, bcc, to, sender
+from mock import Mock, call
+import mailthon.headers
+from mailthon.headers import Headers, cc, to, bcc, sender, message_id, date
 from .mimetest import blank
 
 
@@ -108,3 +110,21 @@ def test_sender_tuple(argtype):
         param = '{0} <{1}>'.format(*param)
     _, value = sender(param)
     assert value == 'name <mail@mail.com>'
+
+
+def test_message_id():
+    def msgid(thing=None):
+        return thing
+
+    mailthon.headers.make_msgid = Mock(side_effect=msgid)
+    assert tuple(message_id()) == ('Message-ID', None)
+    assert tuple(message_id('string')) == ('Message-ID', 'string')
+    assert tuple(message_id(idstring=1)) == ('Message-ID', 1)
+
+
+def test_date():
+    formatdate = mailthon.headers.formatdate = Mock(return_value=1)
+    assert tuple(date()) == ('Date', 1)
+    assert formatdate.mock_calls == [call(localtime=True)]
+
+    assert tuple(date('time')) == ('Date', 'time')
