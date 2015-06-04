@@ -13,8 +13,7 @@ def tls_started(conn):
     starttls = call.starttls()
     ehlo = call.ehlo()
     return (starttls in calls and
-            ehlo in calls and
-            calls.index(starttls) < calls.index(ehlo))
+            ehlo in calls[calls.index(starttls)+1:])
 
 
 class TestTlsSupported:

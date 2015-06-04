@@ -46,13 +46,17 @@ class TestEmail:
 class TestPostman:
     @pytest.fixture
     def postman(self):
-        return postman(
+        p = postman(
             host='smtp.mail.com',
             port=100,
             auth=('username', 'password'),
             force_tls=True,
             options={'timeout': 1},
         )
+        smtp = Mock()
+        smtp.return_value = smtp
+        p.transport = smtp
+        return p
 
     def test_attributes(self, postman):
         assert postman.host == 'smtp.mail.com'
@@ -60,10 +64,6 @@ class TestPostman:
         assert postman.options == {'timeout': 1}
 
     def test_middleware(self, postman):
-        conn = Mock()
-
-        for item in postman.middlewares:
-            item(conn)
-
-        assert tls_started(conn)
-        assert call.login('username', 'password') in conn.mock_calls
+        with postman.connection() as conn:
+            assert tls_started(conn)
+            assert call.login('username', 'password') in conn.mock_calls
