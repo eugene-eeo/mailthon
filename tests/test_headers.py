@@ -101,10 +101,10 @@ def test_tuple_headers(function):
     assert value == expected
 
 
-@pytest.mark.parametrize('param', [
-    ('name', 'mail@mail.com'),
-    'name <mail@mail.com>',
-])
-def test_sender_tuple(param):
+@pytest.mark.parametrize('argtype', [str, tuple])
+def test_sender_tuple(argtype):
+    param = ('name', 'mail@mail.com')
+    if argtype is str:
+        param = '{0} <{1}>'.format(*param)
     _, value = sender(param)
     assert value == 'name <mail@mail.com>'
