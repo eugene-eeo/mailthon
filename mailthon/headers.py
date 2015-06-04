@@ -89,7 +89,7 @@ def sender(address):
     Generates a Sender header with a given *text*.
     """
     yield 'Sender'
-    yield address
+    yield format_addresses([address])
 
 
 def to(*addrs):

@@ -1,5 +1,5 @@
 import pytest
-from mailthon.headers import Headers, cc, bcc, to
+from mailthon.headers import Headers, cc, bcc, to, sender
 from .mimetest import blank
 
 
@@ -99,3 +99,12 @@ def test_tuple_headers(function):
     )
     expected = 'Sender <sender@mail.com>, Me <me@mail.com>'
     assert value == expected
+
+
+@pytest.mark.parametrize('param', [
+    ('name', 'mail@mail.com'),
+    'name <mail@mail.com>',
+])
+def test_sender_tuple(param):
+    _, value = sender(param)
+    assert value == 'name <mail@mail.com>'
