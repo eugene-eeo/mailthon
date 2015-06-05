@@ -1,52 +1,46 @@
-Contributing to Mailthon
-========================
+Contribution Guidelines
+=======================
 
-Thanks for considering to contribute to Mailthon.
+Whether you are submitting new features, filing issues, discussing
+improvements or giving feedback about the library, all are welcome!
+To get started:
 
-Feedback / Support Questions
-----------------------------
+1. Check for related issues or open a fresh one to start discussion
+   around an idea or a bug.
+2. Fork the `repository <https://github.com/eugen-eeo/mailthon>`_,
+   create a new branch off `master` and make your changes.
+3. Write a regression test which shows that the bug was fixed or the
+   feature works as expected. If it's a bug, try to make sure the
+   tests fail without your changes.
+4. Submit a pull request!
 
-- Use the Github Issues system or send me an email if the feedback
-  is more personal.
+Philosophy
+**********
 
-Reporting Issues
-----------------
+Mailthon aims to be easy to use while being very extensible at
+the same time. Therefore two values needed to be upholded- the
+simplicity and elegance of the code. Sometimes they will contradict
+one another; in that case prefer the approach with fewer magic,
+in fact don't try to include magic if possible.
 
-- Include the Python version. Usually this can be done by invoking
-  ``python --version``. This is especially important when it comes
-  to encoding issues.
-- If possible, check that it's already fixed in the latest version
-  of the codebase (i.e. the master branch).
+Code Conventions
+****************
 
-Submitting Patches
-------------------
+Generally the Mailthon codebase follows rules dictated by
+`PEP 8 <http://legacy.python.org/dev/peps/pep-0008/>`_. Sometimes
+following PEP8 makes the code uglier. In that case feel free to
+break from the rules if it makes your code more understandable.
+A minor exception concerning docstrings:
 
-- Include regression test(s) if your patch solves a bug. Explain
-  how the bug happens and if possible, include version information
-  and stack traces. Make sure that the regression test fails without
-  your patch. (If only on certain systems).
+When multiline docstrings are used, keep the triple quotes on
+their own line and do not put a separate newline after it if
+it is not necessary. This convention is used by Flask et al.
 
-- Follow PEP 8 to a reasonable extent. Ignore it if it makes the
-  code ugly or harder to understand. Readability is more important.
+.. code-block:: python
 
-- If you would like to contribute but are not familiar with the
-  codebase, look for issues filed under the ``beginner-friendly``
-  tag.
-
-Running Tests
-#############
-
-The test suite requires pytest and mock::
-
-    $ pip install mock
-    $ pip install pytest
-
-Running the test suite is simply::
-
-    $ py.test
-
-Feel free to use pyenv_ to test against many other Pythons. Note
-that Travis is already configured to test against the more
-frequently used ones when you submit your pull request.
-
-.. _pyenv: https://github.com/yyuu/pyenv
+    def function():
+        """
+        Documentation
+        """
+        # implementation
+        return value
