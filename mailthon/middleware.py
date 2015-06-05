@@ -13,10 +13,7 @@
 class Middleware(object):
     """
     Base class for middlewares. Middlewares are encouraged
-    to subclass from this class and override the ``__call__``
-    method to implement the correct functionality. By
-    default, the ``__call__`` method raises
-    NotImplementedError.
+    to subclass from this class for extensibility reasons.
     """
 
     def __call__(self, conn):

@@ -42,7 +42,8 @@ class SendmailResponse(Response):
     command.
 
     :param pair: The response pair.
-    :param rejected: Rejected receipients.
+    :param rejected: Dictionary of rejected
+        addresses to status-code message pairs.
     """
 
     def __init__(self, pair, rejected):

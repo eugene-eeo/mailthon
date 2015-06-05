@@ -44,6 +44,9 @@ class Postman(object):
         Use a certain callable *middleware*, i.e.
         append it to the list of middlewares, and
         return it so it can be used as a decorator.
+        Note that the *middleware* is added to the
+        end of the middlewares list, so it will be
+        called last.
         """
         self.middlewares.append(middleware)
         return middleware

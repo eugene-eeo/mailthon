@@ -76,9 +76,6 @@ class UnicodeDict(dict):
     magically - that is, byte-values are
     automatically decoded. Accepts a dict
     or iterable *values*.
-
-    :param encoding: Default encoding used
-        if no encoding is specified.
     """
 
     def __init__(self, values=(), encoding='utf-8'):
