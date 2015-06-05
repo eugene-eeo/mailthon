@@ -11,7 +11,8 @@ To get started:
    create a new branch off `master` and make your changes.
 3. Write a regression test which shows that the bug was fixed or the
    feature works as expected. If it's a bug, try to make sure the
-   tests fail without your changes.
+   tests fail without your changes. Tests can be ran via the
+   ``py.test`` command.
 4. Submit a pull request!
 
 Philosophy
