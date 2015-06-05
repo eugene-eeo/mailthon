@@ -12,13 +12,15 @@ started with the library.
    installation
    quickstart
 
-API Reference
--------------
+Developer Reference
+-------------------
 
 If you are looking for specific classes, methods or functions,
-this part of the documentation is for you.
+or curious about why certain things work the way they work, this
+part of the documentation is for you.
 
 .. toctree::
    :maxdepth: 2
 
    api
+   design
