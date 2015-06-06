@@ -6,6 +6,7 @@ from email.message import Message
 class mimetest:
     def __init__(self, mime):
         self.mime = mime
+        assert not mime.defects
 
     def __getitem__(self, header):
         return self.mime[header]
@@ -16,15 +17,11 @@ class mimetest:
 
     @property
     def encoding(self):
-        ctype = self['Content-Type'].split()
-        if len(ctype) >= 2:
-            match = search('charset="(.+?)"', ctype[1])
-            if match:
-                return match.group(1)
+        return self.mime.get_content_charset(None)
 
     @property
     def mimetype(self):
-        return self['Content-Type'].split()[0].strip(';')
+        return self.mime.get_content_type()
 
     @property
     def payload(self):
