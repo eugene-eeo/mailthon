@@ -181,7 +181,7 @@ instance, it'll happily send it off::
     >>> assert r.ok
 
 Questioning our identity
-########################
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Notice the ``mail_from`` attribute- it is not
 named something like ``sender``. Why is that so?
@@ -233,7 +233,7 @@ do so via the :attr:`~mailthon.envelope.Envelope.sender`
 attribute.
 
 The headless MIME
-#################
+^^^^^^^^^^^^^^^^^
 
 In an ideal world, the SMTP protocol speaks Unicode
 and we can all throw poop emojis around at each other
@@ -241,8 +241,8 @@ while pretending to get our work done. But that is
 sadly not the case. SMTP is a protocol which only
 understands bytes, and was invented way back in
 `1982 <http://tools.ietf.org/html/rfc821>`_ when
-(only?) ASCII was the dominant encoding and nobody
-cared about characters outside the English alphabet.
+nobody cared about characters outside the English
+alphabet.
 
 As a result, the simple ASCII encoding stuck and
 was used as the de-facto standard for emails and
@@ -279,13 +279,79 @@ class) is to handle all this for you::
     >>> headers = Headers({
     ...    'Subject': u'∂y is not exact',
     ... })
-    ...
     >>> mime = Message()
     >>> headers.prepare(mime)
     >>> mime.as_string()
     'Subject: =?utf-8?q?=E2=88=82y_is_not_exact?=\n\n'
 
 For the record, it's actually the :class:`~email.message.Message`
-class that does all the heavy lifting-
-Mailthon simply supplies it with the right
-things and does the right transformations.
+class that does all the heavy lifting- for space
+saving and efficiency reasons, Mailthon simply
+supplies it with the Unicode string and it
+determines whether to encode with ASCII or
+UTF-8.
+
+IDNA and Friends
+^^^^^^^^^^^^^^^^
+
+Turns out that there is now a format for
+encoding domain names with non-ASCII
+characters in them, specified in :rfc:`3490`
+and usually referred to as
+`IDN or IDNA <http://en.wikipedia.org/wiki/Internationalized_domain_name>`_.
+For a real life example: `é.com <http://xn--9ca.com>`_.
+This gives us a pleasant surprise if we try
+to encode everything with UTF-8, the silver
+bullet to our Unicode encoding woes::
+
+    >>> u'é'.encode('utf8')
+    '\xc3\xa9'
+    >>> u'é'.encode('idna')
+    'xn--9ca'
+
+A short detour on the format of email addresses-
+they are made up of two parts, separated by the
+first occurence of the '@' symbol.
+
+1. `Local-Part <http://en.wikipedia.org/wiki/Email_address#Local_part>`_
+   which can be UTF-8 encoded as per :rfc:`6531`.
+   The local part is not really important to the
+   sending server who you are sending it to, rather
+   it is more concerned with which server you are
+   sending it to.
+2. `Domain-Part <http://en.wikipedia.org/wiki/Email_address#Domain_part>`_
+   which should be IDNA-encoded. Although servers
+   which are compliant with both :rfc:`6531` and
+   :rfc:`6532` can accept Unicode-encoded domain
+   names, the pessimistic guess would be that most
+   aren't, so for the time being we are encoding
+   in IDNA.
+
+Putting it all together we have something like
+the following function::
+
+    def encode_address(addr):
+        localpart, domain = addr.split('@', 1)
+        return b'@'.join([
+            localpart.encode('utf8'),
+            domain.encode('idna'),
+        ])
+
+But Mailthon already has a more robust implementation
+available in the form of the :func:`~mailthon.helpers.encode_address`
+function, and is automatically used by the :class:`~mailthon.postman.Postman`
+class when sending envelopes. Via the :meth:`~smtplib.SMTP.sendmail`
+method. Essentially, the following::
+
+    def send(smtp, envelope):
+        smtp.sendmail(
+            encode_address(envelope.sender),
+            [encode_address(k) for k in envelope.receivers],
+            envelope.string(),
+        )
+
+Which explains why the addresses specified in the
+:attr:`~mailthon.envelope.Envelope.mail_from` and
+:attr:`~mailthon.envelope.Envelope.receivers` attributes
+must be Unicode values instead of byte strings
+since mixing them up will cause issues in Python 3.
