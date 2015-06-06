@@ -1,4 +1,4 @@
-.. design::
+.. _design:
 
 Design Decisions
 ================
@@ -56,50 +56,37 @@ consider the following situations:
    it is extremely unweildly to have a giant Envelope class
    that does everything.
 
-
-No bulk sending
+Unicode Headers
 ---------------
 
-Usually this feature is expected to be present in libraries.
-However Mailthon does not include bulk email sending. This
-is not an issue with multiple receipients- that is well
-supported but what is meant by bulk sending is the sending
-of many emails to many people. This is what it used to
-look like::
+This design decision is in fact inspired by Werkzeug. Basically,
+SMTP allows you to specify headers of different encodings, e.g.
+UTF-8 headers for chinese characters in the subject field. While
+the :class:`~email.message.Message` objects allow you to pass in
+unicode or byte strings, or even :class:`~email.header.Header`
+objects as the header values- Mailthon chooses to pass in Unicode
+values.
 
-    postman.send_many([env1, env2, env3])
+The background is simple- so that users writing special headers
+do not need to worry about weird encoding problems that do not
+usually show up until the time where you least expect them to.
+Thus the :class:`~mailthon.helpers.UnicodeDict` class was born::
 
-Where the connection is shared in between the delivery of
-all of the three envelopes. That is good when everything
-goes well but consider an imaginary situation where there
-is an exception raised before the second envelope is sent.
-There is no way to inform the user that the second and third
-envelopes are not sent. Instead Mailthon leaves this up to
-the developer::
+    >>> from mailthon.helpers import UnicodeDict
+    >>> d = UnicodeDict()
+    >>> d['uni'] = u'unicode'
+    >>> d['uni']
+    u'unicode'
+    >>> d['key'] = b'value'
+    >>> d['key']
+    u'value'
 
-    with postman.connection() as conn:
-        try:
-            respose = postman.deliver(conn, envelope)
-            assert response.ok
-        except Exception as err:
-            handle_exception(err)
-
-One way around this problem is to use something like a cursor
-class, where the delivery can be continued arbirtrarily, and
-the generator paused whenever an exception occurs such that
-the user can resume the sending after it is handled. For
-example, something like the following::
-
-    cursor = postman.cursor([env1, env2, env3])
-    try:
-        cursor.deliver()
-    except Exception as err:
-        if cursor.sent > 0:
-            resolve(err)
-            cursor.deliver()
-        else:
-            raise
-
-Where ``cursor.sent`` is the number of envelopes sent. Once
-again this is good and all but presents some resource
-handling problems of it's own.
+Which automatically tries to decode bytes values into Unicode
+strings. This makes development of Headers very painless; you
+can pass in whatever value in Unicode- they will all look the
+same and thus can be very easily programmed against. Also it
+makes passing in a special ``mail_from`` parameter to the
+:class:`~mailthon.envelope.Envelope`` class simpler; you do
+not need to worry about encoding since the :class:`~mailthon.postman.Postman`
+object encodes it for you behind the scenes, using the
+:func:`~mailthon.helpers.encode_address` function.

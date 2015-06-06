@@ -88,7 +88,7 @@ Enclosure Objects
 .. autoclass:: mailthon.enclosure.Attachment
    :members:
 
-Response objects
+Response Objects
 ----------------
 
 .. autoclass:: mailthon.response.Response
