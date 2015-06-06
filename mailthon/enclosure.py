@@ -31,6 +31,7 @@ class Enclosure(object):
 
     def __init__(self, headers=()):
         self.headers = Headers(headers)
+        self.content = None
 
     def mime_object(self):
         """
