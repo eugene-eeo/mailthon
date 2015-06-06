@@ -11,6 +11,7 @@ started with the library.
    foreword
    installation
    quickstart
+   indepth
 
 Developer Reference
 -------------------

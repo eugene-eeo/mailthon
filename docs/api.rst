@@ -76,6 +76,19 @@ Enclosure Objects
       over which headers are set in the final, prepared MIME
       object.
 
+   .. attribute:: content
+
+      Anything the the Enclosure object contains. For
+      example for :class:`~mailthon.enclosure.PlainText`
+      enclosures this is usually a Unicode or bytes string.
+      There is no restriction on what kind of object the
+      ``content`` attribute may contain, but most of the
+      time assume it is a string unless absolutely necessary,
+      e.g. for some performance/memory-usage tweaks.
+
+      On the :class:`~mailthon.enclosure.Enclosure` base
+      class this defaults to ``None``.
+ 
 .. autoclass:: mailthon.enclosure.PlainText
    :members:
 

@@ -137,3 +137,7 @@ the response values::
 
     if response.ok:
         print("OK! :)")
+
+You might want to continue reading about Mailthon's architecture
+in the :ref:`indepth`, or dive into the internals in the :ref:`api`
+section.
