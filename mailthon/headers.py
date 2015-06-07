@@ -16,12 +16,13 @@ from .helpers import format_addresses, UnicodeDict
 
 class Headers(UnicodeDict):
     """
-    RFC 2822 compliant subclass of a dictionary. The
-    semantics of the dictionary is different from
-    that of the standard library MIME object- only
-    the latest header is preserved instead of
-    preserving all headers. This makes header lookup
-    deterministic and sane.
+    :rfc:`2822` compliant subclass of the
+    :class:`~mailthon.helpers.UnicodeDict`. The
+    semantics of the dictionary is different from that
+    of the standard library MIME object- only the
+    latest header is preserved instead of preserving
+    all headers. This makes header lookup deterministic
+    and sane.
     """
 
     @property

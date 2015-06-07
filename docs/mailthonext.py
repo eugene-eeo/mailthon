@@ -26,7 +26,7 @@ class JinjaStyle(Style):
 
         Operator.Word:              'bold #B80000',
 
-        Name.Builtin:               '#333333',
+        Name.Builtin:               '#B80000',
         Name.Function:              '#333333',
         Name.Class:                 'bold #333333',
         Name.Namespace:             'bold #333333',

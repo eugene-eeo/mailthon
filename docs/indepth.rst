@@ -230,6 +230,8 @@ class). But if you wish to do so, you can change the
 However if you want the inferred sender (the one
 that was obtained from the headers) you can still
 do so via the :attr:`~mailthon.envelope.Envelope.sender`
+attribute. You can read more about the behaviour
+of the :attr:`~mailthon.envelope.Envelope.mail_from`
 attribute.
 
 The headless MIME
@@ -355,3 +357,186 @@ Which explains why the addresses specified in the
 :attr:`~mailthon.envelope.Envelope.receivers` attributes
 must be Unicode values instead of byte strings
 since mixing them up will cause issues in Python 3.
+
+The Postman Object
+------------------
+
+The :class:`~mailthon.postman.Postman` class is
+responsible for delivering the email via some
+transport, and is meant as a transport-agnostic
+layer to make sending emails via different protocols
+as painless as possible. Let's start by creating
+a postman instance::
+
+    >>> from mailthon.postman import Postman
+    >>> postman = Postman(host='smtp.server.com', port=587)
+
+The Mutation Phase
+^^^^^^^^^^^^^^^^^^
+
+The :attr:`~Postman.transport` attribute. This is
+the actual "transport" used to send our emails over
+to a real server. To implement a transport it turns
+out that we need, at the very least, to have the
+``ehlo``, ``noop``, ``quit``, and ``sendmail``
+methods::
+
+    class MyTransport(object):
+        def __init__(self, host, port):
+            self.host = host
+            self.port = port
+            self.connection_started = False
+
+        def check_conn(self):
+            if not self.connection_started:
+                raise IOError
+
+        def noop(self):
+            self.check_conn()
+            return 200
+
+        def ehlo(self):
+            self.connection_started = True
+
+        def sendmail(self, sender, receipients, string):
+            self.check_conn()
+            return {}
+
+        def quit(self):
+            self.connection_started = False
+
+Next all we need to do is replace the ``tranport``
+attribute with the class object that we've just
+created. Although this is not recommended as I
+recommend subclassing to change the transport
+being used we will do it anyways::
+
+    postman.transport = MyTransport
+
+The :attr:`~Postman.response_cls` attribute will
+contain a custom response class. We will create
+our own response class as well::
+
+    class Response(object):
+        def __init__(self, rejected, status):
+            self.rejected = rejected
+            self.status_code = status
+     
+        @property
+        def ok(self):
+            return self.status_code == 200 and \
+                   not self.rejected
+
+If you haven't noticed, the ``__init__`` method
+of our custom response class matches perfectly
+with the return values of the ``sendmail`` and
+``noop`` methods from the ``MyTransport`` class,
+respectively. They are called by the :class:`~mailthon.postman.Postman`
+class like so::
+
+   def deliver(self, conn, envelope):
+       rejected = conn.sendmail(...)
+       return self.response_cls(rejected, conn.noop())
+
+Now we just have to change the response class on
+the postman object we've created. Once again I
+recommend subclassing to change these attributes
+but for this experiment we'll change them in runtime::
+
+    >>> postman.response_cls = Response
+
+Putting it all together
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Next we'll send an envelope "across the wire" using
+our mutated postman object with our custom transport
+and response classes::
+
+    >>> r = postman.send(envelope)
+    >>> assert r.ok
+
+But that doesn't give us very much knowlegde of what
+happens underneath the hood. The :meth:`~mailthon.postman.Postman.send`
+method is simply a veneer over the lower level
+:meth:`~mailthon.postman.Postman.connection` and
+:meth:`~mailthon.postman.Postman.deliver` methods.
+Let's recreate the send method::
+
+    >>> with postman.connection() as conn:
+    ...    print(conn.connection_started)
+    ...    r = postman.deliver(conn, envelope)
+    ...    print(r)
+    ...
+    True
+    <__main__.Response object at 0x...>
+
+Basically what the :meth:`~mailthon.postman.Postman.connection`
+context manager does is that it manages the (usually SMTP)
+session for you. It is roughly implemented as::
+
+    @contextmanager
+    def connection(self):
+        conn = self.transport(self.host, self.port)
+        try:
+            conn.ehlo()
+            yield conn
+        finally:
+            conn.quit()
+
+Which closes the connection regardless of whether the
+sending operation is a success. This is important to
+prevent excessive memory and file-descriptor usage
+from the open sockets. You can verify that the connection
+as closed::
+
+    >>> conn.connection_started
+    False
+
+Which is changed to False due the the context manager
+calling the ``quit`` method once the block of code within
+the ``with`` statement has finished executing. If you
+would like to find out how all of this is implemented
+you can take a look at the `source <https://github.com/eugene-eeo/mailthon/blob/master/mailthon/postman.py>`_
+code.
+
+Middlewares and Middlemen
+-------------------------
+
+One of the more powerful features of Mailthon is the
+ability to add middleware- which are basically functions
+that allow for certain features, e.g. :class:`~mailthon.middleware.TLS`,
+:class:`~mailthon.middleware.Auth` which provide for
+TLS and authentication, respectively. Let's make
+our own middleware to see how all of this is done::
+
+    def my_middleware(must_have=()):
+        def func(conn):
+            for item in must_have:
+                assert hasattr(conn, item)
+        return func
+
+Then we need to put our middleware in what's known
+as a middleware stack. It is basically a list of
+callables which will be invoked with the transport
+object. Using our Postman class::
+
+    postman.use(my_middleware(['quit']))
+
+Which will add the closure into the middleware stack
+and assert that the transport object has the ``quit``
+attribute/method. More powerful middleware can
+certainly be programmed via classes, the recommended
+way if you want to make extensible middlewares is to
+subclass from the :class:`~mailthon.middleware.Middleware`
+class::
+
+    from mailthon.middleware import Middleware
+
+    class MyMiddleware(Middle):
+        def __call__(self, conn):
+            pass
+
+The registered middlewares will be called by the
+:meth:`~mailthon.postman.Postman.connection` method
+to set up the connection. If any exception is raised,
+the connection is automatically closed.

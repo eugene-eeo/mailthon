@@ -22,12 +22,13 @@ Postman Object
 
       Although you can change it during runtime for special
       purposes such as testing. The transport class must also
-      support the ``ehlo`` and ``sendmail`` methods, and return
-      objects that match the signature of those functions. For
-      reference:
+      support the ``ehlo``, ``noop``, ``quit``, and ``sendmail``
+      methods. For reference:
 
       - :meth:`smtplib.SMTP.sendmail`
+      - :meth:`smtplib.SMTP.noop`
       - :meth:`smtplib.SMTP.ehlo`
+      - :meth:`smtplib.SMTP.quit`
 
    .. attribute:: response_cls
 
@@ -39,6 +40,10 @@ Postman Object
 
           class HTTPPostman(Postman):
               response_cls = MyResponse
+
+      It will be called with the response returned by
+      the :meth:`~smtplib.SMTP.noop` method, or the
+      noop method of your own transport class.
 
 Envelope Object
 ---------------
