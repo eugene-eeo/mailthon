@@ -7,6 +7,56 @@ This page gives a good introduction to Mailthon, and assumes
 that you already have Mailthon installed. Head over to the
 :ref:`installation` section if you do not.
 
+Comparison
+----------
+
+A comparison between using the standard library
+`smtplib <https://docs.python.org/2/library/smtplib.html>`_ module and
+Mailthon::
+
+    from smtplib import SMTP
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
+    from email.mime.image import MIMEImage
+
+    text = MIMEText('<html><p>Hi!</p></html>', 'html')
+    image = MIMEImage(open('cats.gif', 'rb').read())
+
+    mime = MIMEMultipart()
+    mime['Sender'] = 'Me <me@mail.com>'
+    mime['To'] = 'Them <them@mail.com>'
+    mime.attach(text)
+    mime.attach(image)
+
+    smtp = SMTP(host='smtp.server.com', port=587)
+    smtp.ehlo()
+    smtp.starttls()
+    smtp.login('username', 'password')
+    smtp.sendmail(
+        mime['Sender'],
+        mime['To'],
+        mime.as_string()
+    )
+    smtp.quit()
+
+Using Mailthon all this cruft is reduced::
+
+    from mailthon import postman, email
+    
+    smtp = postman(host='smtp.server.com', port=587, auth=('username', 'password'))
+    smtp.send(email(
+        sender='Me <me@mail.com>',
+        receivers=['Them <them@mail.com>'],
+        content='<html><p>Hi!</p></html>',
+        attachments=[
+            'cats.gif',
+        ]
+    ))
+
+Quoting Kenneth Reitz, "things shouldn't be like that,
+not in Python.".
+
+
 Creating an Email
 -----------------
 
