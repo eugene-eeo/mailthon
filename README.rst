@@ -7,11 +7,11 @@ Mailthon
 .. image:: https://ci.appveyor.com/api/projects/status/eadeytartlka64a1?svg=true
     :target: https://ci.appveyor.com/project/eugene-eeo/mailthon
 
-MIT licensed library for easy delivery of emails, inspired
-by Requests's simple, beautiful API. Mailthon aims to
-simplify the delivery of emails and make it a joy to use
-as well as being extremely extensible and configurable at
-the same time.
+Mailthon is an email library for Python that aims to be highly
+extensible and composable. Mailthon is unicode aware and supports
+internationalised headers and email addresses. Also it aims to be
+highly transport agnostic, meaning that SMTP can be swapped out
+for other transports.
 
 .. code-block:: python
 
@@ -25,14 +25,8 @@ the same time.
         ))
     >>> assert r.ok
 
-The library is still in rapid development and the edges
-are being ironed out. Feel free to raise issues/ping me
-if you want to give feedback. Also, you can always make
-pull requests if you prefer expressing yourself in code.
+**Useful links:** `Documentation`_ | `Issue Tracker`_ | `PyPI Page`_
 
-Installation
-------------
-
-::
-
-    $ pip install mailthon
+.. _Documentation: http://mailthon.readthedocs.org/en/latest/
+.. _Issue Tracker: http://github.com/eugene-eeo/mailthon/issues/
+.. _PyPI Page: http://pypi.python.org/pypi/Mailthon
