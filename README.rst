@@ -1,12 +1,6 @@
 Mailthon
 ========
 
-.. image:: https://travis-ci.org/eugene-eeo/mailthon.svg?branch=master
-    :target: https://travis-ci.org/eugene-eeo/mailthon
-
-.. image:: https://ci.appveyor.com/api/projects/status/eadeytartlka64a1?svg=true
-    :target: https://ci.appveyor.com/project/eugene-eeo/mailthon
-
 Mailthon is an email library for Python that aims to be highly
 extensible and composable. Mailthon is unicode aware and supports
 internationalised headers and email addresses. Also it aims to be
@@ -30,3 +24,14 @@ for other transports.
 .. _Documentation: http://mailthon.readthedocs.org/en/latest/
 .. _Issue Tracker: http://github.com/eugene-eeo/mailthon/issues/
 .. _PyPI Page: http://pypi.python.org/pypi/Mailthon
+
+Platforms
+---------
+
++-------------+----------------------------------------------------------------------------------+
+| **Linux**   | .. image:: https://travis-ci.org/eugene-eeo/mailthon.svg?branch=master           |
+|             |     :target: https://travis-ci.org/eugene-eeo/mailthon                           |
++-------------+----------------------------------------------------------------------------------+
+| **Windows** | .. image:: https://ci.appveyor.com/api/projects/status/eadeytartlka64a1?svg=true |
+|             |     :target: https://ci.appveyor.com/project/eugene-eeo/mailthon                 |
++-------------+----------------------------------------------------------------------------------+
