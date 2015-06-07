@@ -1,6 +1,8 @@
 Mailthon
 ========
 
+**Useful links:** `Documentation`_ | `Issue Tracker`_ | `PyPI Page`_
+
 Mailthon is an email library for Python that aims to be highly
 extensible and composable. Mailthon is unicode aware and supports
 internationalised headers and email addresses. Also it aims to be
@@ -18,8 +20,6 @@ for other transports.
             receivers=['doe@jon.com'],
         ))
     >>> assert r.ok
-
-**Useful links:** `Documentation`_ | `Issue Tracker`_ | `PyPI Page`_
 
 .. _Documentation: http://mailthon.readthedocs.org/en/latest/
 .. _Issue Tracker: http://github.com/eugene-eeo/mailthon/issues/
