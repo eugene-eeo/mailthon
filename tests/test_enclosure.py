@@ -21,6 +21,10 @@ class TestCollection:
         )
         return mimetest(coll.mime())
 
+    def test_default_mimetype(self):
+        mime = mimetest(Collection().mime())
+        assert mime.mimetype == 'multipart/mixed'
+
     def test_mimetype(self, mime):
         assert mime.mimetype == 'multipart/alternative'
 
@@ -95,6 +99,11 @@ class TestBinary(TestPlainText):
                    headers={'Content-Type': 'text/plain'})
         mime = mimetest(b.mime())
         assert mime['Content-Type'] == 'text/plain'
+
+    def test_content_id(self, enclosure):
+        enclosure.content_id('id')
+        mime = mimetest(enclosure.mime())
+        assert mime['Content-ID'] == '<id>'
 
 
 class TestAttachment(TestBinary):

@@ -73,7 +73,7 @@ class Enclosure(object):
 
 class Collection(Enclosure):
     def __init__(self, *enclosures, **kwargs):
-        self.subtype = kwargs.pop('subtype', 'application')
+        self.subtype = kwargs.pop('subtype', 'mixed')
         self.enclosures = enclosures
         Enclosure.__init__(self, **kwargs)
 
@@ -150,6 +150,9 @@ class Binary(Enclosure):
         self.encoder(mime)
         return mime
 
+    def content_id(self, value):
+        self.headers['Content-ID'] = '<%s>' % (value,)
+
 
 class Attachment(Binary):
     """
@@ -157,8 +160,7 @@ class Attachment(Binary):
     The advantage over directly using the Binary
     class is that the Content-Disposition header
     is automatically set, the mimetype guessed,
-    and the ``content`` attribute is lazily
-    obtained.
+    and the content lazily returned.
 
     :param path: Absolute/Relative path to the file.
     :param headers: Optional headers.
