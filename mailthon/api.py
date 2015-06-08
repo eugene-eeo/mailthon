@@ -19,7 +19,8 @@ def email(sender=None, receivers=(), cc=(), bcc=(),
           subject=None, content=None, encoding='utf8',
           attachments=()):
     """
-    Creates an Envelope object with a HTML *content*.
+    Creates a Collection object with a HTML *content*,
+    and *attachments*.
 
     :param content: HTML content.
     :param encoding: Encoding of the email.

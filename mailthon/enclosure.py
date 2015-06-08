@@ -2,8 +2,7 @@
     mailthon.enclosure
     ~~~~~~~~~~~~~~~~~~
 
-    Implements Enclosure objects- parts that collectively
-    make up body of the email.
+    Implements Enclosure objects.
 
     :copyright: (c) 2015 by Eeo Jun
     :license: MIT, see LICENSE for details.
@@ -22,13 +21,10 @@ from .helpers import guess
 class Enclosure(object):
     """
     Base class for Enclosure objects to inherit from.
-    An enclosure is a part of the enclosure in a real
-    envelope- it contains part of the content to be
-    sent.
+    An enclosure can be sent on it's own or wrapped
+    inside an Envelope object.
 
-    :param headers: Iterable of headers to include,
-        stored in an RFC-compliant Headers mapping
-        internally under the headers attribute.
+    :param headers: Iterable of headers to include.
     """
 
     def __init__(self, headers=()):
@@ -68,6 +64,10 @@ class Enclosure(object):
         return mime
 
     def string(self):
+        """
+        Returns the stringified MIME object, ready
+        to be sent via sendmail.
+        """
         return self.mime().as_string()
 
 
@@ -153,7 +153,9 @@ class Attachment(Binary):
     Binary subclass for easier file attachments.
     The advantage over directly using the Binary
     class is that the Content-Disposition header
-    is automatically set.
+    is automatically set, the mimetype guessed,
+    and the ``content`` attribute is lazily
+    obtained.
 
     :param path: Absolute/Relative path to the file.
     :param headers: Optional headers.
