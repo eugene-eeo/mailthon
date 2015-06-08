@@ -11,11 +11,12 @@
 
 from email.encoders import encode_base64
 from email.message import Message
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from os.path import basename
-from .helpers import guess
+
 from .headers import Headers, content_disposition
+from .helpers import guess
 
 
 class Enclosure(object):
@@ -36,10 +37,17 @@ class Enclosure(object):
 
     @property
     def sender(self):
+        """
+        Returns the sender of the enclosure, obtained
+        from the headers.
+        """
         return self.headers.sender
 
     @property
     def receivers(self):
+        """
+        Returns a list of receiver addresses.
+        """
         return self.headers.receivers
 
     def mime_object(self):
@@ -134,10 +142,8 @@ class Binary(Enclosure):
     def mime_object(self):
         mime = Message()
         mime.set_payload(self.content)
-        args = {} if self.encoding is None else {'charset': self.encoding}
-        mime.add_header('Content-Type',
-                        self.mimetype,
-                        **args)
+        mime.add_header('Content-Type', self.mimetype)
+        mime.set_charset(self.encoding)
         self.encoder(mime)
         return mime
 

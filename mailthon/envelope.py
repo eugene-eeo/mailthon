@@ -11,9 +11,9 @@
 
 class Envelope(object):
     """
-    Encapsulates the concept of an Envelope- there
-    can be multiple stamps (*headers*) and multiple
-    "things" inside the *enclosure*.
+    Encapsulates the concept of an Envelope- a wrapper
+    around some content in the form of an *enclosure*,
+    and dealing with SMTP specific idiosyncracies.
 
     :param enclosure: An enclosure object to wrap around.
     :param mail_from: The "real" sender. May be omitted.
