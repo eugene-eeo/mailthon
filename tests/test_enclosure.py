@@ -118,7 +118,7 @@ def test_binary_with_encoding():
     b = Binary(
         content=b'something',
         mimetype='image/gif',
-        encoding='utf8',
+        encoding='utf-8',
     )
     mime = mimetest(b.mime())
-    assert mime.encoding == 'utf8'
+    assert mime.encoding == 'utf-8'
