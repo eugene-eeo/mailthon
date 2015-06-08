@@ -10,8 +10,9 @@
 """
 
 from email.encoders import encode_base64
-from email.mime.base import MIMEBase
+from email.message import Message
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from os.path import basename
 from .helpers import guess
 from .headers import Headers, content_disposition
@@ -33,6 +34,14 @@ class Enclosure(object):
         self.headers = Headers(headers)
         self.content = None
 
+    @property
+    def sender(self):
+        return self.headers.sender
+
+    @property
+    def receivers(self):
+        return self.headers.receivers
+
     def mime_object(self):
         """
         To be overriden. Returns the generated MIME
@@ -48,6 +57,22 @@ class Enclosure(object):
         """
         mime = self.mime_object()
         self.headers.prepare(mime)
+        return mime
+
+    def string(self):
+        return self.mime().as_string()
+
+
+class Collection(Enclosure):
+    def __init__(self, *enclosures, **kwargs):
+        self.subtype = kwargs.pop('subtype', 'application')
+        self.enclosures = enclosures
+        Enclosure.__init__(self, **kwargs)
+
+    def mime_object(self):
+        mime = MIMEMultipart(self.subtype)
+        for item in self.enclosures:
+            mime.attach(item.mime())
         return mime
 
 
@@ -107,13 +132,12 @@ class Binary(Enclosure):
         self.encoder = encoder
 
     def mime_object(self):
-        mime = MIMEBase(*self.mimetype.split('/'))
+        mime = Message()
         mime.set_payload(self.content)
-        if self.encoding:
-            del mime['Content-Type']
-            mime.add_header('Content-Type',
-                            self.mimetype,
-                            charset=self.encoding)
+        args = {} if self.encoding is None else {'charset': self.encoding}
+        mime.add_header('Content-Type',
+                        self.mimetype,
+                        **args)
         self.encoder(mime)
         return mime
 

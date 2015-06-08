@@ -9,7 +9,7 @@ from .utils import smtp, tls_started
 class TestEmail:
     @pytest.fixture(scope='class')
     def mime(self):
-        envelope = email(
+        env = email(
             sender='Me <me@mail.com>',
             receivers=['rcv@mail.com'],
             subject='Something',
@@ -19,7 +19,7 @@ class TestEmail:
             bcc=['bcc1@mail.com', 'bcc2@mail.com'],
             encoding='ascii',
         )
-        return mimetest(envelope.mime())
+        return mimetest(env.mime())
 
 
     def test_bcc_not_set(self, mime):

@@ -76,7 +76,7 @@ class Postman(object):
         not close the connection.
         """
         rejected = conn.sendmail(
-            encode_address(envelope.mail_from),
+            encode_address(envelope.sender),
             [encode_address(k) for k in envelope.receivers],
             envelope.string(),
         )

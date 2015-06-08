@@ -8,9 +8,6 @@
     :license: MIT, see LICENSE for details.
 """
 
-from email.mime.multipart import MIMEMultipart
-from .headers import Headers
-
 
 class Envelope(object):
     """
@@ -18,64 +15,27 @@ class Envelope(object):
     can be multiple stamps (*headers*) and multiple
     "things" inside the *enclosure*.
 
-    :param headers: An iterable/mapping of headers.
-    :param enclosure: A list of enclosure objects.
+    :param enclosure: An enclosure object to wrap around.
+    :param mail_from: The "real" sender. May be omitted.
+    :param rcpt_to: A list of "real" email addresses.
+        May be omitted.
     """
 
-    def __init__(self, headers, enclosure, mail_from=None):
-        self.headers = Headers(headers)
+    def __init__(self, enclosure, mail_from=None, rcpt_to=None):
         self.enclosure = enclosure
         self.mail_from = mail_from
+        self.rcpt_to = rcpt_to
 
     @property
     def sender(self):
-        """
-        Returns the sender of the envelope, obtained
-        from the headers.
-        """
-        return self.headers.sender
-
-    @property
-    def mail_from(self):
-        """
-        Dictates the sender argument being passed to
-        the SMTP.sendmail method. This is different
-        from the ``sender`` property as it is the
-        *real* sender, but the ``sender`` property
-        is merely what *appears* on the email. If it
-        is not set, the real sender is then inferred
-        from the headers.
-        """
-        return self._mail_from or self.sender
-
-    @mail_from.setter
-    def mail_from(self, value):
-        self._mail_from = value
+        return self.mail_from or self.enclosure.sender
 
     @property
     def receivers(self):
-        """
-        Returns a list of receiver addresses.
-        """
-        return self.headers.receivers
+        return self.rcpt_to or self.enclosure.receivers
 
     def mime(self):
-        """
-        Returns a mime object. Internally this
-        generates a ``MIMEMultipart`` object,
-        attaches the enclosures, then prepares
-        it using the internal headers object.
-        """
-        mime = MIMEMultipart()
-        for item in self.enclosure:
-            mime.attach(item.mime())
-        self.headers.prepare(mime)
-        return mime
+        return self.enclosure.mime()
 
     def string(self):
-        """
-        Returns the MIME object as a string-
-        i.e., calls the ``as_string`` method of
-        the generated MIME object.
-        """
-        return self.mime().as_string()
+        return self.enclosure.string()

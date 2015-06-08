@@ -1,5 +1,4 @@
 import pytest
-from email import message_from_string
 from mailthon.enclosure import PlainText
 from mailthon.envelope import Envelope
 from mailthon.headers import sender, to, subject
@@ -10,23 +9,16 @@ class TestEnvelope:
     @pytest.fixture
     def envelope(self):
         return Envelope(
-            headers=[
-                sender('Me <me@mail.com>'),
-                to('him@mail.com', 'them@mail.com'),
-                subject('subject'),
-            ],
-            enclosure=[
-                PlainText('hi!'),
-                PlainText('bye!'),
-            ],
+            PlainText(
+                'hi!',
+                headers=[
+                    sender('Me <me@mail.com>'),
+                    to('him@mail.com', 'them@mail.com'),
+                    subject('subject'),
+                ]),
         )
 
-    def test_string(self, envelope):
-        message = message_from_string(envelope.string())
-        mime = mimetest(message)
-        assert [g.payload for g in mime.parts] == [b'hi!', b'bye!']
-
-    def test_mime_headers(self, envelope):
+    def test_mime(self, envelope):
         mime = mimetest(envelope.mime())
 
         assert mime['Sender'] == 'Me <me@mail.com>'
@@ -37,9 +29,10 @@ class TestEnvelope:
         assert envelope.sender == 'me@mail.com'
         assert envelope.receivers == ['him@mail.com', 'them@mail.com']
 
-    def test_mail_from_not_specified(self, envelope):
-        assert envelope.mail_from == envelope.sender
+    def test_mail_from(self, envelope):
+        envelope.mail_from = 'from@mail.com'
+        assert envelope.sender == 'from@mail.com'
 
-    def test_mail_from_specified(self, envelope):
-        envelope.mail_from = 'From <from@mail.com>'
-        assert envelope.mail_from == 'From <from@mail.com>'
+    def test_rcpt_to(self, envelope):
+        envelope.rcpt_to = ['hi@mail.com']
+        assert envelope.receivers == ['hi@mail.com']
