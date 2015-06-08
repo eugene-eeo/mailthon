@@ -9,7 +9,7 @@
 """
 
 from email.encoders import encode_base64
-from email.message import Message
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from os.path import basename
@@ -140,10 +140,13 @@ class Binary(Enclosure):
         self.encoder = encoder
 
     def mime_object(self):
-        mime = Message()
+        mime = MIMEBase(*self.mimetype.split('/'))
         mime.set_payload(self.content)
-        mime.add_header('Content-Type', self.mimetype)
-        mime.set_charset(self.encoding)
+        if self.encoding:
+            del mime['Content-Type']
+            mime.add_header('Content-Type',
+                            self.mimetype,
+                            charset=self.encoding)
         self.encoder(mime)
         return mime
 
