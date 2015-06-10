@@ -29,9 +29,9 @@ class TestEnvelope:
         assert envelope.mime() == embedded.mime()
         assert envelope.string() == embedded.string()
 
-    def test_attrs(self, envelope):
-        assert envelope.sender == 'me@mail.com'
-        assert envelope.receivers == ['him@mail.com', 'them@mail.com']
+    def test_attrs(self, envelope, embedded):
+        assert envelope.sender == embedded.sender
+        assert envelope.receivers == embedded.receivers
 
     def test_mail_from(self, envelope):
         envelope.mail_from = 'from@mail.com'

@@ -100,11 +100,6 @@ class TestBinary(TestPlainText):
         mime = mimetest(b.mime())
         assert mime['Content-Type'] == 'text/plain'
 
-    def test_content_id(self, enclosure):
-        enclosure.content_id('id')
-        mime = mimetest(enclosure.mime())
-        assert mime['Content-ID'] == '<id>'
-
 
 class TestAttachment(TestBinary):
     @fixture
