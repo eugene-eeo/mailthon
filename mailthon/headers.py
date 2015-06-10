@@ -153,3 +153,8 @@ def message_id(string=None, idstring=None):
     """
     yield 'Message-ID'
     yield string or make_msgid(idstring)
+
+
+def content_id(name):
+    yield 'Content-ID'
+    yield '<%s>' % (name,)

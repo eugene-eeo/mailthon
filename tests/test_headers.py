@@ -1,7 +1,8 @@
 import pytest
 from mock import Mock, call
 import mailthon.headers
-from mailthon.headers import Headers, cc, to, bcc, sender, message_id, date
+from mailthon.headers import (Headers, cc, to, bcc, sender,
+                              message_id, date, content_id)
 from .mimetest import blank
 
 
@@ -128,3 +129,7 @@ def test_date():
     assert formatdate.mock_calls == [call(localtime=True)]
 
     assert tuple(date('time')) == ('Date', 'time')
+
+
+def test_content_id():
+    assert dict([content_id('l')]) == {'Content-ID': '<l>'}

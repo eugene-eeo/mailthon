@@ -150,10 +150,6 @@ class Binary(Enclosure):
         self.encoder(mime)
         return mime
 
-    def content_id(self, value):
-        self.headers['Content-ID'] = '<%s>' % (value,)
-
-
 class Attachment(Binary):
     """
     Binary subclass for easier file attachments.
