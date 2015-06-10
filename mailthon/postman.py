@@ -69,23 +69,23 @@ class Postman(object):
         finally:
             conn.quit()
 
-    def deliver(self, conn, envelope):
+    def deliver(self, conn, enclosure):
         """
-        Deliver an *envelope* using a given connection
+        Deliver an *enclosure* using a given connection
         *conn*, and return the response object. Does
         not close the connection.
         """
         rejected = conn.sendmail(
-            encode_address(envelope.sender),
-            [encode_address(k) for k in envelope.receivers],
-            envelope.string(),
+            encode_address(enclosure.sender),
+            [encode_address(k) for k in enclosure.receivers],
+            enclosure.string(),
         )
         return self.response_cls(conn.noop(), rejected)
 
-    def send(self, envelope):
+    def send(self, enclosure):
         """
-        Sends an *envelope* and return a response
+        Sends an *enclosure* and return a response
         object.
         """
         with self.connection() as conn:
-            return self.deliver(conn, envelope)
+            return self.deliver(conn, enclosure)

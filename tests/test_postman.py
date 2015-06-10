@@ -1,20 +1,17 @@
 from pytest import fixture
 from mock import Mock, call
 from mailthon.postman import Postman
-from mailthon.enclosure import Collection
-from mailthon.headers import sender, to, subject
-from .utils import smtp
+from .utils import smtp, unicode
 
 
 @fixture
 def enclosure():
-    env = Collection(
-        headers=[sender('Me <me@mail.com>'),
-                 to('him@mail.com'),
-                 subject('subject')]
-    )
-    env.string = Mock(return_value='--email--')
-    return env
+    spec = Mock()
+    spec.sender = unicode('addr@mail.com')
+    spec.receivers = [unicode('addr1@mail.com'),
+                      unicode('addr2@mail.com')]
+    spec.string = Mock(return_value='content')
+    return spec
 
 
 class TestPostman:
