@@ -26,16 +26,17 @@ class Postman(object):
     :param port: Port to connect to.
     :param middlewares: An iterable of middleware that
         will be used by the Postman.
+    :param transport: Transport class to be used,
+        defaults to :class:`~smtplib.SMTP`.
     :param options: Dictionary of options to be passed
         to the underlying transport.
     """
 
-    transport = SMTP
-    response_cls = SendmailResponse
-
-    def __init__(self, host, port, middlewares=(), options=None):
+    def __init__(self, host, port, middlewares=(), transport=None,
+                 options=None):
         self.host = host
         self.port = port
+        self.transport = transport or SMTP
         self.middlewares = list(middlewares)
         self.options = options or {}
 
@@ -80,7 +81,7 @@ class Postman(object):
             [encode_address(k) for k in enclosure.receivers],
             enclosure.string(),
         )
-        return self.response_cls(conn.noop(), rejected)
+        return SendmailResponse(conn.noop(), rejected)
 
     def send(self, enclosure):
         """

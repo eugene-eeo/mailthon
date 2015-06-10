@@ -150,6 +150,7 @@ class Binary(Enclosure):
         self.encoder(mime)
         return mime
 
+
 class Attachment(Binary):
     """
     Binary subclass for easier file attachments.
