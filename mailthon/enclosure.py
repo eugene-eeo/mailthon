@@ -72,6 +72,19 @@ class Enclosure(object):
 
 
 class Collection(Enclosure):
+    """
+    Multipart enclosure that allows the inclusion of
+    multiple enclosures into one single object. Note
+    that :class:`~mailthon.enclosure.Collection`
+    objects can be nested inside one another.
+
+    :param *enclosures: pass in any number of
+        enclosure objects.
+    :param subtype: Defaults to ``mixed``, the
+        multipart subtype.
+    :param headers: Optional headers.
+    """
+
     def __init__(self, *enclosures, **kwargs):
         self.subtype = kwargs.pop('subtype', 'mixed')
         self.enclosures = enclosures
