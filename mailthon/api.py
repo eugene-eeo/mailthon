@@ -60,9 +60,9 @@ def postman(host, port=587, auth=(None, None),
     return Postman(
         host=host,
         port=port,
-        options=options,
         middlewares=[
             TLS(force=force_tls),
             Auth(*auth),
         ],
+        **options
     )
