@@ -1,4 +1,4 @@
-import pytest
+from pytest import fixture
 from mock import call, Mock
 from mailthon.postman import Session, Postman
 from mailthon.enclosure import PlainText
@@ -11,7 +11,7 @@ class FakeSession(Session):
         self.conn = mocked_smtp(**kwargs)
 
 
-@pytest.fixture
+@fixture
 def enclosure():
     env = PlainText(
         headers={
@@ -28,10 +28,19 @@ class TestSession:
     host = 'host'
     port = 1000
 
-    @pytest.fixture
+    @fixture
     def session(self):
         return FakeSession(host=self.host,
                            port=self.port)
+
+    @fixture(params=[0, 1])
+    def failures(self, request, session):
+        smtp = session.conn
+        failures = request.param
+        if failures:
+            smtp.sendmail.return_value = {'addr': (255, 'reason')}
+            smtp.noop.return_value = (250, 'ok')
+        return failures
 
     def test_init(self, session):
         expected = [call(host=self.host, port=self.port)]
@@ -54,9 +63,18 @@ class TestSession:
         )
         assert sendmail in session.conn.mock_calls
 
+    def test_send_with_failures(self, session, enclosure, failures):
+        r = session.send(enclosure)
+        if failures:
+            assert not r.ok
+            assert r.rejected
+        else:
+            assert r.ok
+            assert not r.rejected
+
 
 class TestPostman:
-    @pytest.fixture
+    @fixture
     def postman(self):
         def config(**kwargs):
             session.opts = kwargs
