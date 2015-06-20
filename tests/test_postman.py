@@ -1,16 +1,14 @@
 import pytest
 from mock import call, Mock
-from mailthon.postman import Session
+from mailthon.postman import Session, Postman
 from mailthon.enclosure import PlainText
 from .utils import mocked_smtp, unicode
 
 
 class FakeSession(Session):
-    smtp_instances = []
-
     def __init__(self, **kwargs):
+        self.opts = kwargs
         self.conn = mocked_smtp(**kwargs)
-        self.smtp_instances.append(self.conn)
 
 
 @pytest.fixture
@@ -55,3 +53,38 @@ class TestSession:
             '--string--',
         )
         assert sendmail in session.conn.mock_calls
+
+
+class TestPostman:
+    @pytest.fixture
+    def postman(self):
+        def config(**kwargs):
+            session.opts = kwargs
+            return session
+
+        session = Mock(spec=Session)
+        session.side_effect = config
+
+        return Postman(
+            session=session,
+            host='host',
+            port=1000,
+            )
+
+    def test_connection(self, postman):
+        with postman.connection() as session:
+            assert session.opts == {'host': 'host', 'port': 1000}
+            assert session.mock_calls == [call(**postman.options),
+                                          call.setup()]
+        assert session.mock_calls[-1] == call.teardown()
+
+    def test_use(self, postman):
+        func = Mock()
+        assert postman.use(func) is func
+
+        with postman.connection() as session:
+            assert func.mock_calls == [call(session)]
+
+    def test_send(self, postman, enclosure):
+        postman.send(enclosure)
+        assert call.send(enclosure) in postman.session.mock_calls
