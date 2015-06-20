@@ -15,16 +15,42 @@ from .helpers import encode_address
 
 
 class Session(object):
+    """
+    Represents a connection to some server or external
+    service, e.g. some REST API. The underlying transport
+    defaults to SMTP but can be subclassed.
+
+    :param **kwargs: Keyword arguments to be passed to
+        the underlying transport.
+    """
+
     def __init__(self, **kwargs):
         self.conn = SMTP(**kwargs)
 
     def setup(self):
+        """
+        Setup the connection. It is recommended that
+        the connection is already made in the ``__init__``
+        method and not lazily until ``setup`` is called.
+        """
         self.conn.ehlo()
 
     def teardown(self):
+        """
+        Tear down the connection. Is called regardless
+        if an exception was raised or not.
+        """
         self.conn.quit()
 
     def send(self, envelope):
+        """
+        Send an *envelope* which may be an envelope
+        or an enclosure-like object, see
+        :class:`~mailthon.enclosure.Enclosure` and
+        :class:`~mailthon.envelope.Envelope`, and
+        returns a :class:`~mailthon.response.SendmailResponse`
+        object.
+        """
         rejected = self.conn.sendmail(
             encode_address(envelope.sender),
             [encode_address(k) for k in envelope.receivers],
@@ -40,7 +66,9 @@ class Postman(object):
     """
     Encapsulates a connection to a server, created by
     some *session* class and provides middleware
-    management and setup/teardown goodness.
+    management and setup/teardown goodness. Basically
+    is a layer of indirection over session objects,
+    allowing for pluggable transports.
 
     :param session: Session class to be used.
     :param middleware: Middlewares to use.
