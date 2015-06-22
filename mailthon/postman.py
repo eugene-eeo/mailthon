@@ -110,4 +110,4 @@ class Postman(object):
         object.
         """
         with self.connection() as conn:
-            conn.send(envelope)
+            return conn.send(envelope)

@@ -1,7 +1,8 @@
-from pytest import fixture
 from mock import call, Mock
-from mailthon.postman import Session, Postman
+from pytest import fixture
 from mailthon.enclosure import PlainText
+from mailthon.postman import Session, Postman
+from mailthon.response import SendmailResponse
 from .utils import mocked_smtp, unicode
 
 
@@ -82,6 +83,7 @@ class TestPostman:
 
         session = Mock(spec=Session)
         session.side_effect = config
+        session.send.return_value = SendmailResponse((250, 'ok'), {})
 
         return Postman(
             session=session,
@@ -104,5 +106,7 @@ class TestPostman:
             assert func.mock_calls == [call(session)]
 
     def test_send(self, postman, enclosure):
-        postman.send(enclosure)
+        r = postman.send(enclosure)
         assert call.send(enclosure) in postman.session.mock_calls
+        assert r.ok
+        assert not r.rejected
