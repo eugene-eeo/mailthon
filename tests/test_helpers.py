@@ -24,9 +24,11 @@ def test_format_addresses():
 
 
 def test_encode_address():
+    assert encode_address(b'mail@mail.com') == b'mail@mail.com'
     assert encode_address(uni('mail@mail.com')) == b'mail@mail.com'
     assert encode_address(uni('mail@måil.com')) == b'mail@xn--mil-ula.com'
     assert encode_address(uni('måil@måil.com')) == b'm\xc3\xa5il@xn--mil-ula.com'
+    assert encode_address(uni('måil')) == b'm\xc3\xa5il'
 
 
 class TestUnicodeDict:
