@@ -62,7 +62,7 @@ class Session(object):
         )
 
 
-class Postman(object): 
+class Postman(object):
     """
     Encapsulates a connection to a server, created by
     some *session* class and provides middleware
