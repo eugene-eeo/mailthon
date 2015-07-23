@@ -90,7 +90,7 @@ def sender(address):
     Generates a Sender header with a given *text*.
     *text* can be both a tuple or a string.
     """
-    yield 'Sender'
+    yield 'From'
     yield format_addresses([address])
 
 

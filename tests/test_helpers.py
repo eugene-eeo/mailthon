@@ -17,10 +17,10 @@ def test_guess_fallback():
 
 def test_format_addresses():
     chunks = format_addresses([
-        ('Sender', 'sender@mail.com'),
+        ('From', 'sender@mail.com'),
         'Fender <fender@mail.com>',
     ])
-    assert chunks == 'Sender <sender@mail.com>, Fender <fender@mail.com>'
+    assert chunks == 'From <sender@mail.com>, Fender <fender@mail.com>'
 
 
 def test_encode_address():

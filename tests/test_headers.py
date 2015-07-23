@@ -17,7 +17,7 @@ class TestNotResentHeaders:
         ])
 
     def test_getitem(self, headers):
-        assert headers['Sender'] == 'sender@mail.com'
+        assert headers['From'] == 'sender@mail.com'
         assert headers['To'] == 'to@mail.com'
 
     def test_sender(self, headers):
@@ -42,8 +42,7 @@ class TestNotResentHeaders:
         assert not mime['Bcc']
         assert mime['Cc'] == 'cc1@mail.com, cc2@mail.com'
         assert mime['To'] == 'to@mail.com'
-        assert mime['Sender'] == 'sender@mail.com'
-        assert mime['From'] == 'from@mail.com'
+        assert mime['From'] == 'sender@mail.com'
 
 
 class TestResentHeaders(TestNotResentHeaders):
@@ -96,10 +95,10 @@ class TestResentHeaders(TestNotResentHeaders):
 @pytest.mark.parametrize('function', [to, cc, bcc])
 def test_tuple_headers(function):
     _, value = function(
-        ('Sender', 'sender@mail.com'),
+        ('From', 'sender@mail.com'),
         'Me <me@mail.com>',
     )
-    expected = 'Sender <sender@mail.com>, Me <me@mail.com>'
+    expected = 'From <sender@mail.com>, Me <me@mail.com>'
     assert value == expected
 
 

@@ -29,7 +29,7 @@ class TestEnvelope:
     def test_mime_headers(self, envelope):
         mime = mimetest(envelope.mime())
 
-        assert mime['Sender'] == 'Me <me@mail.com>'
+        assert mime['From'] == 'Me <me@mail.com>'
         assert mime['To'] == 'him@mail.com, them@mail.com'
         assert mime['Subject'] == 'subject'
 
