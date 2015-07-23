@@ -17,7 +17,7 @@ class TestNotResentHeaders:
         ])
 
     def test_getitem(self, headers):
-        assert headers['Sender'] == 'sender@mail.com'
+        assert headers['From'] == 'sender@mail.com'
         assert headers['To'] == 'to@mail.com'
 
     def test_sender(self, headers):
