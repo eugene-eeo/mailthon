@@ -43,7 +43,6 @@ class TestNotResentHeaders:
         assert mime['Cc'] == 'cc1@mail.com, cc2@mail.com'
         assert mime['To'] == 'to@mail.com'
         assert mime['From'] == 'sender@mail.com'
-        assert mime['From'] == 'from@mail.com'
 
 
 class TestResentHeaders(TestNotResentHeaders):
@@ -99,7 +98,7 @@ def test_tuple_headers(function):
         ('From', 'sender@mail.com'),
         'Me <me@mail.com>',
     )
-    expected = 'Sender <sender@mail.com>, Me <me@mail.com>'
+    expected = 'From <sender@mail.com>, Me <me@mail.com>'
     assert value == expected
 
 
