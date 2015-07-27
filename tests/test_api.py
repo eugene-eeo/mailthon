@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 import pytest
-from mailthon.api import postman, email
-from mailthon.middleware import Auth, TLS
+from mock import Mock, call
+from mailthon.api import email, postman
+from mailthon.postman import Postman
+from mailthon.middleware import TLS, Auth
 from .utils import unicode as uni
 from .mimetest import mimetest
 
@@ -25,6 +28,38 @@ class TestPostman:
             key='value',
             )
         assert self.p.options == opts
+
+
+class TestRealSmtp:
+    def test_send_email_example(self, smtpserver):
+        host, port = smtpserver.addr
+        p = Postman(host=host, port=port)
+
+        r = p.send(email(
+            content=u'<p>Hello 世界</p>',
+            subject='Hello world',
+            sender='John <john@jon.com>',
+            receivers=['doe@jon.com'],
+        ))
+
+        assert r.ok
+        assert len(smtpserver.outbox) == 1
+
+
+class TestEmail:
+    @pytest.fixture(scope='class')
+    def mime(self):
+        envelope = email(
+            sender='Me <me@mail.com>',
+            receivers=['rcv@mail.com'],
+            subject='Something',
+            content='<p>hi</p>',
+            attachments=['tests/assets/spacer.gif'],
+            cc=['cc1@mail.com', 'cc2@mail.com'],
+            bcc=['bcc1@mail.com', 'bcc2@mail.com'],
+            encoding='ascii',
+        )
+        return mimetest(envelope.mime())
 
 
 class TestEmail:

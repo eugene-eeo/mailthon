@@ -11,7 +11,7 @@
 from contextlib import contextmanager
 from smtplib import SMTP
 from .response import SendmailResponse
-from .helpers import encode_address
+from .helpers import stringify_address
 
 
 class Session(object):
@@ -52,8 +52,8 @@ class Session(object):
         object.
         """
         rejected = self.conn.sendmail(
-            encode_address(envelope.sender),
-            [encode_address(k) for k in envelope.receivers],
+            stringify_address(envelope.sender),
+            [stringify_address(k) for k in envelope.receivers],
             envelope.string(),
         )
         return SendmailResponse(

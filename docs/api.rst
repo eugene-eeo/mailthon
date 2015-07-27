@@ -156,7 +156,7 @@ Middlewares
 Helper Functions
 ----------------
 
-.. autofunction:: mailthon.helpers.encode_address
+.. autofunction:: mailthon.helpers.stringify_address
 
 .. autofunction:: mailthon.helpers.guess
 

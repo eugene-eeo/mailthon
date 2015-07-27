@@ -47,12 +47,15 @@ def format_addresses(addrs):
     )
 
 
-def encode_address(addr, encoding='utf-8'):
+def stringify_address(addr, encoding='utf-8'):
     """
     Given an email address *addr*, try to encode
     it with ASCII. If it's not possible, encode
     the *local-part* with the *encoding* and the
     *domain* with IDNA.
+
+    The result is a unicode string with the domain
+    encoded as idna.
     """
     if isinstance(addr, bytes_type):
         return addr
@@ -67,7 +70,7 @@ def encode_address(addr, encoding='utf-8'):
             ])
         else:
             addr = addr.encode(encoding)
-    return addr
+    return addr.decode('utf-8')
 
 
 class UnicodeDict(dict):

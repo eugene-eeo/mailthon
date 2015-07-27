@@ -1,7 +1,7 @@
 # coding=utf8
 import pytest
 from mailthon.helpers import (guess, format_addresses,
-                              encode_address, UnicodeDict)
+                              stringify_address, UnicodeDict)
 from .utils import unicode as uni
 
 
@@ -23,12 +23,10 @@ def test_format_addresses():
     assert chunks == 'Sender <sender@mail.com>, Fender <fender@mail.com>'
 
 
-def test_encode_address():
-    assert encode_address(b'mail@mail.com') == b'mail@mail.com'
-    assert encode_address(uni('mail@mail.com')) == b'mail@mail.com'
-    assert encode_address(uni('mail@måil.com')) == b'mail@xn--mil-ula.com'
-    assert encode_address(uni('måil@måil.com')) == b'm\xc3\xa5il@xn--mil-ula.com'
-    assert encode_address(uni('måil')) == b'm\xc3\xa5il'
+def test_stringify_address():
+    assert stringify_address(uni('mail@mail.com')) == u'mail@mail.com'
+    assert stringify_address(uni('mail@måil.com')) == u'mail@xn--mil-ula.com'
+    assert stringify_address(uni('måil@måil.com')) == u'måil@xn--mil-ula.com'
 
 
 class TestUnicodeDict:
