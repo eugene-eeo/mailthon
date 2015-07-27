@@ -60,8 +60,8 @@ class TestPostman:
         with postman.connection() as conn:
             postman.deliver(conn, envelope)
             sendmail = call.sendmail(
-                envelope.sender.encode(),
-                [u.encode() for u in envelope.receivers],
+                envelope.sender,
+                envelope.receivers,
                 envelope.string(),
             )
             ehlo = call.ehlo()

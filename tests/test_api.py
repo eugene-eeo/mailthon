@@ -1,9 +1,27 @@
+# -*- coding: utf-8 -*-
 import pytest
 from mock import Mock, call
 from mailthon.api import email, postman
+from mailthon.postman import Postman
 from mailthon.middleware import TLS, Auth
 from .mimetest import mimetest
 from .utils import smtp, tls_started
+
+
+class TestRealSmtp:
+
+    def test_send_email_example(self, smtpserver):
+        p = Postman(*smtpserver.addr)
+
+        r = p.send(email(
+            content=u'<p>Hello 世界</p>',
+            subject='Hello world',
+            sender='John <john@jon.com>',
+            receivers=['doe@jon.com'],
+        ))
+
+        assert r.ok
+        assert len(smtpserver.outbox) == 1
 
 
 class TestEmail:

@@ -332,7 +332,7 @@ first occurence of the '@' symbol.
 Putting it all together we have something like
 the following function::
 
-    def encode_address(addr):
+    def stringify_address(addr):
         localpart, domain = addr.split('@', 1)
         return b'@'.join([
             localpart.encode('utf8'),
@@ -340,15 +340,15 @@ the following function::
         ])
 
 But Mailthon already has a more robust implementation
-available in the form of the :func:`~mailthon.helpers.encode_address`
+available in the form of the :func:`~mailthon.helpers.stringify_address`
 function, and is automatically used by the :class:`~mailthon.postman.Postman`
 class when sending envelopes. Via the :meth:`~smtplib.SMTP.sendmail`
 method. Essentially, the following::
 
     def send(smtp, envelope):
         smtp.sendmail(
-            encode_address(envelope.sender),
-            [encode_address(k) for k in envelope.receivers],
+            stringify_address(envelope.sender),
+            [stringify_address(k) for k in envelope.receivers],
             envelope.string(),
         )
 

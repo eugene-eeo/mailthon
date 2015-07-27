@@ -37,7 +37,7 @@ setup(
     include_package_data=True,
     package_data={'mailthon': ['LICENSE', 'README.rst']},
     packages=['mailthon'],
-    tests_require=['pytest'],
+    tests_require=['mock', 'pytest', 'pytest-localserver'],
     cmdclass={'test': PyTest},
     platforms='any',
     zip_safe=False,

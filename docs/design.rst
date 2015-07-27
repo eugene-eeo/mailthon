@@ -89,4 +89,4 @@ makes passing in a special ``mail_from`` parameter to the
 :class:`~mailthon.envelope.Envelope`` class simpler; you do
 not need to worry about encoding since the :class:`~mailthon.postman.Postman`
 object encodes it for you behind the scenes, using the
-:func:`~mailthon.helpers.encode_address` function.
+:func:`~mailthon.helpers.stringify_address` function.
