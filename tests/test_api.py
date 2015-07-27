@@ -23,6 +23,30 @@ class TestRealSmtp:
         assert r.ok
         assert len(smtpserver.outbox) == 1
 
+    def test_send_email_attachment(self, smtpserver):
+        p = Postman(*smtpserver.addr)
+
+        r = p.send(email(
+            sender='Me <me@mail.com>',
+            receivers=['rcv@mail.com'],
+            subject='Something',
+            content='<p>hi</p>',
+            attachments=['tests/assets/spacer.gif'],
+            cc=['cc1@mail.com', 'cc2@mail.com'],
+            bcc=['bcc1@mail.com', 'bcc2@mail.com'],
+            encoding='ascii',
+        ))
+
+        assert r.ok
+        assert len(smtpserver.outbox) == 1
+
+        message = smtpserver.outbox[0]
+        assert message['Content-Type'].startswith('multipart/mixed')
+        assert message['Subject'] == 'Something'
+        assert message['To'] == 'rcv@mail.com'
+        assert message['CC'] == 'cc1@mail.com, cc2@mail.com'
+        assert message['From'] == 'Me <me@mail.com>'
+
 
 class TestEmail:
     @pytest.fixture(scope='class')
