@@ -1,8 +1,11 @@
+# -*- encoding: utf-8 -*-
+
 import pytest
 from mock import Mock, call
 import mailthon.headers
 from mailthon.headers import (Headers, cc, to, bcc, sender,
-                              message_id, date, content_id)
+                              message_id, date, content_id,
+                              content_disposition)
 from .mimetest import blank
 
 
@@ -16,6 +19,11 @@ class TestNotResentHeaders:
             cc('cc1@mail.com', 'cc2@mail.com'),
             bcc('bcc1@mail.com', 'bcc2@mail.com'),
         ])
+
+    @pytest.fixture
+    def content_disposition_headers(self):
+        return (Headers([content_disposition("attachment", "ascii.filename")]),
+                Headers([content_disposition("attachment", "файл.filename")]))
 
     def test_getitem(self, headers):
         assert headers['Sender'] == 'sender@mail.com'
@@ -45,6 +53,15 @@ class TestNotResentHeaders:
         assert mime['To'] == 'to@mail.com'
         assert mime['Sender'] == 'sender@mail.com'
         assert mime['From'] == 'from@mail.com'
+
+    def test_content_disposition_headers(self, content_disposition_headers):
+        """
+        Do the same as test above but for `complex` headers which can contain additional fields
+        """
+        for header in content_disposition_headers:
+            mime = blank()
+            header.prepare(mime)
+            assert "filename" in mime["Content-Disposition"]
 
 
 class TestResentHeaders(TestNotResentHeaders):
@@ -106,9 +123,10 @@ def test_tuple_headers(function):
 
 @pytest.mark.parametrize('argtype', [str, tuple])
 def test_sender_tuple(argtype):
-    param = ('name', 'mail@mail.com')
-    if argtype is str:
-        param = '{0} <{1}>'.format(*param)
+    param = (
+        'name <mail@mail.com>' if argtype is str else
+        ('name', 'mail@mail.com')
+    )
     _, value = sender(param)
     assert value == 'name <mail@mail.com>'
 
