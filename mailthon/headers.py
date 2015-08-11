@@ -16,6 +16,9 @@ from email.utils import quote, formatdate, make_msgid, getaddresses
 from .helpers import format_addresses, UnicodeDict
 
 
+IS_PY3 = int(sys.version[0]) == 2
+
+
 class Headers(UnicodeDict):
     """
     :rfc:`2822` compliant subclass of the
@@ -78,10 +81,7 @@ class Headers(UnicodeDict):
             del mime[key]
             # python 3.* email's compatibility layer will handle unicode field values in proper way
             # but python 2.* -- won't (it will encode not only additional field values but also all header value)
-            if int(sys.version[0]) == 2:
-                parsed_header, additional_fields = cgi.parse_header(self[key].encode("utf-8"))
-            else:
-                parsed_header, additional_fields = cgi.parse_header(self[key])
+            parsed_header, additional_fields = cgi.parse_header(self[key].encode("utf-8") if not IS_PY3 else self[key])
             mime.add_header(key, parsed_header, **additional_fields)
 
 
