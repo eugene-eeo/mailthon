@@ -16,7 +16,7 @@ from email.utils import quote, formatdate, make_msgid, getaddresses
 from .helpers import format_addresses, UnicodeDict
 
 
-IS_PY3 = int(sys.version[0]) == 2
+IS_PY3 = int(sys.version[0]) == 3
 
 
 class Headers(UnicodeDict):
