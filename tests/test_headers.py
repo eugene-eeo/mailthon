@@ -1,7 +1,9 @@
+# -*- encoding: utf-8 -*-
+
 import pytest
 from mock import Mock, call
 import mailthon.headers
-from mailthon.headers import Headers, cc, to, bcc, sender, message_id, date
+from mailthon.headers import Headers, cc, to, bcc, sender, message_id, date, content_disposition
 from .mimetest import blank
 
 
@@ -15,6 +17,11 @@ class TestNotResentHeaders:
             cc('cc1@mail.com', 'cc2@mail.com'),
             bcc('bcc1@mail.com', 'bcc2@mail.com'),
         ])
+
+    @pytest.fixture
+    def content_disposition_headers(self):
+        return (Headers([content_disposition("attachment", "ascii.filename")]),
+                Headers([content_disposition("attachment", "файл.filename")]))
 
     def test_getitem(self, headers):
         assert headers['From'] == 'sender@mail.com'
@@ -43,6 +50,15 @@ class TestNotResentHeaders:
         assert mime['Cc'] == 'cc1@mail.com, cc2@mail.com'
         assert mime['To'] == 'to@mail.com'
         assert mime['From'] == 'sender@mail.com'
+
+    def test_content_disposition_headers(self, content_disposition_headers):
+        """
+        Do the same as test above but for `complex` headers which can contain additional fields
+        """
+        for header in content_disposition_headers:
+            mime = blank()
+            header.prepare(mime)
+            assert "filename" in mime["Content-Disposition"]
 
 
 class TestResentHeaders(TestNotResentHeaders):

@@ -9,9 +9,14 @@
     :copyright: (c) 2015 by Eeo Jun
     :license: MIT, see LICENSE for details.
 """
+import sys
+import cgi
 
 from email.utils import quote, formatdate, make_msgid, getaddresses
 from .helpers import format_addresses, UnicodeDict
+
+
+IS_PY3 = int(sys.version[0]) == 3
 
 
 class Headers(UnicodeDict):
@@ -66,7 +71,7 @@ class Headers(UnicodeDict):
 
     def prepare(self, mime):
         """
-        Preprares a MIME object by applying the headers
+        Prepares a MIME object by applying the headers
         to the *mime* object. Ignores any Bcc or
         Resent-Bcc headers.
         """
@@ -74,7 +79,10 @@ class Headers(UnicodeDict):
             if key == 'Bcc' or key == 'Resent-Bcc':
                 continue
             del mime[key]
-            mime[key] = self[key]
+            # python 3.* email's compatibility layer will handle unicode field values in proper way
+            # but python 2.* -- won't (it will encode not only additional field values but also all header value)
+            parsed_header, additional_fields = cgi.parse_header(self[key].encode("utf-8") if not IS_PY3 else self[key])
+            mime.add_header(key, parsed_header, **additional_fields)
 
 
 def subject(text):
