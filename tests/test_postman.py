@@ -43,10 +43,6 @@ class TestSession:
             smtp.noop.return_value = (250, 'ok')
         return failures
 
-    def test_init(self, session):
-        expected = [call(host=self.host, port=self.port)]
-        assert session.conn.mock_calls == expected
-
     def test_setup(self, session):
         session.setup()
         assert call.ehlo() in session.conn.mock_calls
@@ -93,10 +89,11 @@ class TestPostman:
 
     def test_connection(self, postman):
         with postman.connection() as session:
+            mc = session.mock_calls
             assert session.opts == {'host': 'host', 'port': 1000}
-            assert session.mock_calls == [call(**postman.options),
-                                          call.setup()]
-        assert session.mock_calls[-1] == call.teardown()
+            assert mc == [call(**postman.options),
+                          call.setup()]
+        assert mc[-1] == call.teardown()
 
     def test_use(self, postman):
         func = Mock()
