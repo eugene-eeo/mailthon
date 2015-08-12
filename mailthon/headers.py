@@ -9,6 +9,7 @@
     :copyright: (c) 2015 by Eeo Jun
     :license: MIT, see LICENSE for details.
 """
+
 import sys
 import cgi
 
