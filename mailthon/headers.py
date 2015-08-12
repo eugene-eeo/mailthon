@@ -79,9 +79,15 @@ class Headers(UnicodeDict):
             if key == 'Bcc' or key == 'Resent-Bcc':
                 continue
             del mime[key]
-            # python 3.* email's compatibility layer will handle unicode field values in proper way
-            # but python 2.* -- won't (it will encode not only additional field values but also all header value)
-            parsed_header, additional_fields = cgi.parse_header(self[key].encode("utf-8") if not IS_PY3 else self[key])
+            # python 3.* email's compatibility layer will
+            # handle unicode field values in proper way
+            # but python 2.* -- won't (it will encode not
+            # only additional field values but also all
+            # header value)
+            parsed_header, additional_fields = cgi.parse_header(
+                self[key] if IS_PY3 else
+                self[key].encode("utf-8")
+            )
             mime.add_header(key, parsed_header, **additional_fields)
 
 
