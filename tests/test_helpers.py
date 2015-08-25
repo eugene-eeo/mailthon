@@ -24,9 +24,9 @@ def test_format_addresses():
 
 
 def test_stringify_address():
-    assert stringify_address(uni('mail@mail.com')) == u'mail@mail.com'
-    assert stringify_address(uni('mail@måil.com')) == u'mail@xn--mil-ula.com'
-    assert stringify_address(uni('måil@måil.com')) == u'måil@xn--mil-ula.com'
+    assert stringify_address(uni('mail@mail.com')) == 'mail@mail.com'
+    assert stringify_address(uni('mail@måil.com')) == 'mail@xn--mil-ula.com'
+    assert stringify_address(uni('måil@måil.com')) == uni('måil@xn--mil-ula.com')
 
 
 class TestUnicodeDict:

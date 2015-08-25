@@ -36,7 +36,7 @@ class TestRealSmtp:
         p = Postman(host=host, port=port)
 
         r = p.send(email(
-            content=u'<p>Hello 世界</p>',
+            content='<p>Hello 世界</p>',
             subject='Hello world',
             sender='John <john@jon.com>',
             receivers=['doe@jon.com'],
