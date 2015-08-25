@@ -54,8 +54,8 @@ class TestSession:
     def test_send(self, session, enclosure):
         session.send(enclosure)
         sendmail = call.sendmail(
-            b'sender@mail.com',
-            [b'addr1@mail.com', b'addr2@mail.com'],
+            'sender@mail.com',
+            ['addr1@mail.com', 'addr2@mail.com'],
             '--string--',
         )
         assert sendmail in session.conn.mock_calls
