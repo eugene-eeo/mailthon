@@ -12,7 +12,7 @@ class TestResponse:
 
     @fixture
     def res(self, status):
-        return Response((status, self.message))
+        return Response(status, self.message)
 
     def test_attrs(self, res, status):
         assert res.status_code == status
@@ -27,18 +27,17 @@ class TestResponse:
 
 class TestSendmailResponse:
     def test_ok_with_no_failure(self):
-        r = SendmailResponse((250, 'message'), {})
+        r = SendmailResponse(250, 'message', {})
         assert r.ok
         assert r.rejected == {}
 
     def test_ok_with_failure(self):
-        r = SendmailResponse((251, 'error'), {})
+        r = SendmailResponse(251, 'error', {})
         assert not r.ok
         assert r.rejected == {}
 
     def test_ok_with_rejection(self):
         for code in [250, 251]:
-            r = SendmailResponse((code, 'message'), {'addr': (123, 'reason')})
+            r = SendmailResponse(code, 'message', {'addr': (123, 'reason')})
             assert not r.ok
-            assert r.rejected['addr'].status_code == 123
-            assert r.rejected['addr'].message == 'reason'
+            assert r.rejected['addr'] == Response(123, 'reason')

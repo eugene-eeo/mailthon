@@ -56,8 +56,10 @@ class Session(object):
             [stringify_address(k) for k in envelope.receivers],
             envelope.string(),
         )
+        status_code, message = self.conn.noop()
         return SendmailResponse(
-            self.conn.noop(),
+            status_code,
+            message,
             rejected,
         )
 

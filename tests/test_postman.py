@@ -79,7 +79,7 @@ class TestPostman:
 
         session = Mock(spec=Session)
         session.side_effect = config
-        session.send.return_value = SendmailResponse((250, 'ok'), {})
+        session.send.return_value = SendmailResponse(250, 'ok', {})
 
         return Postman(
             session=session,

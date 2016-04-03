@@ -12,26 +12,24 @@
 from collections import namedtuple
 
 
-class Response(object):
+_ResponseBase = namedtuple('Response', ['status_code', 'message'])
+
+
+class Response(_ResponseBase):
     """
     Encapsulates a (status_code, message) tuple
     returned by a server when the ``NOOP``
     command is called.
 
-    :param pair: A (status_code, message) pair.
+    :param status_code: status code returned by server.
+    :param message: error/success message.
     """
-
-    def __init__(self, pair):
-        status, message = pair
-        self.status_code = status
-        self.message = message
 
     @property
     def ok(self):
         """
-        Tells whether the Response object is ok-
-        that everything went well. Returns true
-        if the status code is 250, false otherwise.
+        Returns true if the status code is 250, false
+        otherwise.
         """
         return self.status_code == 250
 
@@ -49,11 +47,12 @@ class SendmailResponse(Response):
         addresses to status-code message pairs.
     """
 
-    def __init__(self, pair, rejected):
-        Response.__init__(self, pair)
+    def __new__(cls, status_code, message, rejected):
+        self = Response.__new__(cls, status_code, message)
         self.rejected = {}
         for addr, pair in rejected.items():
-            self.rejected[addr] = Response(pair)
+            self.rejected[addr] = Response(*pair)
+        return self
 
     @property
     def ok(self):
