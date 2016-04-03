@@ -26,13 +26,10 @@ def enclosure():
 
 
 class TestSession:
-    host = 'host'
-    port = 1000
-
     @fixture
     def session(self):
-        return FakeSession(host=self.host,
-                           port=self.port)
+        return FakeSession(host='host',
+                           port=1000)
 
     @fixture(params=[0, 1])
     def failures(self, request, session):
