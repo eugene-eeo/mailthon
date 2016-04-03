@@ -32,7 +32,8 @@ class TestPostman:
 
 class TestRealSmtp:
     def test_send_email_example(self, smtpserver):
-        host, port = smtpserver.addr
+        host = smtpserver.addr[0]
+        port = smtpserver.addr[1]
         p = Postman(host=host, port=port)
 
         r = p.send(email(

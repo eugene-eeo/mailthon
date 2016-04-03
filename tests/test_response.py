@@ -7,21 +7,18 @@ def status(request):
     return request.param
 
 
-@fixture
-def message(status):
-    return 'ok' if status == 250 else 'error'
-
-
 class TestResponse:
+    message = 'error-message'
+
     @fixture
-    def res(self, status, message):
-        return Response((status, message))
+    def res(self, status):
+        return Response((status, self.message))
 
-    def test_attrs(self, res, status, message):
+    def test_attrs(self, res, status):
         assert res.status_code == status
-        assert res.message == message
+        assert res.message == self.message
 
-    def test_ok(self, res, status, message):
+    def test_ok(self, res, status):
         if status == 250:
             assert res.ok
         else:
@@ -29,19 +26,19 @@ class TestResponse:
 
 
 class TestSendmailResponse:
-    @fixture(params=[1, 0])
-    def failures(self, request):
-        return {'addr': (251, 'error')} if request.param else {}
+    def test_ok_with_no_failure(self):
+        r = SendmailResponse((250, 'message'), {})
+        assert r.ok
+        assert r.rejected == {}
 
-    def test_ok(self, failures, status, message):
-        r = SendmailResponse((status, message), failures)
-        if not failures and status == 250:
-            assert r.ok
-            assert not r.rejected
-        elif failures:
-            rejected = r.rejected['addr']
+    def test_ok_with_failure(self):
+        r = SendmailResponse((251, 'error'), {})
+        assert not r.ok
+        assert r.rejected == {}
+
+    def test_ok_with_rejection(self):
+        for code in [250, 251]:
+            r = SendmailResponse((code, 'message'), {'addr': (123, 'reason')})
             assert not r.ok
-            assert not rejected.ok
-            assert rejected.status_code == 251
-        else:
-            assert not r.ok
+            assert r.rejected['addr'].status_code == 123
+            assert r.rejected['addr'].message == 'reason'

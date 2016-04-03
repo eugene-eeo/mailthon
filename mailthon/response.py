@@ -9,6 +9,9 @@
     :license: MIT, see LICENSE for details.
 """
 
+from collections import namedtuple
+
+
 class Response(object):
     """
     Encapsulates a (status_code, message) tuple
