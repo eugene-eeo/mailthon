@@ -21,7 +21,7 @@ setup(
     description='Elegant email library',
     long_description=open('README.rst', 'rb').read().decode('utf8'),
     author='Eeo Jun',
-    author_email='packwolf58@gmail.com',
+    author_email='141bytes@gmail.com',
     url='https://github.com/eugene-eeo/mailthon/',
     classifiers=[
         'Development Status :: 3 - Alpha',
