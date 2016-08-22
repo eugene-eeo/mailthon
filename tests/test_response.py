@@ -8,15 +8,15 @@ def status(request):
 
 
 class TestResponse:
-    message = 'error-message'
+    reason = 'error'
 
     @fixture
     def res(self, status):
-        return Response(status, self.message)
+        return Response(status, self.reason)
 
     def test_attrs(self, res, status):
         assert res.status_code == status
-        assert res.message == self.message
+        assert res.reason == self.reason
 
     def test_ok(self, res, status):
         if status == 250:
@@ -27,7 +27,7 @@ class TestResponse:
 
 class TestSendmailResponse:
     def test_ok_with_no_failure(self):
-        r = SendmailResponse(250, 'message', {})
+        r = SendmailResponse(250, 'reason', {})
         assert r.ok
         assert r.rejected == {}
 
@@ -38,6 +38,6 @@ class TestSendmailResponse:
 
     def test_ok_with_rejection(self):
         for code in [250, 251]:
-            r = SendmailResponse(code, 'message', {'addr': (123, 'reason')})
+            r = SendmailResponse(code, 'reason', {'addr': (123, 'reason')})
             assert not r.ok
             assert r.rejected['addr'] == Response(123, 'reason')

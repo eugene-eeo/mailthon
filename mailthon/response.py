@@ -12,7 +12,7 @@
 from collections import namedtuple
 
 
-_ResponseBase = namedtuple('Response', ['status_code', 'message'])
+_ResponseBase = namedtuple('Response', ['status_code', 'reason'])
 
 
 class Response(_ResponseBase):
@@ -34,25 +34,24 @@ class Response(_ResponseBase):
         return self.status_code == 250
 
 
-class SendmailResponse(Response):
+class SendmailResponse:
     """
-    Encapsulates a (status_code, message) tuple
+    Encapsulates a (status_code, reason) tuple
     as well as a mapping of email-address to
-    (status_code, message) tuples that can be
+    (status_code, reason) tuples that can be
     attained by the NOOP and the SENDMAIL
     command.
 
     :param pair: The response pair.
     :param rejected: Dictionary of rejected
-        addresses to status-code message pairs.
+        addresses to status-code reason pairs.
     """
 
-    def __new__(cls, status_code, message, rejected):
-        self = Response.__new__(cls, status_code, message)
+    def __init__(self, status_code, reason, rejected):
+        self.res = Response(status_code, reason)
         self.rejected = {}
         for addr, pair in rejected.items():
             self.rejected[addr] = Response(*pair)
-        return self
 
     @property
     def ok(self):
@@ -60,5 +59,4 @@ class SendmailResponse(Response):
         Returns True only if no addresses were
         rejected and if the status code is 250.
         """
-        return (Response.ok.fget(self) and
-                not self.rejected)
+        return self.res.ok and not self.rejected
