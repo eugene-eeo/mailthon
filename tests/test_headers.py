@@ -26,6 +26,7 @@ class TestNotResentHeaders:
                 Headers([content_disposition("attachment", "файл.filename")]))
 
     def test_getitem(self, headers):
+        assert headers['From'] == 'from@mail.com'
         assert headers['Sender'] == 'sender@mail.com'
         assert headers['To'] == 'to@mail.com'
 
@@ -52,7 +53,6 @@ class TestNotResentHeaders:
         assert mime['Cc'] == 'cc1@mail.com, cc2@mail.com'
         assert mime['To'] == 'to@mail.com'
         assert mime['Sender'] == 'sender@mail.com'
-        assert mime['From'] == 'from@mail.com'
 
     def test_content_disposition_headers(self, content_disposition_headers):
         """

@@ -43,22 +43,6 @@ class TestRealSmtp:
 
 
 class TestEmail:
-    @pytest.fixture(scope='class')
-    def mime(self):
-        envelope = email(
-            sender='Me <me@mail.com>',
-            receivers=['rcv@mail.com'],
-            subject='Something',
-            content='<p>hi</p>',
-            attachments=['tests/assets/spacer.gif'],
-            cc=['cc1@mail.com', 'cc2@mail.com'],
-            bcc=['bcc1@mail.com', 'bcc2@mail.com'],
-            encoding='ascii',
-        )
-        return mimetest(envelope.mime())
-
-
-class TestEmail:
     e = email(
         subject='hi',
         sender='name <send@mail.com>',
