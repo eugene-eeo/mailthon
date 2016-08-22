@@ -11,7 +11,9 @@ from .utils import smtp, tls_started
 class TestRealSmtp:
 
     def test_send_email_example(self, smtpserver):
-        p = Postman(*smtpserver.addr)
+        host = smtpserver.addr[0]
+        port = smtpserver.addr[1]
+        p = Postman(host, port)
 
         r = p.send(email(
             content='<p>Hello 世界</p>',
@@ -24,7 +26,9 @@ class TestRealSmtp:
         assert len(smtpserver.outbox) == 1
 
     def test_send_email_attachment(self, smtpserver):
-        p = Postman(*smtpserver.addr)
+        host = smtpserver.addr[0]
+        port = smtpserver.addr[1]
+        p = Postman(host, port)
 
         r = p.send(email(
             sender='Me <me@mail.com>',
