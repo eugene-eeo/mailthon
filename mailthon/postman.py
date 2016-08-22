@@ -26,19 +26,11 @@ class Session(object):
 
     def __init__(self, **kwargs):
         self.conn = SMTP(**kwargs)
-
-    def setup(self):
-        """
-        Setup the connection. It is recommended that
-        the connection is already made in the ``__init__``
-        method and not lazily until ``setup`` is called.
-        """
         self.conn.ehlo()
 
     def teardown(self):
         """
-        Tear down the connection. Is called regardless
-        if an exception was raised or not.
+        Tear down the connection.
         """
         self.conn.quit()
 
@@ -99,7 +91,6 @@ class Postman(object):
         """
         conn = self.session(**self.options)
         try:
-            conn.setup()
             for item in self.middlewares:
                 item(conn)
             yield conn

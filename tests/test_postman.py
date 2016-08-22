@@ -31,40 +31,32 @@ class TestSession:
         return FakeSession(host='host',
                            port=1000)
 
-    @fixture(params=[0, 1])
-    def failures(self, request, session):
-        smtp = session.conn
-        failures = request.param
-        if failures:
-            smtp.sendmail.return_value = {'addr': (255, 'reason')}
-            smtp.noop.return_value = (250, 'ok')
-        return failures
-
-    def test_setup(self, session):
-        session.setup()
-        assert call.ehlo() in session.conn.mock_calls
-
     def test_teardown(self, session):
         session.teardown()
         assert session.conn.mock_calls[-1] == call.quit()
 
     def test_send(self, session, enclosure):
-        session.send(enclosure)
+        smtp = session.conn
+        smtp.sendmail.return_value = {}
+        smtp.noop.return_value = (250, 'ok')
+
+        response = session.send(enclosure)
         sendmail = call.sendmail(
             'sender@mail.com',
             ['addr1@mail.com', 'addr2@mail.com'],
             '--string--',
         )
         assert sendmail in session.conn.mock_calls
+        assert response.ok
 
-    def test_send_with_failures(self, session, enclosure, failures):
-        r = session.send(enclosure)
-        if failures:
-            assert not r.ok
-            assert r.rejected
-        else:
-            assert r.ok
-            assert not r.rejected
+    def test_send_with_failures(self, session, enclosure):
+        rejected = {'addr': (255, 'reason')}
+        smtp = session.conn
+        smtp.sendmail.return_value = rejected
+        smtp.noop.return_value = (250, 'ok')
+
+        response = session.send(enclosure)
+        assert not response.ok
 
 
 class TestPostman:
@@ -88,8 +80,7 @@ class TestPostman:
         with postman.connection() as session:
             mc = session.mock_calls
             assert session.opts == {'host': 'host', 'port': 1000}
-            assert mc == [call(**postman.options),
-                          call.setup()]
+            assert mc == [call(**postman.options)]
         assert mc[-1] == call.teardown()
 
     def test_use(self, postman):
