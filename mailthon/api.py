@@ -11,7 +11,7 @@
 
 from mailthon.enclosure import Collection, HTML, Attachment
 from mailthon.postman import Postman
-from mailthon.middleware import TLS, Auth
+import mailthon.middleware as middleware
 import mailthon.headers as headers
 
 
@@ -61,8 +61,8 @@ def postman(host, port=587, auth=(None, None),
         host=host,
         port=port,
         middlewares=[
-            TLS(force=force_tls),
-            Auth(*auth),
+            middleware.tls(force=force_tls),
+            middleware.auth(*auth),
         ],
         **options
     )

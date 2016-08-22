@@ -3,7 +3,7 @@ import pytest
 from mock import Mock, call
 from mailthon.api import email, postman
 from mailthon.postman import Postman
-from mailthon.middleware import TLS, Auth
+from mailthon.middleware import tls, auth
 from .utils import unicode as uni
 from .mimetest import mimetest
 
@@ -15,11 +15,6 @@ class TestPostman:
         auth=('username', 'password'),
         options={'key': 'value'},
     )
-
-    def test_middlewares(self):
-        tls, auth = self.p.middlewares
-        assert not tls.force
-        assert auth.username == 'username' and auth.password == 'password'
 
     def test_options(self):
         opts = dict(
