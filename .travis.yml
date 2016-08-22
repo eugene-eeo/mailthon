@@ -12,4 +12,3 @@ script: python setup.py test
 install: python setup.py install
 os:
     - linux
-    - osx
