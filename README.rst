@@ -28,10 +28,10 @@ for other transports.
 Platforms
 ---------
 
-+-------------+----------------------------------------------------------------------------------+
-| **Linux**   | .. image:: https://travis-ci.org/eugene-eeo/mailthon.svg?branch=master           |
-|             |     :target: https://travis-ci.org/eugene-eeo/mailthon                           |
-+-------------+----------------------------------------------------------------------------------+
-| **Windows** | .. image:: https://ci.appveyor.com/api/projects/status/eadeytartlka64a1?svg=true |
-|             |     :target: https://ci.appveyor.com/project/eugene-eeo/mailthon                 |
-+-------------+----------------------------------------------------------------------------------+
++-------------+-----------------------------------------------------------------------+
+| **Linux**   | .. image:: https://img.shields.io/travis/eugene-eeo/mailthon.svg      |
+|             |     :target: https://travis-ci.org/eugene-eeo/mailthon                |
++-------------+-----------------------------------------------------------------------+
+| **Windows** | .. image:: https://img.shields.io/appveyor/ci/eugene-eeo/mailthon.svg |
+|             |     :target: https://ci.appveyor.com/project/eugene-eeo/mailthon      |
++-------------+-----------------------------------------------------------------------+
