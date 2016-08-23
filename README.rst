@@ -1,14 +1,12 @@
 Mailthon
 ========
 
-**Useful links:** `Documentation`_ | `Issue Tracker`_ | `PyPI Page`_
+**Useful links:** `Documentation`_ (outdated) | `Issue Tracker`_ | `PyPI Page`_
 
 Mailthon is an MIT licensed email library for Python that aims to be
 highly extensible and composable. Mailthon is unicode aware and supports
 internationalised headers and email addresses. Also it aims to be transport
-agnostic, meaning that SMTP can be swapped out for other transports.
-
-.. code-block:: python
+agnostic, meaning that SMTP can be swapped out for other transports::
 
     >>> from mailthon import postman, email
     >>> p = postman(host='smtp.gmail.com', auth=('username', 'password'))
