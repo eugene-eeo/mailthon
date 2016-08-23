@@ -4,6 +4,7 @@ environment:
     - PYTHON: "C:/Python27"
     - PYTHON: "C:/Python33"
     - PYTHON: "C:/Python34"
+    - PYTHON: "C:/Python35"
 init:
   - "ECHO %PYTHON%"
   - ps: "ls C:/Python*"
@@ -13,5 +14,6 @@ install:
   - "%PYTHON%/Scripts/pip.exe install -e ."
   - "%PYTHON%/Scripts/pip.exe install pytest"
   - "%PYTHON%/Scripts/pip.exe install mock"
+  - "%PYTHON%/Scripts/pip.exe install pytest-cov"
 test_script:
   - "%PYTHON%/python.exe setup.py test"
