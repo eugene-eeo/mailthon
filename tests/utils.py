@@ -25,11 +25,6 @@ def mocked_smtp(*args, **kwargs):
     return smtp
 
 
-@fixture
-def smtp():
-    return mocked_smtp()
-
-
 def tls_started(conn):
     calls = conn.mock_calls
     starttls = call.starttls()

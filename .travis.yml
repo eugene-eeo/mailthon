@@ -8,7 +8,11 @@ python:
     - '3.4'
     - 'pypy'
     - 'pypy3'
+install:
+    - python setup.py install
+    - pip install codecov
 script: python setup.py test
-install: python setup.py install
+after_script:
+    - codecov
 os:
     - linux
