@@ -22,13 +22,16 @@ agnostic, meaning that SMTP can be swapped out for other transports::
 .. _Issue Tracker: http://github.com/eugene-eeo/mailthon/issues/
 .. _PyPI Page: http://pypi.python.org/pypi/Mailthon
 
-Platforms
----------
+Builds
+------
 
-+-------------+-----------------------------------------------------------------------+
-| **Linux**   | .. image:: https://img.shields.io/travis/eugene-eeo/mailthon.svg      |
-|             |     :target: https://travis-ci.org/eugene-eeo/mailthon                |
-+-------------+-----------------------------------------------------------------------+
-| **Windows** | .. image:: https://img.shields.io/appveyor/ci/eugene-eeo/mailthon.svg |
-|             |     :target: https://ci.appveyor.com/project/eugene-eeo/mailthon      |
-+-------------+-----------------------------------------------------------------------+
++-------------+----------------------------------------------------------------------------+
+| **Linux**   | .. image:: https://img.shields.io/travis/eugene-eeo/mailthon.svg           |
+|             |     :target: https://travis-ci.org/eugene-eeo/mailthon                     |
++-------------+----------------------------------------------------------------------------+
+| **Windows** | .. image:: https://img.shields.io/appveyor/ci/eugene-eeo/mailthon.svg      |
+|             |     :target: https://ci.appveyor.com/project/eugene-eeo/mailthon           |
++-------------+----------------------------------------------------------------------------+
+| **Coverage**| .. image:: https://img.shields.io/codecov/c/github/eugene-eeo/mailthon.svg |
+|             |     :target: https://codecov.io/gh/eugene-eeo/mailthon                     |
++-------------+----------------------------------------------------------------------------+
